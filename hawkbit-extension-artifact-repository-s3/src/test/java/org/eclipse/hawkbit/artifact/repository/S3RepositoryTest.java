@@ -10,6 +10,7 @@ package org.eclipse.hawkbit.artifact.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
@@ -39,6 +40,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.google.common.io.BaseEncoding;
 import com.google.common.io.ByteStreams;
@@ -65,6 +67,9 @@ public class S3RepositoryTest {
     @Mock
     private ObjectMetadata s3ObjectMetadataMock;
 
+    @Mock
+    private PutObjectResult putObjectResultMock;
+
     @Captor
     private ArgumentCaptor<ObjectMetadata> objectMetaDataCaptor;
 
@@ -77,6 +82,7 @@ public class S3RepositoryTest {
     @Before
     public void before() {
         s3RepositoryUnderTest = new S3Repository(amazonS3Mock, s3Properties);
+        when(amazonS3Mock.putObject(any(), any(), any(), any())).thenReturn(putObjectResultMock);
     }
 
     @Test
@@ -152,7 +158,8 @@ public class S3RepositoryTest {
         when(amazonS3Mock.getObject(s3Properties.getBucketName(), knownSHA1Hash)).thenReturn(null);
 
         // test
-        final AbstractDbArtifact artifactBySha1NotExists = s3RepositoryUnderTest.getArtifactBySha1(TENANT, knownSHA1Hash);
+        final AbstractDbArtifact artifactBySha1NotExists = s3RepositoryUnderTest.getArtifactBySha1(TENANT,
+                knownSHA1Hash);
 
         // verify
         assertThat(artifactBySha1NotExists).isNull();
