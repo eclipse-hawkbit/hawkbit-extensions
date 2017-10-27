@@ -19,6 +19,7 @@ import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
 /**
  * The Spring auto-configuration to register the necessary beans for the S3
@@ -70,7 +71,8 @@ public class S3RepositoryAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public AmazonS3 amazonS3() {
-        return new AmazonS3Client(awsCredentialsProvider(), awsClientConfiguration());
+        return AmazonS3ClientBuilder.standard().withCredentials(awsCredentialsProvider())
+                .withClientConfiguration(awsClientConfiguration()).build();
     }
 
     /**
