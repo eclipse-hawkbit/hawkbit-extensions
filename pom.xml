@@ -16,6 +16,7 @@
       <version>0.2.0M4</version>
    </parent>
    <artifactId>hawkbit-extensions-parent</artifactId>
+   <version>0.2.0-SNAPSHOT</version>
    <packaging>pom</packaging>
    <name>hawkBit :: Extensions</name>
    <description>Parent pom for hawkBit extensions</description>
