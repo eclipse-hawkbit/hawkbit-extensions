@@ -179,22 +179,26 @@ public class S3Repository implements ArtifactRepository {
         final String key = objectKey(tenant, sha1Hash);
 
         LOG.info("Retrieving S3 object from bucket {} and key {}", s3Properties.getBucketName(), key);
-        try (final S3Object s3Object = amazonS3.getObject(s3Properties.getBucketName(), key)) {
-            if (s3Object == null) {
-                return null;
-            }
+        final S3Object s3Object = amazonS3.getObject(s3Properties.getBucketName(), key);
+        if (s3Object == null) {
+            return null;
+        }
 
+        try {
             final ObjectMetadata s3ObjectMetadata = s3Object.getObjectMetadata();
-
             // the MD5Content is stored in the ETag
             return new S3Artifact(amazonS3, s3Properties, key, sha1Hash,
                     new DbArtifactHash(sha1Hash,
                             BaseEncoding.base16().lowerCase()
                                     .encode(BaseEncoding.base64().decode(s3ObjectMetadata.getETag()))),
                     s3ObjectMetadata.getContentLength(), s3ObjectMetadata.getContentType());
-        } catch (final IOException e) {
-            LOG.error("Could not verify S3Object", e);
-            return null;
+        } finally {
+            // Make sure s3Object is closed to avoid memory leak
+            try {
+                s3Object.close();
+            } catch (IOException e) {
+                throw new ArtifactStoreException("Unable to close S3Object", e);
+            }
         }
     }
 
