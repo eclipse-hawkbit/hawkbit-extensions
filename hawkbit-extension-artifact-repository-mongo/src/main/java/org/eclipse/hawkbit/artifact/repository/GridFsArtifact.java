@@ -34,7 +34,7 @@ public class GridFsArtifact extends AbstractDbArtifact {
      */
     public GridFsArtifact(final GridFSFile dbFile) {
         super(dbFile.getId().toString(), new DbArtifactHash(dbFile.getFilename(), dbFile.getMD5()), dbFile.getLength(),
-                dbFile.getContentType());
+                dbFile.getContentType(), dbFile.getUploadDate().getTime());
         this.dbFile = dbFile;
     }
 
