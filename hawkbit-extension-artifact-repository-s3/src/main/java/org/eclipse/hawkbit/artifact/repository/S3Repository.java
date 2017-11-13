@@ -126,7 +126,7 @@ public class S3Repository implements ArtifactRepository {
         checkHashes(s3Artifact, hash);
         final String key = objectKey(tenant, sha1Hash16);
 
-        LOG.info("Storing file {} with length {} to AWS S3 bucket {} as Key {}", file.getName(), file.length(),
+        LOG.info("Storing file {} with length {} to AWS S3 bucket {} with key {}", file.getName(), file.length(),
                 s3Properties.getBucketName(), key);
 
         if (exists(key)) {
