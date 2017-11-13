@@ -27,8 +27,9 @@ public class S3Artifact extends AbstractDbArtifact {
     private final String key;
 
     S3Artifact(final AmazonS3 amazonS3, final S3RepositoryProperties s3Properties, final String key,
-            final String artifactId, final DbArtifactHash hashes, final Long size, final String contentType) {
-        super(artifactId, hashes, size, contentType);
+            final String artifactId, final DbArtifactHash hashes, final Long size, final String contentType,
+            final long lastModified) {
+        super(artifactId, hashes, size, contentType, lastModified);
         Assert.notNull(amazonS3, "S3 cannot be null");
         Assert.notNull(s3Properties, "Properties cannot be null");
         Assert.notNull(key, "Key cannot be null");
@@ -45,6 +46,7 @@ public class S3Artifact extends AbstractDbArtifact {
     @Override
     public String toString() {
         return "S3Artifact [key=" + key + ", getArtifactId()=" + getArtifactId() + ", getHashes()=" + getHashes()
-                + ", getSize()=" + getSize() + ", getContentType()=" + getContentType() + "]";
+                + ", getLastModified()=" + getLastModified() + ", getSize()=" + getSize() + ", getContentType()="
+                + getContentType() + "]";
     }
 }

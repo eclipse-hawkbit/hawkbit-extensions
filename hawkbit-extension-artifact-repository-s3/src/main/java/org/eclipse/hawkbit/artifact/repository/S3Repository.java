@@ -122,8 +122,7 @@ public class S3Repository implements ArtifactRepository {
 
     private AbstractDbArtifact store(final String tenant, final String sha1Hash16, final String mdMD5Hash16,
             final String contentType, final File file, final DbArtifactHash hash) {
-        final S3Artifact s3Artifact = createS3Artifact(tenant, sha1Hash16, mdMD5Hash16, contentType, file);
-        checkHashes(s3Artifact, hash);
+        checkHashes(sha1Hash16, mdMD5Hash16, hash);
         final String key = objectKey(tenant, sha1Hash16);
 
         LOG.info("Storing file {} with length {} to AWS S3 bucket {} with key {}", file.getName(), file.length(),
@@ -132,7 +131,7 @@ public class S3Repository implements ArtifactRepository {
         if (exists(key)) {
             LOG.debug("Artifact {} already exists on S3 bucket {}, don't need to upload twice", key,
                     s3Properties.getBucketName());
-            return s3Artifact;
+            return getArtifactBySha1(tenant, sha1Hash16);
         }
 
         try (final InputStream inputStream = new BufferedInputStream(new FileInputStream(file),
@@ -144,16 +143,17 @@ public class S3Repository implements ArtifactRepository {
             LOG.debug("Artifact {} stored on S3 bucket {} with server side Etag {} and MD5 hash {}", key,
                     s3Properties.getBucketName(), result.getETag(), result.getContentMd5());
 
-            return s3Artifact;
+            return createS3Artifact(tenant, sha1Hash16, mdMD5Hash16, contentType, file,
+                    result.getMetadata().getLastModified().getTime());
         } catch (final IOException | AmazonClientException e) {
             throw new ArtifactStoreException("Failed to store artifact into S3 ", e);
         }
     }
 
     private S3Artifact createS3Artifact(final String tenant, final String sha1Hash, final String mdMD5Hash16,
-            final String contentType, final File file) {
+            final String contentType, final File file, final long lastModified) {
         return new S3Artifact(amazonS3, s3Properties, objectKey(tenant, sha1Hash), sha1Hash,
-                new DbArtifactHash(sha1Hash, mdMD5Hash16), file.length(), contentType);
+                new DbArtifactHash(sha1Hash, mdMD5Hash16), file.length(), contentType, lastModified);
     }
 
     private ObjectMetadata createObjectMetadata(final String mdMD5Hash16, final String contentType, final File file) {
@@ -197,26 +197,25 @@ public class S3Repository implements ArtifactRepository {
                     new DbArtifactHash(sha1Hash,
                             BaseEncoding.base16().lowerCase()
                                     .encode(BaseEncoding.base64().decode(s3ObjectMetadata.getETag()))),
-                    s3ObjectMetadata.getContentLength(), s3ObjectMetadata.getContentType());
+                    s3ObjectMetadata.getContentLength(), s3ObjectMetadata.getContentType(),
+                    s3ObjectMetadata.getLastModified().getTime());
         } catch (final IOException e) {
             LOG.error("Could not verify S3Object", e);
             return null;
         }
     }
 
-    private static void checkHashes(final AbstractDbArtifact artifact, final DbArtifactHash hash) {
+    private static void checkHashes(final String sha1Hash16, final String mdMD5Hash16, final DbArtifactHash hash) {
         if (hash == null) {
             return;
         }
-        if (hash.getSha1() != null && !artifact.getHashes().getSha1().equals(hash.getSha1())) {
+        if (hash.getSha1() != null && !sha1Hash16.equals(hash.getSha1())) {
             throw new HashNotMatchException("The given sha1 hash " + hash.getSha1()
-                    + " does not match with the calcualted sha1 hash " + artifact.getHashes().getSha1(),
-                    HashNotMatchException.SHA1);
+                    + " does not match with the calcualted sha1 hash " + sha1Hash16, HashNotMatchException.SHA1);
         }
-        if (hash.getMd5() != null && !artifact.getHashes().getMd5().equals(hash.getMd5())) {
+        if (hash.getMd5() != null && !mdMD5Hash16.equals(hash.getMd5())) {
             throw new HashNotMatchException("The given md5 hash " + hash.getMd5()
-                    + " does not match with the calcualted md5 hash " + artifact.getHashes().getMd5(),
-                    HashNotMatchException.MD5);
+                    + " does not match with the calcualted md5 hash " + mdMD5Hash16, HashNotMatchException.MD5);
         }
     }
 
