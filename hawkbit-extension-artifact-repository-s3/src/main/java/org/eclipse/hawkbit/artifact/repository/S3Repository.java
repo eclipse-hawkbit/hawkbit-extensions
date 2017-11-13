@@ -98,15 +98,17 @@ public class S3Repository implements ArtifactRepository {
             throw new ArtifactStoreException(e.getMessage(), e);
         }
 
-        LOG.debug("Creating temporary file to store the inputstream to it");
+        LOG.debug("Creating temporary file and store the inputstream to it");
 
         final File file = createTempFile();
-        LOG.debug("Calculating sha1 and md5 hashes");
+
         try (final DigestOutputStream outputstream = openFileOutputStream(file, mdSHA1, mdMD5)) {
             ByteStreams.copy(content, outputstream);
             outputstream.flush();
             final String sha1Hash16 = BaseEncoding.base16().lowerCase().encode(mdSHA1.digest());
             final String md5Hash16 = BaseEncoding.base16().lowerCase().encode(mdMD5.digest());
+
+            LOG.debug("Temporary file {} stored. Calculated sha1: {} and md5: {} hashes", file, sha1Hash16, md5Hash16);
 
             return store(tenant, sha1Hash16, md5Hash16, contentType, file, hash);
         } catch (final IOException e) {
@@ -123,11 +125,11 @@ public class S3Repository implements ArtifactRepository {
         checkHashes(sha1Hash16, mdMD5Hash16, hash);
         final String key = objectKey(tenant, sha1Hash16);
 
-        LOG.info("Storing file {} with length {} to AWS S3 bucket {} as SHA1 {}", file.getName(), file.length(),
+        LOG.info("Storing file {} with length {} to AWS S3 bucket {} with key {}", file.getName(), file.length(),
                 s3Properties.getBucketName(), key);
 
         if (exists(key)) {
-            LOG.debug("Artifact {} already exists on S3 bucket {}, don't need to upload twice", sha1Hash16,
+            LOG.debug("Artifact {} already exists on S3 bucket {}, don't need to upload twice", key,
                     s3Properties.getBucketName());
             return getArtifactBySha1(tenant, sha1Hash16);
         }
@@ -138,10 +140,13 @@ public class S3Repository implements ArtifactRepository {
             final PutObjectResult result = amazonS3.putObject(s3Properties.getBucketName(), key, inputStream,
                     objectMetadata);
 
+            LOG.debug("Artifact {} stored on S3 bucket {} with server side Etag {} and MD5 hash {}", key,
+                    s3Properties.getBucketName(), result.getETag(), result.getContentMd5());
+
             return createS3Artifact(tenant, sha1Hash16, mdMD5Hash16, contentType, file,
                     result.getMetadata().getLastModified().getTime());
         } catch (final IOException | AmazonClientException e) {
-            throw new ArtifactStoreException(e.getMessage(), e);
+            throw new ArtifactStoreException("Failed to store artifact into S3 ", e);
         }
     }
 
@@ -157,7 +162,6 @@ public class S3Repository implements ArtifactRepository {
         objectMetadata.setContentMD5(mdMD5Hash64);
         objectMetadata.setContentType(contentType);
         objectMetadata.setContentLength(file.length());
-        objectMetadata.setHeader("x-amz-meta-md5chksum", mdMD5Hash64);
         if (s3Properties.isServerSideEncryption()) {
             objectMetadata.setHeader(Headers.SERVER_SIDE_ENCRYPTION, s3Properties.getServerSideEncryptionAlgorithm());
         }
