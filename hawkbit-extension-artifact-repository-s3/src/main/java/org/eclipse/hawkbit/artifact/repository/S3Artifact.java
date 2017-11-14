@@ -8,7 +8,6 @@
  */
 package org.eclipse.hawkbit.artifact.repository;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
@@ -16,7 +15,6 @@ import org.eclipse.hawkbit.artifact.repository.model.DbArtifactHash;
 import org.springframework.util.Assert;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.S3Object;
 
 /**
  * An {@link AbstractDbArtifact} implementation which retrieves the
@@ -41,21 +39,7 @@ public class S3Artifact extends AbstractDbArtifact {
 
     @Override
     public InputStream getFileInputStream() {
-        final S3Object s3Object = amazonS3.getObject(s3Properties.getBucketName(), key);
-        if (s3Object == null) {
-            return null;
-        }
-        
-        try {
-            return s3Object.getObjectContent();
-        } finally {
-            // Make sure s3Object is closed to avoid memory leak
-            try {
-                s3Object.close();
-            } catch (IOException e) {
-                throw new ArtifactStoreException("Unable to close S3Object", e);
-            }
-        }
+        return amazonS3.getObject(s3Properties.getBucketName(), key).getObjectContent();
     }
 
     @Override
