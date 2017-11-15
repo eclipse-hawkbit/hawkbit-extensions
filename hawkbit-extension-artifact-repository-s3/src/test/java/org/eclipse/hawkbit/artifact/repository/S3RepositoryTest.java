@@ -14,6 +14,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.BufferedInputStream;
@@ -131,6 +132,11 @@ public class S3RepositoryTest {
         assertThat(artifactBySha1.getSize()).isEqualTo(knownContentLength);
         assertThat(artifactBySha1.getHashes().getSha1()).isEqualTo(knownSHA1Hash);
         assertThat(artifactBySha1.getHashes().getMd5()).isEqualTo(knownMdBase16);
+        try {
+            verify(s3ObjectMock).close();
+        } catch (IOException e) {
+            fail("close() caused IOException");
+        }
     }
 
     @Test
