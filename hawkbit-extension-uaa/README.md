@@ -117,3 +117,38 @@ After building the `uaa` docker image you can then start the `uaa-server` using 
 ``` 
 docker run -p 8080:8080 -d -e "SPRING_PROFILES_ACTIVE=hsqldb" -v "/etc/uaa:/etc/uaa" uaa
 ```
+# Keycloak
+You can use also Keyclok IdentityProvider to authenticate the user. 
+
+## Keycloak Configuration
+
+In this case, you need to:
+  * Add these roles to Realm: READ_TARGET,CREATE_TARGET,UPDATE_TARGET,DELETE_TARGET,READ_REPOSITORY,UPDATE_REPOSITORY,CREATE_REPOSITORY,DELETE_REPOSITORY,SYSTEM_MONITOR,SYSTEM_DIAG,SYSTEM_ADMIN,DOWNLOAD_REPOSITORY_ARTIFACT,TENANT_CONFIGURATION,ROLLOUT_MANAGEMENT
+* Create a new Client (say hawkbit) with Access Type confidential and Autorization Enable ON (write down the Secret in Credentials tab, we neet it in hawkbit).
+* Set in the new Client the Valid Redirect URIs (es: http://localhost:8080/uaalogin )
+* In the Mappers Tab:
+   * select username and set in the Token Claim Name: user_name
+   * add a new Mapper with Mapper type User Attribute, Claim JSON Type String and set Name, User Attribute and Token Claim Name to zid
+   * add a new Mapper with Mapper type User Attribute, Claim JSON Type String and set Name, User Attribute and Token Claim Name to locale
+   * add a new Mapper with Mapper type User Realm Role, Claim JSON Type String and set Name to scope-role-mapper Token Claim Name to scope and Multivalued ON
+ 
+ Go to user and in the RoleMapping assigne the desired roles to user. 
+ 
+## Hawkbit Configuration
+
+in hawkbit-runtime/hawkbit-update-server/src/main/resources/application.properties add:
+```
+uaa.client.clientId=hawkbit  <-  Then Keycloak Client Name
+uaa.client.clientSecret=XXXXXXXXXXX <- the Secret written down above
+uaa.client.clientAuthenticationScheme=form
+uaa.resource.jwt.keyValue=uaasign
+uaa.client.accessTokenUri=https://KEYCLOAK/auth/realms/MYREALM/protocol/openid-connect/token
+uaa.client.userAuthorizationUri=https://KEYCLOAK/auth/realms/MYREALM/protocol/openid-connect/auth
+uaa.resource.userInfoUri=https://KEYCLOAK/auth/realms/MYREALM/protocol/openid-connect/userinfo
+```
+Change KEYCLOAK and MYREAL with the correct value of your installation.
+
+ 
+ 
+ 
+ 
