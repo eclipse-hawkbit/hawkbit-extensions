@@ -127,10 +127,10 @@ In this case, you need to:
 * Create a new Client (say hawkbit) with Access Type confidential and Autorization Enable ON (write down the Secret in Credentials tab, we neet it in hawkbit).
 * Set in the new Client the Valid Redirect URIs (es: http://localhost:8080/uaalogin )
 * In the Mappers Tab:
- * select username and set in the Token Claim Name: user_name
- * add a new Mapper with Mapper type User Attribute, Claim JSON Type String and set Name, User Attribute and Token Claim Name to zid
-  * add a new Mapper with Mapper type User Attribute, Claim JSON Type String and set Name, User Attribute and Token Claim Name to locale
- * add a new Mapper with Mapper type User Realm Role, Claim JSON Type String and set Name to scope-role-mapper Token Claim Name to scope and Multivalued ON
+   * select username and set in the Token Claim Name: user_name
+   * add a new Mapper with Mapper type User Attribute, Claim JSON Type String and set Name, User Attribute and Token Claim Name to zid
+   * add a new Mapper with Mapper type User Attribute, Claim JSON Type String and set Name, User Attribute and Token Claim Name to locale
+   * add a new Mapper with Mapper type User Realm Role, Claim JSON Type String and set Name to scope-role-mapper Token Claim Name to scope and Multivalued ON
  
  Go to user and in the RoleMapping assigne the desired roles to user. 
  
