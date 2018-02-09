@@ -110,7 +110,7 @@ public class S3Repository implements ArtifactRepository {
 
             LOG.debug("Temporary file {} stored. Calculated sha1: {} and md5: {} hashes", file, sha1Hash16, md5Hash16);
 
-            return store(tenant, sha1Hash16, md5Hash16, contentType, file, hash);
+            return store(tenant, sha1Hash16, md5Hash16, contentType, file, hash, filename);
         } catch (final IOException e) {
             throw new ArtifactStoreException(e.getMessage(), e);
         } finally {
@@ -121,7 +121,7 @@ public class S3Repository implements ArtifactRepository {
     }
 
     private AbstractDbArtifact store(final String tenant, final String sha1Hash16, final String mdMD5Hash16,
-            final String contentType, final File file, final DbArtifactHash hash) {
+            final String contentType, final File file, final DbArtifactHash hash, final String filename) {
         final S3Artifact s3Artifact = createS3Artifact(tenant, sha1Hash16, mdMD5Hash16, contentType, file);
         checkHashes(s3Artifact, hash);
         final String key = objectKey(tenant, sha1Hash16);
@@ -137,7 +137,7 @@ public class S3Repository implements ArtifactRepository {
 
         try (final InputStream inputStream = new BufferedInputStream(new FileInputStream(file),
                 RequestClientOptions.DEFAULT_STREAM_BUFFER_SIZE)) {
-            final ObjectMetadata objectMetadata = createObjectMetadata(mdMD5Hash16, contentType, file);
+            final ObjectMetadata objectMetadata = createObjectMetadata(mdMD5Hash16, contentType, file, filename);
             final PutObjectResult result = amazonS3.putObject(s3Properties.getBucketName(), key, inputStream,
                     objectMetadata);
 
@@ -156,12 +156,14 @@ public class S3Repository implements ArtifactRepository {
                 new DbArtifactHash(sha1Hash, mdMD5Hash16), file.length(), contentType);
     }
 
-    private ObjectMetadata createObjectMetadata(final String mdMD5Hash16, final String contentType, final File file) {
+    private ObjectMetadata createObjectMetadata(final String mdMD5Hash16, final String contentType, final File file,
+            final String filename) {
         final ObjectMetadata objectMetadata = new ObjectMetadata();
         final String mdMD5Hash64 = BaseEncoding.base64().encode(BaseEncoding.base16().lowerCase().decode(mdMD5Hash16));
         objectMetadata.setContentMD5(mdMD5Hash64);
         objectMetadata.setContentType(contentType);
         objectMetadata.setContentLength(file.length());
+        objectMetadata.setContentDisposition("attachment;filename=\"" + filename + "\"");
         if (s3Properties.isServerSideEncryption()) {
             objectMetadata.setHeader(Headers.SERVER_SIDE_ENCRYPTION, s3Properties.getServerSideEncryptionAlgorithm());
         }
