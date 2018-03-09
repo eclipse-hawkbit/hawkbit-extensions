@@ -173,6 +173,7 @@ public class S3Repository implements ArtifactRepository {
         final String key = objectKey(tenant, sha1Hash);
 
         LOG.info("Deleting S3 object from bucket {} and key {}", s3Properties.getBucketName(), key);
+        closeS3Object(amazonS3.getObject(s3Properties.getBucketName(), key));
         amazonS3.deleteObject(new DeleteObjectRequest(s3Properties.getBucketName(), key));
     }
 
@@ -248,7 +249,8 @@ public class S3Repository implements ArtifactRepository {
         ObjectListing objects = amazonS3.listObjects(s3Properties.getBucketName(), folder + "/");
         do {
             for (final S3ObjectSummary objectSummary : objects.getObjectSummaries()) {
-                amazonS3.deleteObject(s3Properties.getBucketName(), objectSummary.getKey());
+                closeS3Object(amazonS3.getObject(s3Properties.getBucketName(), objectSummary.getKey()));
+            	amazonS3.deleteObject(s3Properties.getBucketName(), objectSummary.getKey());
             }
             objects = amazonS3.listNextBatchOfObjects(objects);
         } while (objects.isTruncated());
@@ -257,5 +259,16 @@ public class S3Repository implements ArtifactRepository {
 
     private static String sanitizeTenant(final String tenant) {
         return tenant.trim().toUpperCase();
+    }
+    
+    private void closeS3Object(final S3Object s3Object) {
+        if (s3Object != null) {
+        	try {
+        		s3Object.close();
+        	} catch (IOException ex) {
+        		// Housekeeping did not succeed, but we we're about to delete anyway.
+        		// Might already be closed.
+        	}
+        }
     }
 }
