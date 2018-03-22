@@ -60,7 +60,7 @@ public class MongoDBArtifactStoreTest {
         final String contentType = "application/json";
 
         final DigestInputStream digestInputStream = digestInputStream(generateInputStream(filelengthBytes), "SHA-1");
-        artifactStoreUnderTest.store(tenant, digestInputStream, filename, contentType);
+        artifactStoreUnderTest.store(tenant, digestInputStream, filename, contentType, null);
 
         final String sha1 = BaseEncoding.base16().lowerCase().encode(digestInputStream.getMessageDigest().digest());
         assertThat(artifactStoreUnderTest.getArtifactBySha1(tenant, sha1)).isNotNull();

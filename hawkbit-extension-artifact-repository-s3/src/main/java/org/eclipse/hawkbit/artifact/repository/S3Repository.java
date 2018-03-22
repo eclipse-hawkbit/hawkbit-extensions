@@ -9,16 +9,10 @@
 package org.eclipse.hawkbit.artifact.repository;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.DigestOutputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
 import org.eclipse.hawkbit.artifact.repository.model.DbArtifactHash;
@@ -37,7 +31,6 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.io.BaseEncoding;
-import com.google.common.io.ByteStreams;
 
 /**
  * An {@link ArtifactRepository} implementation for the AWS S3 service. All
@@ -53,12 +46,9 @@ import com.google.common.io.ByteStreams;
  * </p>
  */
 @Validated
-public class S3Repository implements ArtifactRepository {
+public class S3Repository extends AbstractArtifactRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(S3Repository.class);
-
-    private static final String TEMP_FILE_PREFIX = "tmp";
-    private static final String TEMP_FILE_SUFFIX = "artifactrepo";
 
     private final AmazonS3 amazonS3;
     private final S3RepositoryProperties s3Properties;
@@ -78,52 +68,9 @@ public class S3Repository implements ArtifactRepository {
     }
 
     @Override
-    public AbstractDbArtifact store(final String tenant, final InputStream content, final String filename,
-            final String contentType) {
-        return store(tenant, content, filename, contentType, null);
-    }
-
-    @Override
-    // suppress warning, of not strong enough hashing algorithm, SHA-1 and MD5
-    // is not used security related
-    @SuppressWarnings("squid:S2070")
-    public AbstractDbArtifact store(final String tenant, final InputStream content, final String filename,
-            final String contentType, final DbArtifactHash hash) {
-        final MessageDigest mdSHA1;
-        final MessageDigest mdMD5;
-        try {
-            mdSHA1 = MessageDigest.getInstance("SHA1");
-            mdMD5 = MessageDigest.getInstance("MD5");
-        } catch (final NoSuchAlgorithmException e) {
-            throw new ArtifactStoreException(e.getMessage(), e);
-        }
-
-        LOG.debug("Creating temporary file and store the inputstream to it");
-
-        final File file = createTempFile();
-
-        try (final DigestOutputStream outputstream = openFileOutputStream(file, mdSHA1, mdMD5)) {
-            ByteStreams.copy(content, outputstream);
-            outputstream.flush();
-            final String sha1Hash16 = BaseEncoding.base16().lowerCase().encode(mdSHA1.digest());
-            final String md5Hash16 = BaseEncoding.base16().lowerCase().encode(mdMD5.digest());
-
-            LOG.debug("Temporary file {} stored. Calculated sha1: {} and md5: {} hashes", file, sha1Hash16, md5Hash16);
-
-            return store(tenant, sha1Hash16, md5Hash16, contentType, file, hash);
-        } catch (final IOException e) {
-            throw new ArtifactStoreException(e.getMessage(), e);
-        } finally {
-            if (!file.delete()) {
-                LOG.error("Could not delete temp file {}", file);
-            }
-        }
-    }
-
-    private AbstractDbArtifact store(final String tenant, final String sha1Hash16, final String mdMD5Hash16,
-            final String contentType, final File file, final DbArtifactHash hash) {
+    protected AbstractDbArtifact store(final String tenant, final String sha1Hash16, final String mdMD5Hash16,
+            final String contentType, final File file) throws IOException {
         final S3Artifact s3Artifact = createS3Artifact(tenant, sha1Hash16, mdMD5Hash16, contentType, file);
-        checkHashes(s3Artifact, hash);
         final String key = objectKey(tenant, sha1Hash16);
 
         LOG.info("Storing file {} with length {} to AWS S3 bucket {} with key {}", file.getName(), file.length(),
@@ -145,7 +92,7 @@ public class S3Repository implements ArtifactRepository {
                     s3Properties.getBucketName(), result.getETag(), result.getContentMd5());
 
             return s3Artifact;
-        } catch (final IOException | AmazonClientException e) {
+        } catch (final AmazonClientException e) {
             throw new ArtifactStoreException("Failed to store artifact into S3 ", e);
         }
     }
@@ -204,36 +151,6 @@ public class S3Repository implements ArtifactRepository {
         }
     }
 
-    private static void checkHashes(final AbstractDbArtifact artifact, final DbArtifactHash hash) {
-        if (hash == null) {
-            return;
-        }
-        if (hash.getSha1() != null && !artifact.getHashes().getSha1().equals(hash.getSha1())) {
-            throw new HashNotMatchException("The given sha1 hash " + hash.getSha1()
-                    + " does not match with the calcualted sha1 hash " + artifact.getHashes().getSha1(),
-                    HashNotMatchException.SHA1);
-        }
-        if (hash.getMd5() != null && !artifact.getHashes().getMd5().equals(hash.getMd5())) {
-            throw new HashNotMatchException("The given md5 hash " + hash.getMd5()
-                    + " does not match with the calcualted md5 hash " + artifact.getHashes().getMd5(),
-                    HashNotMatchException.MD5);
-        }
-    }
-
-    private static File createTempFile() {
-        try {
-            return File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
-        } catch (final IOException e) {
-            throw new ArtifactStoreException("Cannot create tempfile", e);
-        }
-    }
-
-    private static DigestOutputStream openFileOutputStream(final File file, final MessageDigest mdSHA1,
-            final MessageDigest mdMD5) throws FileNotFoundException {
-        return new DigestOutputStream(
-                new DigestOutputStream(new BufferedOutputStream(new FileOutputStream(file)), mdMD5), mdSHA1);
-    }
-
     private boolean exists(final String sha1) {
         return amazonS3.doesObjectExist(s3Properties.getBucketName(), sha1);
     }
@@ -255,7 +172,4 @@ public class S3Repository implements ArtifactRepository {
 
     }
 
-    private static String sanitizeTenant(final String tenant) {
-        return tenant.trim().toUpperCase();
-    }
 }
