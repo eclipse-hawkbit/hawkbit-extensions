@@ -46,7 +46,6 @@
 
    <modules>
       <module>hawkbit-extension-uaa</module>
-      <module>hawkbit-extension-artifact-repository-core</module>
       <module>hawkbit-extension-artifact-repository-mongo</module>
       <module>hawkbit-extension-artifact-repository-s3</module>
    </modules>
