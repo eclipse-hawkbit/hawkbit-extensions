@@ -37,10 +37,16 @@
 
    <properties>
       <jacoco.outputDir>${project.basedir}/../../target/</jacoco.outputDir>
+      <hawkbit-core.version>0.2.0-SNAPSHOT</hawkbit-core.version>
+
+      <!-- Sonar - START -->
+      <sonar.github.repository>eclipse/hawkbit-extensions</sonar.github.repository>
+      <sonar.links.ci>https://circleci.com/gh/eclipse/hawkbit-extensions</sonar.links.ci>
    </properties>
 
    <modules>
       <module>hawkbit-extension-uaa</module>
+      <module>hawkbit-extension-artifact-repository-core</module>
       <module>hawkbit-extension-artifact-repository-mongo</module>
       <module>hawkbit-extension-artifact-repository-s3</module>
    </modules>
@@ -53,6 +59,12 @@
             <version>1.11.221</version>
             <type>pom</type>
             <scope>import</scope>
+         </dependency>
+         <dependency>
+            <groupId>org.eclipse.hawkbit</groupId>
+            <artifactId>hawkbit-core</artifactId>
+            <version>${hawkbit-core.version}</version>
+            <scope>provided</scope>
          </dependency>
       </dependencies>
    </dependencyManagement>
