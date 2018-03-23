@@ -16,8 +16,6 @@ import java.io.InputStream;
 
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
 import org.eclipse.hawkbit.tenancy.TenantAware;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
@@ -30,14 +28,11 @@ import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSFile;
 
 /**
- * The file management which looks up all the file in the file tore.
+ * The file management based on MongoDb GridFS.
  *
  */
 @Validated
 public class MongoDBArtifactStore extends AbstractArtifactRepository {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MongoDBArtifactStore.class);
-
     /**
      * The mongoDB field which holds the filename of the file to download.
      * hawkBit update-server uses the SHA hash as a filename and lookup in the
