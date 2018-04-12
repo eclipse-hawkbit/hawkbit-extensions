@@ -8,17 +8,19 @@
     http://www.eclipse.org/legal/epl-v10.html
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
+   
    <parent>
       <groupId>org.eclipse.hawkbit</groupId>
       <artifactId>hawkbit-parent</artifactId>
       <version>0.2.0M8</version>
    </parent>
+   
    <artifactId>hawkbit-extensions-parent</artifactId>
    <version>0.2.0-SNAPSHOT</version>
    <packaging>pom</packaging>
+   
    <name>hawkBit :: Extensions</name>
    <description>Parent pom for hawkBit extensions</description>
 
@@ -100,6 +102,7 @@
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>versions-maven-plugin</artifactId>
+            <version>2.5</version>
          </plugin>
          <plugin>
             <artifactId>maven-scm-plugin</artifactId>
