@@ -51,6 +51,12 @@
       <sonar.github.repository>eclipse/hawkbit-extensions</sonar.github.repository>
       <sonar.links.ci>https://circleci.com/gh/eclipse/hawkbit-extensions</sonar.links.ci>
    </properties>
+   
+   <scm>
+      <connection>${release.scm.connection}</connection>
+      <developerConnection>${release.scm.developerConnection}</developerConnection>
+      <url>${release.scm.url}</url>
+   </scm>
 
    <modules>
       <module>hawkbit-extension-uaa</module>
