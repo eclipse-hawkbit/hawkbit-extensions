@@ -38,6 +38,12 @@
    <properties>
       <jacoco.outputDir>${project.basedir}/../../target/</jacoco.outputDir>
       <hawkbit-core.version>0.2.0M8</hawkbit-core.version>
+      
+      <!-- Release - START -->
+      <release.scm.connection>scm:git:git@github.com:eclipse/hawkbit-extensions.git</release.scm.connection>
+      <release.scm.developerConnection>scm:git:https://github.com/eclipse/hawkbit-extensions.git</release.scm.developerConnection>
+      <release.scm.url>https://github.com/eclipse/hawkbit-extensions.git</release.scm.url>
+      <!-- Release - END -->
 
       <!-- Sonar - START -->
       <sonar.github.repository>eclipse/hawkbit-extensions</sonar.github.repository>
