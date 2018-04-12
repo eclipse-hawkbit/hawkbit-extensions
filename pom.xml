@@ -39,7 +39,7 @@
 
    <properties>
       <jacoco.outputDir>${project.basedir}/../../target/</jacoco.outputDir>
-      <hawkbit-core.version>0.2.0M8</hawkbit-core.version>
+      <hawkbit.version>0.2.0M8</hawkbit.version>
       
       <!-- Release - START -->
       <release.scm.connection>scm:git:git@github.com:eclipse/hawkbit-extensions.git</release.scm.connection>
@@ -168,9 +168,15 @@
          <dependency>
             <groupId>org.eclipse.hawkbit</groupId>
             <artifactId>hawkbit-core</artifactId>
-            <version>${hawkbit-core.version}</version>
+            <version>${hawkbit.version}</version>
             <scope>provided</scope>
          </dependency>
+         <dependency>
+            <groupId>org.eclipse.hawkbit</groupId>
+            <artifactId>hawkbit-security-core</artifactId>
+            <version>${hawkbit.version}</version>
+            <scope>provided</scope>
+      </dependency>
       </dependencies>
    </dependencyManagement>
 

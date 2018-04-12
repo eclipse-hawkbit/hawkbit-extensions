@@ -23,7 +23,6 @@
       <dependency>
          <groupId>org.eclipse.hawkbit</groupId>
          <artifactId>hawkbit-security-core</artifactId>
-         <version>${project.version}</version>
          <scope>provided</scope>
       </dependency>
       <dependency>
