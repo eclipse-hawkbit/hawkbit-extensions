@@ -8,11 +8,9 @@
  */
 package org.eclipse.hawkbit.artifact.repository;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
 import org.eclipse.hawkbit.tenancy.TenantAware;
@@ -57,6 +55,8 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
     private static final String SHA1 = "sha1";
 
     private static final String ID = "_id";
+
+    private static final String CONTENT_TYPE = "contentType";
 
     private final GridFsOperations gridFs;
 
@@ -109,22 +109,65 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
 
     @Override
     protected AbstractDbArtifact store(final String tenant, final String sha1Hash16, final String mdMD5Hash16,
-            final String contentType, final File file) throws IOException {
+            final String contentType, final String tempFile) throws IOException {
 
         // upload if it does not exist already, check if file exists, not
         // tenant specific.
         final GridFSDBFile result = gridFs
                 .findOne(new Query().addCriteria(Criteria.where(FILENAME).is(sha1Hash16).and(TENANT_QUERY).is(tenant)));
+
         if (result == null) {
-            try (final InputStream inputStream = new BufferedInputStream(new FileInputStream(file))) {
-                final BasicDBObject metadata = new BasicDBObject();
-                metadata.put(SHA1, sha1Hash16);
-                metadata.put(TENANT, tenant);
-                return map(gridFs.store(inputStream, sha1Hash16, contentType, metadata));
-            }
+            final BasicDBObject metadata = new BasicDBObject();
+            metadata.put(SHA1, sha1Hash16);
+            metadata.put(TENANT, tenant);
+
+            final GridFSDBFile temp = loadTempFile(tempFile);
+
+            temp.setMetaData(metadata);
+            temp.put(FILENAME, sha1Hash16);
+            temp.put(CONTENT_TYPE, contentType);
+            temp.save();
+
+            return map(temp);
         }
 
         return map(result);
+    }
+
+    private GridFSDBFile loadTempFile(final String tempFile) {
+        return gridFs.findOne(new Query().addCriteria(Criteria.where(FILENAME).is(getTempFilename(tempFile))));
+    }
+
+    @Override
+    protected String storeTempFile(final InputStream content) {
+        final String fileName = findUnusedTemFileName();
+
+        gridFs.store(content, getTempFilename(fileName));
+
+        return fileName;
+    }
+
+    private String findUnusedTemFileName() {
+        String fileName;
+        do {
+            fileName = UUID.randomUUID().toString();
+        } while (loadTempFile(fileName) != null);
+
+        return fileName;
+    }
+
+    @Override
+    protected void deleteTempFile(final String tempFile) {
+        try {
+            deleteArtifact(loadTempFile(tempFile));
+        } catch (final MongoException e) {
+            throw new ArtifactStoreException(e.getMessage(), e);
+        }
+
+    }
+
+    private static String getTempFilename(final String fileName) {
+        return "TMP_" + fileName;
     }
 
     /**
