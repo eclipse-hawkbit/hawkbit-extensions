@@ -9,10 +9,13 @@
 package org.eclipse.hawkbit.artifact.repository;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
 import org.eclipse.hawkbit.artifact.repository.model.DbArtifactHash;
@@ -31,6 +34,7 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.io.BaseEncoding;
+import com.google.common.io.ByteStreams;
 
 /**
  * An {@link ArtifactRepository} implementation for the AWS S3 service. All
@@ -47,6 +51,8 @@ import com.google.common.io.BaseEncoding;
  */
 @Validated
 public class S3Repository extends AbstractArtifactRepository {
+    private static final String TEMP_FILE_PREFIX = "tmp";
+    private static final String TEMP_FILE_SUFFIX = "artifactrepo";
 
     private static final Logger LOG = LoggerFactory.getLogger(S3Repository.class);
 
@@ -69,7 +75,9 @@ public class S3Repository extends AbstractArtifactRepository {
 
     @Override
     protected AbstractDbArtifact store(final String tenant, final String sha1Hash16, final String mdMD5Hash16,
-            final String contentType, final File file) throws IOException {
+            final String contentType, final String tempFile) throws IOException {
+        final File file = new File(tempFile);
+
         final S3Artifact s3Artifact = createS3Artifact(tenant, sha1Hash16, mdMD5Hash16, contentType, file);
         final String key = objectKey(tenant, sha1Hash16);
 
@@ -94,6 +102,27 @@ public class S3Repository extends AbstractArtifactRepository {
             return s3Artifact;
         } catch (final AmazonClientException e) {
             throw new ArtifactStoreException("Failed to store artifact into S3 ", e);
+        }
+    }
+
+    @Override
+    protected String storeTempFile(final InputStream content) throws IOException {
+        final File file = createTempFile();
+
+        try (final OutputStream outputstream = new BufferedOutputStream(new FileOutputStream(file))) {
+            ByteStreams.copy(content, outputstream);
+            outputstream.flush();
+        }
+
+        return file.getPath();
+    }
+
+    private static File createTempFile() {
+
+        try {
+            return File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
+        } catch (final IOException e) {
+            throw new ArtifactStoreException("Cannot create tempfile", e);
         }
     }
 
@@ -170,6 +199,15 @@ public class S3Repository extends AbstractArtifactRepository {
             objects = amazonS3.listNextBatchOfObjects(objects);
         } while (objects.isTruncated());
 
+    }
+
+    @Override
+    protected void deleteTempFile(final String tempFile) {
+        final File file = new File(tempFile);
+
+        if (file.exists() && !file.delete()) {
+            LOG.error("Could not delete temp file {}", file);
+        }
     }
 
 }

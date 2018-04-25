@@ -11,12 +11,14 @@ package org.eclipse.hawkbit.artifact.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 import org.eclipse.hawkbit.artifact.TestConfiguration;
+import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,12 +61,24 @@ public class MongoDBArtifactStoreTest {
         final String filename = "testfile.json";
         final String contentType = "application/json";
 
-        final DigestInputStream digestInputStream = digestInputStream(generateInputStream(filelengthBytes), "SHA-1");
+        final MessageDigest mdSHA1 = MessageDigest.getInstance("SHA1");
+        final MessageDigest mdMD5 = MessageDigest.getInstance("MD5");
+
+        final DigestInputStream digestInputStream = wrapInDigestInputStream(generateInputStream(filelengthBytes),
+                mdSHA1, mdMD5);
         artifactStoreUnderTest.store(tenant, digestInputStream, filename, contentType, null);
 
-        final String sha1 = BaseEncoding.base16().lowerCase().encode(digestInputStream.getMessageDigest().digest());
-        assertThat(artifactStoreUnderTest.getArtifactBySha1(tenant, sha1)).isNotNull();
-        return sha1;
+        final String sha1Hash16 = BaseEncoding.base16().lowerCase().encode(mdSHA1.digest());
+        final String md5Hash16 = BaseEncoding.base16().lowerCase().encode(mdMD5.digest());
+
+        final AbstractDbArtifact loaded = artifactStoreUnderTest.getArtifactBySha1(tenant, sha1Hash16);
+        assertThat(loaded).isNotNull();
+        assertThat(loaded.getContentType()).isEqualTo("application/json");
+        assertThat(loaded.getHashes().getSha1()).isEqualTo(sha1Hash16);
+        assertThat(loaded.getHashes().getMd5()).isEqualTo(md5Hash16);
+        assertThat(loaded.getSize()).isEqualTo(128);
+
+        return sha1Hash16;
     }
 
     @Test
@@ -97,9 +111,9 @@ public class MongoDBArtifactStoreTest {
         return new ByteArrayInputStream(bytes);
     }
 
-    private static DigestInputStream digestInputStream(final ByteArrayInputStream stream, final String digest)
-            throws NoSuchAlgorithmException {
-        return new DigestInputStream(stream, MessageDigest.getInstance(digest));
+    private static DigestInputStream wrapInDigestInputStream(final InputStream input, final MessageDigest mdSHA1,
+            final MessageDigest mdMD5) {
+        return new DigestInputStream(new DigestInputStream(input, mdMD5), mdSHA1);
     }
 
 }
