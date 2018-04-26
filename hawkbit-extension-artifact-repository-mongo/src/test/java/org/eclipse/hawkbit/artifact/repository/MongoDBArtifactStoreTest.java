@@ -76,7 +76,7 @@ public class MongoDBArtifactStoreTest {
         assertThat(loaded.getContentType()).isEqualTo("application/json");
         assertThat(loaded.getHashes().getSha1()).isEqualTo(sha1Hash16);
         assertThat(loaded.getHashes().getMd5()).isEqualTo(md5Hash16);
-        assertThat(loaded.getSize()).isEqualTo(128);
+        assertThat(loaded.getSize()).isEqualTo(filelengthBytes);
 
         return sha1Hash16;
     }
