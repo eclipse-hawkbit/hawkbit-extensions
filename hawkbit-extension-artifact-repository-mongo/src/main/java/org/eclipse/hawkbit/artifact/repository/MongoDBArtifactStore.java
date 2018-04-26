@@ -140,14 +140,14 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
 
     @Override
     protected String storeTempFile(final InputStream content) {
-        final String fileName = findUnusedTemFileName();
+        final String fileName = findUnusedTempFileName();
 
         gridFs.store(content, getTempFilename(fileName));
 
         return fileName;
     }
 
-    private String findUnusedTemFileName() {
+    private String findUnusedTempFileName() {
         String fileName;
         do {
             fileName = UUID.randomUUID().toString();
