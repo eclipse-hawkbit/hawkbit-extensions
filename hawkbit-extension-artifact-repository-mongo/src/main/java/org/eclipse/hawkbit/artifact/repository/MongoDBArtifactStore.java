@@ -75,16 +75,20 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
     @Override
     public AbstractDbArtifact getArtifactBySha1(final String tenant, final String sha1Hash) {
 
-        GridFSDBFile found = gridFs.findOne(new Query()
-                .addCriteria(Criteria.where(FILENAME).is(sha1Hash).and(TENANT_QUERY).is(sanitizeTenant(tenant))));
+        try {
+            GridFSDBFile found = gridFs.findOne(new Query()
+                    .addCriteria(Criteria.where(FILENAME).is(sha1Hash).and(TENANT_QUERY).is(sanitizeTenant(tenant))));
 
-        // fallback pre-multi-tenancy
-        if (found == null) {
-            found = gridFs.findOne(
-                    new Query().addCriteria(Criteria.where(FILENAME).is(sha1Hash).and(TENANT_QUERY).exists(false)));
+            // fallback pre-multi-tenancy
+            if (found == null) {
+                found = gridFs.findOne(
+                        new Query().addCriteria(Criteria.where(FILENAME).is(sha1Hash).and(TENANT_QUERY).exists(false)));
+            }
+
+            return map(found);
+        } catch (final MongoClientException e) {
+            throw new ArtifactStoreException(e.getMessage(), e);
         }
-
-        return map(found);
     }
 
     @Override
@@ -121,14 +125,18 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
             metadata.put(SHA1, sha1Hash16);
             metadata.put(TENANT, tenant);
 
-            final GridFSDBFile temp = loadTempFile(tempFile);
+            try {
+                final GridFSDBFile temp = loadTempFile(tempFile);
 
-            temp.setMetaData(metadata);
-            temp.put(FILENAME, sha1Hash16);
-            temp.put(CONTENT_TYPE, contentType);
-            temp.save();
+                temp.setMetaData(metadata);
+                temp.put(FILENAME, sha1Hash16);
+                temp.put(CONTENT_TYPE, contentType);
+                temp.save();
 
-            return map(temp);
+                return map(temp);
+            } catch (final MongoClientException e) {
+                throw new ArtifactStoreException(e.getMessage(), e);
+            }
         }
 
         return map(result);
@@ -142,7 +150,11 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
     protected String storeTempFile(final InputStream content) {
         final String fileName = findUnusedTempFileName();
 
-        gridFs.store(content, getTempFilename(fileName));
+        try {
+            gridFs.store(content, getTempFilename(fileName));
+        } catch (final MongoClientException e) {
+            throw new ArtifactStoreException(e.getMessage(), e);
+        }
 
         return fileName;
     }
