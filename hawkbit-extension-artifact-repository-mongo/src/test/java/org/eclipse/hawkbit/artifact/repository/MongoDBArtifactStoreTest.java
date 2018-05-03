@@ -11,6 +11,7 @@ package org.eclipse.hawkbit.artifact.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
@@ -46,7 +47,7 @@ public class MongoDBArtifactStoreTest {
 
     @Test
     @Description("Ensures that search by SHA1 hash (which is used by hawkBit as artifact ID) finds the expected results.")
-    public void findArtifactBySHA1Hash() throws NoSuchAlgorithmException {
+    public void findArtifactBySHA1Hash() throws NoSuchAlgorithmException, IOException {
 
         final String sha1 = storeRandomArifactAndVerify(TENANT);
         final String sha2 = storeRandomArifactAndVerify(TENANT2);
@@ -56,7 +57,7 @@ public class MongoDBArtifactStoreTest {
     }
 
     @Step
-    private String storeRandomArifactAndVerify(final String tenant) throws NoSuchAlgorithmException {
+    private String storeRandomArifactAndVerify(final String tenant) throws NoSuchAlgorithmException, IOException {
         final int filelengthBytes = 128;
         final String filename = "testfile.json";
         final String contentType = "application/json";
@@ -64,10 +65,10 @@ public class MongoDBArtifactStoreTest {
         final MessageDigest mdSHA1 = MessageDigest.getInstance("SHA1");
         final MessageDigest mdMD5 = MessageDigest.getInstance("MD5");
 
-        final DigestInputStream digestInputStream = wrapInDigestInputStream(generateInputStream(filelengthBytes),
-                mdSHA1, mdMD5);
-        artifactStoreUnderTest.store(tenant, digestInputStream, filename, contentType, null);
-
+        try (final DigestInputStream digestInputStream = wrapInDigestInputStream(generateInputStream(filelengthBytes),
+                mdSHA1, mdMD5)) {
+            artifactStoreUnderTest.store(tenant, digestInputStream, filename, contentType, null);
+        }
         final String sha1Hash16 = BaseEncoding.base16().lowerCase().encode(mdSHA1.digest());
         final String md5Hash16 = BaseEncoding.base16().lowerCase().encode(mdMD5.digest());
 
@@ -83,7 +84,7 @@ public class MongoDBArtifactStoreTest {
 
     @Test
     @Description("Deletes file from repository identified by SHA1 hash as filename.")
-    public void deleteArtifactBySHA1Hash() throws NoSuchAlgorithmException {
+    public void deleteArtifactBySHA1Hash() throws NoSuchAlgorithmException, IOException {
 
         final String sha1 = storeRandomArifactAndVerify(TENANT);
 
@@ -94,7 +95,7 @@ public class MongoDBArtifactStoreTest {
     @Test
     @Description("Verfies that all data of a tenant is erased if repository is asked to do so. "
             + "Data of other tenants is not affected.")
-    public void deleteTenant() throws NoSuchAlgorithmException {
+    public void deleteTenant() throws NoSuchAlgorithmException, IOException {
 
         final String shaDeleted = storeRandomArifactAndVerify(TENANT);
         final String shaUndeleted = storeRandomArifactAndVerify("another_tenant");
