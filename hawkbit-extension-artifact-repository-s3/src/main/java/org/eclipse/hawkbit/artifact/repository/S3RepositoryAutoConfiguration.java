@@ -8,6 +8,7 @@
  */
 package org.eclipse.hawkbit.artifact.repository;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -45,6 +46,10 @@ public class S3RepositoryAutoConfiguration {
      * @return the {@link DefaultAWSCredentialsProviderChain} if no other
      *         {@link AWSCredentialsProvider} bean is registered.
      */
+	
+	@Value("${aws.region:}")
+	private String region;
+	
     @Bean
     @ConditionalOnMissingBean
     public AWSCredentialsProvider awsCredentialsProvider() {
@@ -72,7 +77,7 @@ public class S3RepositoryAutoConfiguration {
     @ConditionalOnMissingBean
     public AmazonS3 amazonS3() {
         return AmazonS3ClientBuilder.standard().withCredentials(awsCredentialsProvider())
-                .withClientConfiguration(awsClientConfiguration()).build();
+                .withClientConfiguration(awsClientConfiguration()).withRegion(region).build();
     }
 
     /**
