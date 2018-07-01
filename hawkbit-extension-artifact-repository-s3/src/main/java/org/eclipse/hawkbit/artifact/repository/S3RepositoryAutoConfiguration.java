@@ -35,7 +35,7 @@ public class S3RepositoryAutoConfiguration {
 
 
 	@Value("${aws.region:#{null}}")
-private Optional<String> region;
+    private Optional<String> region;
 
     /**
      * The {@link DefaultAWSCredentialsProviderChain} looks for credentials in
