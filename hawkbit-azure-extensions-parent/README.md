@@ -4,8 +4,6 @@ This module combines a set of extensions for optimized integration of hawkBit up
 
 In addition it includes a reference runtime, i.e. hawkbit-update-server-azure, that packages all the extensions together in a ready to go deployment.
 
-
-
 ## Quick start
 
 ### Build hawkBit azure extension pack
@@ -27,7 +25,7 @@ docker build -t hawkbit/hawkbit-update-server-azure .
 Setup an azure resource group including [Azure SQL Database](https://azure.microsoft.com/en-us/services/sql-database/) and [Azure Storage](https://azure.microsoft.com/en-us/services/storage/) account
 
 ```bash
-docker build -t hawkbit/hawkbit-update-server-azure .
+TODO
 ```
 
 ## Status and roadmap
