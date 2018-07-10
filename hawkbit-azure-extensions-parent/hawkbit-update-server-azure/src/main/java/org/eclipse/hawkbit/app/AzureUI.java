@@ -28,11 +28,11 @@ import com.vaadin.spring.navigator.SpringViewProvider;
  */
 @SpringUI
 @Push(value = PushMode.AUTOMATIC, transport = Transport.WEBSOCKET)
-public class MyUI extends AbstractHawkbitUI {
+public class AzureUI extends AbstractHawkbitUI {
     private static final long serialVersionUID = 1L;
 
     @Autowired
-    MyUI(final EventPushStrategy pushStrategy, final UIEventBus eventBus, final SpringViewProvider viewProvider,
+    AzureUI(final EventPushStrategy pushStrategy, final UIEventBus eventBus, final SpringViewProvider viewProvider,
             final ApplicationContext context, final DashboardMenu dashboardMenu, final ErrorView errorview,
             final NotificationUnreadButton notificationUnreadButton) {
         super(pushStrategy, eventBus, viewProvider, context, dashboardMenu, errorview, notificationUnreadButton);

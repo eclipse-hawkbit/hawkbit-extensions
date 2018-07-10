@@ -23,11 +23,11 @@ import com.vaadin.spring.annotation.SpringUI;
  * hawkBit login UI implementation.
 */
 @SpringUI(path = HawkbitTheme.LOGIN_UI_PATH)
-public class MyLoginUI extends AbstractHawkbitLoginUI {
+public class AzureLoginUI extends AbstractHawkbitLoginUI {
     private static final long serialVersionUID = 1L;
 
     @Autowired
-    MyLoginUI(final ApplicationContext context, final VaadinSecurity vaadinSecurity, final VaadinMessageSource i18n,
+    AzureLoginUI(final ApplicationContext context, final VaadinSecurity vaadinSecurity, final VaadinMessageSource i18n,
             final UiProperties uiProperties, final MultitenancyIndicator multiTenancyIndicator) {
         super(context, vaadinSecurity, i18n, uiProperties, multiTenancyIndicator);
     }

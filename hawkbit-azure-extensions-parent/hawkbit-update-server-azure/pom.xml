@@ -46,7 +46,17 @@
     <dependencies>
         <dependency>
             <groupId>org.eclipse.hawkbit</groupId>
-            <artifactId>hawkbit-boot-starter</artifactId>
+            <artifactId>hawkbit-boot-starter-ddi-api</artifactId>
+            <version>${hawkbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.hawkbit</groupId>
+            <artifactId>hawkbit-boot-starter-mgmt-api</artifactId>
+            <version>${hawkbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.hawkbit</groupId>
+            <artifactId>hawkbit-boot-starter-mgmt-ui</artifactId>
             <version>${hawkbit.version}</version>
         </dependency>
         <dependency>
@@ -74,7 +84,6 @@
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
         </dependency>
-
     </dependencies>
 
 </project>
