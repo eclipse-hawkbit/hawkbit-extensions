@@ -63,7 +63,6 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
         try {
             final CloudBlockBlob blob = getBlob(tenant, sha1Hash16);
 
-            // TODO encryption
             final AzureStorageArtifact artifact = new AzureStorageArtifact(blob, sha1Hash16,
                     new DbArtifactHash(sha1Hash16, mdMD5Hash16), file.length(), contentType);
 
@@ -81,9 +80,10 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
             blob.getProperties().setContentType(contentType);
             blob.uploadFromFile(tempFile);
 
+            final String md5Base16 = convertToBase16(blob.getProperties().getContentMD5());
+
             LOG.debug("Artifact {} stored on Azure Storage container {} with  server side Etag {} and MD5 hash {}",
-                    sha1Hash16, blob.getContainer().getName(), blob.getProperties().getEtag(), BaseEncoding.base16()
-                            .lowerCase().encode(BaseEncoding.base64().decode(blob.getProperties().getContentMD5())));
+                    sha1Hash16, blob.getContainer().getName(), blob.getProperties().getEtag(), md5Base16);
 
             return artifact;
         } catch (final URISyntaxException | StorageException e) {
@@ -91,12 +91,19 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
         }
     }
 
+    private static String convertToBase16(final String md5Base64) {
+        if (md5Base64 == null) {
+            return null;
+        }
+
+        return BaseEncoding.base16().lowerCase().encode(BaseEncoding.base64().decode(md5Base64));
+    }
+
     private CloudBlockBlob getBlob(final String tenant, final String sha1Hash16)
             throws URISyntaxException, StorageException {
         final CloudBlobContainer container = getContainer();
         final CloudBlobDirectory tenantDirectory = container.getDirectoryReference(sanitizeTenant(tenant));
-        final CloudBlockBlob blob = tenantDirectory.getBlockBlobReference(sha1Hash16);
-        return blob;
+        return tenantDirectory.getBlockBlobReference(sha1Hash16);
     }
 
     @Override
@@ -118,17 +125,15 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
         try {
             final CloudBlockBlob blob = getBlob(tenant, sha1Hash16);
 
-            LOG.info("Loading Azure Storage blob from container {} and hash {} for tenant {}",
-                    blob.getContainer().getName(), sha1Hash16, tenant);
-
             if (blob == null || !blob.exists()) {
                 return null;
             }
 
+            LOG.info("Loading Azure Storage blob from container {} and hash {} for tenant {}",
+                    blob.getContainer().getName(), sha1Hash16, tenant);
+
             return new AzureStorageArtifact(blob, sha1Hash16,
-                    new DbArtifactHash(sha1Hash16,
-                            BaseEncoding.base16().lowerCase()
-                                    .encode(BaseEncoding.base64().decode(blob.getProperties().getContentMD5()))),
+                    new DbArtifactHash(sha1Hash16, convertToBase16(blob.getProperties().getContentMD5())),
                     blob.getProperties().getLength(), blob.getProperties().getContentType());
         } catch (final URISyntaxException | StorageException e) {
             throw new ArtifactStoreException("Failed to load artifact into Azure storage", e);
@@ -149,7 +154,13 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
             ResultContinuation token = null;
             do {
                 token = blobs.getContinuationToken();
-                blobs.getResults().stream().filter(blob -> blob instanceof CloudBlob).forEach(blob -> blob.getClass());
+                blobs.getResults().stream().filter(blob -> blob instanceof CloudBlob).forEach(blob -> {
+                    try {
+                        ((CloudBlob) blob).delete();
+                    } catch (final StorageException e) {
+                        throw new ArtifactStoreException("Failed to delete tenant directory from Azure storage", e);
+                    }
+                });
             } while (token != null);
 
         } catch (final URISyntaxException | StorageException e) {

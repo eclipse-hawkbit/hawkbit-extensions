@@ -28,7 +28,7 @@ public class AzureStorageArtifact extends AbstractDbArtifact {
     AzureStorageArtifact(final CloudBlockBlob blob, final String artifactId, final DbArtifactHash hashes,
             final Long size, final String contentType) {
         super(artifactId, hashes, size, contentType);
-        Assert.notNull(blob, "Azure storage blob  cannot be null");
+        Assert.notNull(blob, "Azure storage blob cannot be null");
         this.blob = blob;
     }
 
