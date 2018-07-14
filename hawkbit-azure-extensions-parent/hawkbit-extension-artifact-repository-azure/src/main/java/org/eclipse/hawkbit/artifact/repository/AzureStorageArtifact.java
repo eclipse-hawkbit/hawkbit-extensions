@@ -19,7 +19,7 @@ import com.microsoft.azure.storage.blob.CloudBlockBlob;
 
 /**
  * An {@link AbstractDbArtifact} implementation which retrieves the
- * {@link InputStream} from the {@link AmazonS3} client.
+ * {@link InputStream} from the {@link CloudBlockBlob} client.
  */
 public class AzureStorageArtifact extends AbstractDbArtifact {
 

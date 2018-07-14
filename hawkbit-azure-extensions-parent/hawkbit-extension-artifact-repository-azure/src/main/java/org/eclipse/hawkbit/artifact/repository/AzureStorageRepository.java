@@ -33,6 +33,10 @@ import com.microsoft.azure.storage.blob.CloudBlobDirectory;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.azure.storage.blob.ListBlobItem;
 
+
+/**
+ * An {@link ArtifactRepository} implementation for Azure Storage.
+ */
 @Validated
 public class AzureStorageRepository extends AbstractArtifactRepository {
     private static final Logger LOG = LoggerFactory.getLogger(AzureStorageRepository.class);

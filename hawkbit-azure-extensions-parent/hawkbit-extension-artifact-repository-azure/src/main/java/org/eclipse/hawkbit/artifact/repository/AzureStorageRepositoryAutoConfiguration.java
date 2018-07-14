@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import com.microsoft.azure.storage.CloudStorageAccount;
 
 /**
- * The Spring auto-configuration to register the necessary beans for the S3
+ * The Spring auto-configuration to register the necessary beans for the Azure Storage
  * artifact repository implementation.
  */
 @Configuration
@@ -25,7 +25,7 @@ import com.microsoft.azure.storage.CloudStorageAccount;
 public class AzureStorageRepositoryAutoConfiguration {
 
     /**
-     * @return Azure storage repository {@link ArtifactRepository}
+     * @return Azure storage repository based {@link ArtifactRepository}
      *         implementation.
      */
     @Bean

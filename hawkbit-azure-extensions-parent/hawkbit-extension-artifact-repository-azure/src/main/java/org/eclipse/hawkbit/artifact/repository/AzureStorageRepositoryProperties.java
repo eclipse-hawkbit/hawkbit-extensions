@@ -11,14 +11,13 @@ package org.eclipse.hawkbit.artifact.repository;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * The AWS S3 configuration properties for the S3 artifact repository
+ * The Azure Storage configuration properties for the artifact repository
  * implementation.
  */
 @ConfigurationProperties("org.eclipse.hawkbit.repository.azure")
 public class AzureStorageRepositoryProperties {
 
     private String containerName = "artifactrepository";
-    private boolean serverSideEncryption = false;
 
     public String getContainerName() {
         return containerName;
@@ -26,13 +25,5 @@ public class AzureStorageRepositoryProperties {
 
     public void setContainerName(final String containerName) {
         this.containerName = containerName;
-    }
-
-    public boolean isServerSideEncryption() {
-        return serverSideEncryption;
-    }
-
-    public void setServerSideEncryption(final boolean serverSideEncryption) {
-        this.serverSideEncryption = serverSideEncryption;
     }
 }
