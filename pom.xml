@@ -14,7 +14,7 @@
    <parent>
       <groupId>org.eclipse.hawkbit</groupId>
       <artifactId>hawkbit-parent</artifactId>
-      <version>0.3.0-SNAPSHOT</version>
+      <version>0.2.1</version>
    </parent>
    
    <artifactId>hawkbit-extensions-parent</artifactId>
@@ -39,7 +39,7 @@
 
    <properties>
       <jacoco.outputDir>${project.basedir}/../../target/</jacoco.outputDir>
-      <hawkbit.version>0.3.0-SNAPSHOT</hawkbit.version>
+      <hawkbit.version>0.2.1</hawkbit.version>
       
       <!-- Release - START -->
       <release.scm.connection>scm:git:git@github.com:eclipse/hawkbit-extensions.git</release.scm.connection>
@@ -62,6 +62,7 @@
       <module>hawkbit-extension-uaa</module>
       <module>hawkbit-extension-artifact-repository-mongo</module>
       <module>hawkbit-extension-artifact-repository-s3</module>
+      <module>hawkbit-azure-extensions-parent</module>
    </modules>
    
    <build>
@@ -78,6 +79,15 @@
          <plugin>
             <groupId>com.mycila</groupId>
             <artifactId>license-maven-plugin</artifactId>
+            <configuration>
+                <header>licenses/LICENSE_HEADER_TEMPLATE_BOSCH_18.txt</header>
+                <validHeaders>
+                    <validHeader>licenses/LICENSE_HEADER_TEMPLATE_SIEMENS.txt</validHeader>
+                    <validHeader>licenses/LICENSE_HEADER_TEMPLATE_SIEMENS_18.txt</validHeader>
+                    <validHeader>licenses/LICENSE_HEADER_TEMPLATE_BOSCH.txt</validHeader>
+                    <validHeader>licenses/LICENSE_HEADER_TEMPLATE_MICROSOFT_18.txt</validHeader>
+                </validHeaders>
+            </configuration>
          </plugin>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
