@@ -11,7 +11,7 @@ version: 2
 jobs:
   build:
 
-    working_directory: ~/hawkBit-examples
+    working_directory: ~/hawkBit-extensions
 
     docker:
     - image: circleci/openjdk:8-jdk-browsers
