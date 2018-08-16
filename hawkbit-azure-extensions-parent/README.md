@@ -6,9 +6,9 @@ In addition it includes a reference runtime, i.e. hawkbit-update-server-azure, t
 
 The runtime includes:
 
-* hawkBit DDI, management API and management UI
-* [Azure SQL Database](https://azure.microsoft.com/en-us/services/sql-database/) for the metadata repositoy
-* [Azure Storage](https://azure.microsoft.com/en-us/services/storage/) for software artifact binary persistence
+- hawkBit DDI, management API and management UI
+- [Azure SQL Database](https://azure.microsoft.com/en-us/services/sql-database/) for the metadata repository
+- [Azure Storage](https://azure.microsoft.com/en-us/services/storage/) for software artifact binary persistence
 
 ## Quick start
 
@@ -22,7 +22,7 @@ mvn clean install
 
 ### Package and push the docker image
 
-In this example we expect that you have a [Azure Container Registry (ARC)](https://azure.microsoft.com/en-us/services/container-registry/),  are logged in and have the credentials extracted. However, pushing your image to Docker Hub works as well.
+In this example we expect that you have a [Azure Container Registry (ARC)](https://azure.microsoft.com/en-us/services/container-registry/), are logged in and have the credentials extracted. However, pushing your image to Docker Hub works as well.
 
 ```bash
 cd hawkbit-azure-extensions-parent/hawkbit-update-server-azure
@@ -117,6 +117,6 @@ az group delete --name $resourcegroupname
 
 ## Status and roadmap
 
-| Module | Description | Status | Integrated with runtime |
-|---|:---:|:---:|:---:|
-| hawkbit-extension-artifact-repository-azure  | Artifact repository based on Azure Storage blobs | :white_check_mark: | :white_check_mark: |
+| Module                                      |                   Description                    |       Status       | Integrated with runtime |
+| ------------------------------------------- | :----------------------------------------------: | :----------------: | :---------------------: |
+| hawkbit-extension-artifact-repository-azure | Artifact repository based on Azure Storage blobs | :white_check_mark: |   :white_check_mark:    |
