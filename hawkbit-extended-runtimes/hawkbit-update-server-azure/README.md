@@ -1,8 +1,6 @@
-# hawkBit extensions for Microsoft Azure
+# hawkBit update server with Azure extensions
 
-This module combines a set of extensions for optimized integration of hawkBit update server into Microsoft Azure.
-
-In addition it includes a reference runtime, i.e. hawkbit-update-server-azure, that packages all the extensions together in a ready to go deployment.
+Reference runtime that packages all the extensions together in a ready to go deployment for Microsoft Azure.
 
 The runtime includes:
 
@@ -12,7 +10,7 @@ The runtime includes:
 
 ## Quick start
 
-### Build hawkBit azure extension pack
+### Build hawkBit Azure extension pack
 
 ```bash
 git clone https://github.com/eclipse/hawkbit-extensions.git
@@ -22,10 +20,10 @@ mvn clean install
 
 ### Package and push the docker image
 
-In this example we expect that you have a [Azure Container Registry (ARC)](https://azure.microsoft.com/en-us/services/container-registry/), are logged in and have the credentials extracted. However, pushing your image to Docker Hub works as well.
+In this example we expect that you have a [Azure Container Registry (ACR)](https://azure.microsoft.com/en-us/services/container-registry/), are logged in and have the credentials extracted. However, pushing your image to Docker Hub works as well.
 
 ```bash
-cd hawkbit-azure-extensions-parent/hawkbit-update-server-azure
+cd hawkbit-extended-runtimes/hawkbit-update-server-azure
 docker build -t <YourAcrLoginServer>/hawkbit-update-server-azure:latest .
 docker push <YourAcrLoginServer>/hawkbit-update-server-azure:latest
 ```
@@ -114,9 +112,3 @@ If you no longer need any of the resources you created in this quick start, you 
 ```bash
 az group delete --name $resourcegroupname
 ```
-
-## Status and roadmap
-
-| Module                                      |                   Description                    |       Status       | Integrated with runtime |
-| ------------------------------------------- | :----------------------------------------------: | :----------------: | :---------------------: |
-| hawkbit-extension-artifact-repository-azure | Artifact repository based on Azure Storage blobs | :white_check_mark: |   :white_check_mark:    |

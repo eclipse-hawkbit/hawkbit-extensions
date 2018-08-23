@@ -19,7 +19,7 @@
         <version>0.3.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>hawkbit-azure-extensions-parent</artifactId>
+    <artifactId>hawkbit-extensions-azure</artifactId>
     <version>0.3.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -28,7 +28,6 @@
 
     <modules>
         <module>hawkbit-extension-artifact-repository-azure</module>
-        <module>hawkbit-update-server-azure</module>
     </modules>
 
     <dependencyManagement>
