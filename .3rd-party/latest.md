@@ -7,10 +7,10 @@
 |aopalliance|aopalliance|1.0| [CQ10346](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=10346)  |
 |ch.qos.logback|logback-classic|1.1.11| [CQ10347](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=10347) |
 |ch.qos.logback|logback-core|1.1.11| [CQ12925](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=12925) |
-|com.amazonaws|aws-java-sdk-core|1.11.354| []() |
-|com.amazonaws|aws-java-sdk-kms|1.11.354| []() |
-|com.amazonaws|aws-java-sdk-s3|1.11.354| []() |
-|com.amazonaws|jmespath-java|1.11.354| []() |
+|com.amazonaws|aws-java-sdk-core|1.11.392| [CQ17353](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=17353) |
+|com.amazonaws|aws-java-sdk-kms|1.11.392| [CQ17354](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=17354) |
+|com.amazonaws|aws-java-sdk-s3|1.11.392| [CQ17355](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=17355) |
+|com.amazonaws|jmespath-java|1.11.392| [CQ17356](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=17356) |
 |com.fasterxml.jackson.core|jackson-annotations|2.8.9| [CQ12927](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=12927) |
 |com.fasterxml.jackson.core|jackson-core|2.8.9| [CQ12928](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=12928) |
 |com.fasterxml.jackson.core|jackson-databind|2.8.9| [CQ12930](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=12930) |
