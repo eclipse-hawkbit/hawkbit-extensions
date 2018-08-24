@@ -14,7 +14,6 @@
 |com.fasterxml.jackson.core|jackson-annotations|2.8.9| [CQ12927](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=12927) |
 |com.fasterxml.jackson.core|jackson-core|2.8.9| [CQ12928](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=12928) |
 |com.fasterxml.jackson.core|jackson-databind|2.8.9| [CQ12930](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=12930) |
-|com.fasterxml.jackson.dataformat|jackson-dataformat-cbor|2.8.9| []() |
 |com.fasterxml|classmate|1.3.3| [CQ10368](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=10368) |
 |com.google.guava|guava|25.0-jre| [CQ16201](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=16201) |
 |commons-codec|commons-codec|1.10| [CQ12933](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=12933) |
