@@ -12,5 +12,4 @@ WORKDIR $HAWKBIT_HOME
 ENTRYPOINT ["java","-jar","hawkbit-update-server.jar","-Xmx768m -Xmx768m -XX:MaxMetaspaceSize=250m -XX:MetaspaceSize=250m -Xss300K -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+UseCompressedOops -XX:+HeapDumpOnOutOfMemoryError"]
 
 # Add the service itself
-ARG JAR_FILE
 ADD target/hawkbit-update-server-azure-0.3.0-SNAPSHOT.jar hawkbit-update-server.jar

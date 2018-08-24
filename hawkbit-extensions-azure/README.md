@@ -2,7 +2,7 @@
 
 This module combines a set of extensions for optimized integration of hawkBit update server into Microsoft Azure.
 
-In addition we provide a pre-packaged [runtime including the Azure extensions](/hawkbit-runtimes-parent/hawkbit-update-server-azure).
+In addition we provide a pre-packaged [runtime including the Azure extensions](/hawkbit-extended-runtimes/hawkbit-update-server-azure).
 
 ## Status and roadmap
 
