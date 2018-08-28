@@ -28,10 +28,10 @@ CQ:
 
 | Group ID            | Artifact ID                 | Version |
 | ------------------- | --------------------------- | ------- |
-| de.flapdoodle.embed | de.flapdoodle.embed.mongo   | 1.50.5  |  |
-| de.flapdoodle.embed | de.flapdoodle.embed.process | 1.50.2  |  |
-| net.java.dev.jna    | jna                         | 4.2.2   |  |
-| net.java.dev.jna    | jna-platform                | 4.0.0   |  |
-| org.apache.commons  | commons-compress            | 1.10    |  |
-| org.yaml            | snakeyaml                   | 1.17    |  |
-| ru.qatools.commons  | properties                  | 2.0.RC5 |  |
+| de.flapdoodle.embed | de.flapdoodle.embed.mongo   | 1.50.5  |
+| de.flapdoodle.embed | de.flapdoodle.embed.process | 1.50.2  |
+| net.java.dev.jna    | jna                         | 4.2.2   |
+| net.java.dev.jna    | jna-platform                | 4.0.0   |
+| org.apache.commons  | commons-compress            | 1.10    |
+| org.yaml            | snakeyaml                   | 1.17    |
+| ru.qatools.commons  | properties                  | 2.0.RC5 |
