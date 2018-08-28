@@ -14,7 +14,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.eclipse.hawkbit</groupId>
-        <artifactId>hawkbit-azure-extensions-parent</artifactId>
+        <artifactId>hawkbit-extensions-azure</artifactId>
         <version>0.3.0-SNAPSHOT</version>
     </parent>
     <artifactId>hawkbit-extension-artifact-repository-azure</artifactId>
