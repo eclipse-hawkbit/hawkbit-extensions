@@ -3,8 +3,8 @@
    de.flapdoodle.embed:de.flapdoodle.embed.mongo:jar:1.50.5:test
    de.flapdoodle.embed:de.flapdoodle.embed.process:jar:1.50.2:test
    junit:junit:jar:4.12:test
-   net.java.dev.jna:jna-platform:jar:4.0.0:test
    net.java.dev.jna:jna:jar:4.2.2:test
+   net.java.dev.jna:jna-platform:jar:4.0.0:test
    net.minidev:asm:jar:1.0.2:test
    net.minidev:json-smart:jar:2.1.1:test
    org.apache.commons:commons-compress:jar:1.10:test
