@@ -27,14 +27,4 @@
   <modules>
       <module>hawkbit-update-server-azure</module>
   </modules>
-
-  <dependencyManagement>
-      <dependencies>
-          <dependency>
-              <groupId>com.microsoft.azure</groupId>
-              <artifactId>azure-storage-spring-boot-starter</artifactId>
-              <version>2.0.5</version>
-          </dependency>
-      </dependencies>
-  </dependencyManagement>
 </project>
