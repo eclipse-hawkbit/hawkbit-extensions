@@ -1,7 +1,5 @@
-   aopalliance:aopalliance:jar:1.0:compile
-   ch.qos.logback:logback-classic:jar:1.1.11:compile
-   ch.qos.logback:logback-core:jar:1.1.11:compile
-   com.101tec:zkclient:jar:0.7:compile
+   ch.qos.logback:logback-classic:jar:1.2.3:compile
+   ch.qos.logback:logback-core:jar:1.2.3:compile
    com.amazonaws:aws-java-sdk-core:jar:1.11.392:compile
    com.amazonaws:aws-java-sdk-kms:jar:1.11.392:compile
    com.amazonaws:aws-java-sdk-s3:jar:1.11.392:compile
@@ -9,12 +7,15 @@
    com.cronutils:cron-utils:jar:5.0.5:compile
    com.esotericsoftware:kryo-shaded:jar:3.0.3:compile
    com.esotericsoftware:minlog:jar:1.3.0:compile
-   com.fasterxml:classmate:jar:1.3.3:compile
-   com.fasterxml.jackson.core:jackson-annotations:jar:2.8.9:compile
-   com.fasterxml.jackson.core:jackson-core:jar:2.8.9:compile
-   com.fasterxml.jackson.core:jackson-databind:jar:2.8.9:compile
-   com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:jar:2.8.9:compile
-   com.github.ben-manes.caffeine:caffeine:jar:2.3.5:compile
+   com.fasterxml:classmate:jar:1.3.4:compile
+   com.fasterxml.jackson.core:jackson-annotations:jar:2.9.0:compile
+   com.fasterxml.jackson.core:jackson-core:jar:2.9.6:compile
+   com.fasterxml.jackson.core:jackson-databind:jar:2.9.6:compile
+   com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:jar:2.9.6:compile
+   com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.9.6:compile
+   com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.9.6:compile
+   com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.9.6:compile
+   com.github.ben-manes.caffeine:caffeine:jar:2.6.2:compile
    com.github.gwtd3:gwt-d3-api:jar:1.2.0:compile
    com.github.gwtd3:gwt-d3-js:jar:3.5.11:compile
    com.github.gwtd3:gwt-d3-js:jar:sources:3.5.11:compile
@@ -22,16 +23,13 @@
    com.google.guava:guava:jar:25.0-jre:compile
    com.microsoft.azure:applicationinsights-core:jar:2.1.2:compile
    com.microsoft.azure:azure-keyvault-core:jar:0.8.0:compile
-   com.microsoft.azure:azure-spring-boot:jar:0.2.0:compile
    com.microsoft.azure:azure-spring-boot:jar:2.0.5:compile
-   com.microsoft.azure:azure-spring-boot-starter:jar:0.2.0:compile
    com.microsoft.azure:azure-spring-boot-starter:jar:2.0.5:compile
    com.microsoft.azure:azure-storage:jar:5.5.0:compile
-   com.microsoft.azure:azure-storage-spring-boot-starter:jar:0.2.0:compile
    com.microsoft.azure:azure-storage-spring-boot-starter:jar:2.0.5:compile
    com.microsoft.sqlserver:mssql-jdbc:jar:6.4.0.jre8:compile
-   commons-codec:commons-codec:jar:1.10:compile
-   commons-io:commons-io:jar:2.4:compile
+   commons-codec:commons-codec:jar:1.11:compile
+   commons-io:commons-io:jar:2.5:compile
    commons-logging:commons-logging:jar:1.1.3:compile
    commons-logging:commons-logging:jar:1.2:compile
    com.vaadin.external.atmosphere:atmosphere-runtime:jar:2.2.9.vaadin2:compile
@@ -42,108 +40,97 @@
    com.vaadin:vaadin-sass-compiler:jar:0.9.13:compile
    com.vaadin:vaadin-server:jar:7.7.13:compile
    com.vaadin:vaadin-shared:jar:7.7.13:compile
-   com.vaadin:vaadin-spring-boot:jar:1.1.1:compile
-   com.vaadin:vaadin-spring:jar:1.1.1:compile
+   com.vaadin:vaadin-spring-boot:jar:1.2.0:compile
+   com.vaadin:vaadin-spring:jar:1.2.0:compile
    com.vaadin:vaadin-themes:jar:7.7.13:compile
-   com.yammer.metrics:metrics-core:jar:2.2.0:compile
+   com.zaxxer:HikariCP:jar:2.7.9:compile
    cz.jirutka.rsql:rsql-parser:jar:2.1.0:compile
-   io.netty:netty:jar:3.7.0.Final:compile
-   javax.annotation:javax.annotation-api:jar:1.2:compile
+   io.projectreactor:reactor-core:jar:3.1.8.RELEASE:compile
+   javax.annotation:javax.annotation-api:jar:1.3.2:compile
    javax.servlet:javax.servlet-api:jar:3.1.0:compile
    javax.transaction:javax.transaction-api:jar:1.2:compile
    javax.validation:validation-api:jar:2.0.1.Final:compile
    javax.websocket:javax.websocket-api:jar:1.0:compile
-   jline:jline:jar:0.9.94:compile
    joda-time:joda-time:jar:2.9.9:compile
-   junit:junit:jar:4.12:compile
-   net.jpountz.lz4:lz4:jar:1.2.0:compile
-   net.sf.jopt-simple:jopt-simple:jar:3.2:compile
    org.apache.commons:commons-lang3:jar:3.4:compile
-   org.apache.httpcomponents:httpclient:jar:4.5.3:compile
-   org.apache.httpcomponents:httpcore:jar:4.4.6:compile
-   org.apache.kafka:kafka_2.11:jar:0.9.0.1:compile
-   org.apache.kafka:kafka-clients:jar:0.9.0.1:compile
-   org.apache.tomcat.embed:tomcat-embed-el:jar:8.0.28:compile
-   org.apache.tomcat:tomcat-jdbc:jar:8.0.28:compile
-   org.apache.tomcat:tomcat-juli:jar:8.0.28:compile
-   org.apache.zookeeper:zookeeper:jar:3.4.6:compile
-   org.aspectj:aspectjweaver:jar:1.8.10:compile
-   org.bouncycastle:bcpkix-jdk15on:jar:1.47:compile
-   org.bouncycastle:bcprov-jdk15on:jar:1.47:compile
-   org.codehaus.jackson:jackson-core-asl:jar:1.9.13:compile
-   org.codehaus.jackson:jackson-mapper-asl:jar:1.9.13:compile
-   org.flywaydb:flyway-core:jar:4.0.3:compile
+   org.apache.httpcomponents:httpclient:jar:4.5.5:compile
+   org.apache.httpcomponents:httpcore:jar:4.4.9:compile
+   org.apache.kafka:kafka-clients:jar:1.0.1:compile
+   org.apache.logging.log4j:log4j-api:jar:2.10.0:compile
+   org.apache.logging.log4j:log4j-to-slf4j:jar:2.10.0:compile
+   org.apache.tomcat.embed:tomcat-embed-el:jar:8.5.31:compile
+   org.aspectj:aspectjweaver:jar:1.8.13:compile
+   org.bouncycastle:bcpkix-jdk15on:jar:1.56:compile
+   org.bouncycastle:bcprov-jdk15on:jar:1.56:compile
+   org.flywaydb:flyway-core:jar:5.0.7:compile
    org.glassfish:javax.json:jar:1.0.4:compile
-   org.hamcrest:hamcrest-core:jar:1.3:compile
-   org.hibernate.validator:hibernate-validator:jar:6.0.7.Final:compile
-   org.jboss.logging:jboss-logging:jar:3.2.1.Final:compile
-   org.json:json:jar:20141113:compile
+   org.hibernate.validator:hibernate-validator:jar:6.0.10.Final:compile
+   org.jboss.logging:jboss-logging:jar:3.3.2.Final:compile
+   org.json:json:jar:20171018:compile
    org.jsoup:jsoup:jar:1.8.3:compile
-   org.mongodb:mongo-java-driver:jar:3.2.2:compile
-   org.mortbay.jasper:apache-el:jar:8.0.33:compile
+   org.lz4:lz4-java:jar:1.4:compile
+   org.mongodb:mongo-java-driver:jar:3.6.4:compile
+   org.mortbay.jasper:apache-el:jar:8.5.24.2:compile
    org.objenesis:objenesis:jar:2.1:compile
-   org.ow2.asm:asm-commons:jar:5.0.1:compile
-   org.ow2.asm:asm:jar:5.0.1:compile
-   org.ow2.asm:asm-tree:jar:5.0.1:compile
-   org.scala-lang.modules:scala-parser-combinators_2.11:jar:1.0.4:compile
-   org.scala-lang.modules:scala-xml_2.11:jar:1.0.4:compile
-   org.scala-lang:scala-library:jar:2.11.7:compile
-   org.slf4j:jcl-over-slf4j:jar:1.7.25:compile
+   org.ow2.asm:asm-analysis:jar:6.2:compile
+   org.ow2.asm:asm-commons:jar:6.2:compile
+   org.ow2.asm:asm:jar:6.2:compile
+   org.ow2.asm:asm-tree:jar:6.2:compile
+   org.reactivestreams:reactive-streams:jar:1.0.2:compile
    org.slf4j:jul-to-slf4j:jar:1.7.25:compile
-   org.slf4j:log4j-over-slf4j:jar:1.7.25:compile
    org.slf4j:slf4j-api:jar:1.7.25:compile
-   org.springframework.boot:spring-boot-actuator:jar:1.4.7.RELEASE:compile
-   org.springframework.boot:spring-boot-autoconfigure:jar:1.4.7.RELEASE:compile
-   org.springframework.boot:spring-boot:jar:1.4.7.RELEASE:compile
-   org.springframework.boot:spring-boot-starter-actuator:jar:1.4.7.RELEASE:compile
-   org.springframework.boot:spring-boot-starter-aop:jar:1.4.7.RELEASE:compile
-   org.springframework.boot:spring-boot-starter-data-jpa:jar:1.4.7.RELEASE:compile
-   org.springframework.boot:spring-boot-starter:jar:1.4.7.RELEASE:compile
-   org.springframework.boot:spring-boot-starter-jdbc:jar:1.4.7.RELEASE:compile
-   org.springframework.boot:spring-boot-starter-jetty:jar:1.4.7.RELEASE:compile
-   org.springframework.boot:spring-boot-starter-logging:jar:1.4.7.RELEASE:compile
-   org.springframework.boot:spring-boot-starter-security:jar:1.4.7.RELEASE:compile
-   org.springframework.boot:spring-boot-starter-validation:jar:1.4.7.RELEASE:compile
-   org.springframework.boot:spring-boot-starter-web:jar:1.4.7.RELEASE:compile
-   org.springframework.cloud:spring-cloud-bus:jar:1.2.2.RELEASE:compile
-   org.springframework.cloud:spring-cloud-context:jar:1.1.8.RELEASE:compile
-   org.springframework.cloud:spring-cloud-starter-bus-kafka:jar:1.2.2.RELEASE:compile
-   org.springframework.cloud:spring-cloud-starter-stream-kafka:jar:1.1.2.RELEASE:compile
-   org.springframework.cloud:spring-cloud-stream-binder-kafka:jar:1.1.2.RELEASE:compile
-   org.springframework.cloud:spring-cloud-stream-codec:jar:1.1.2.RELEASE:compile
-   org.springframework.cloud:spring-cloud-stream:jar:1.1.2.RELEASE:compile
-   org.springframework.data:spring-data-commons:jar:1.12.11.RELEASE:compile
-   org.springframework.data:spring-data-jpa:jar:1.10.11.RELEASE:compile
-   org.springframework.data:spring-data-mongodb:jar:1.9.11.RELEASE:compile
-   org.springframework.hateoas:spring-hateoas:jar:0.23.0.RELEASE:compile
-   org.springframework.integration:spring-integration-core:jar:4.3.10.RELEASE:compile
-   org.springframework.integration:spring-integration-jmx:jar:4.3.10.RELEASE:compile
-   org.springframework.integration:spring-integration-kafka:jar:2.0.1.RELEASE:compile
+   org.springframework.boot:spring-boot-autoconfigure:jar:2.0.3.RELEASE:compile
+   org.springframework.boot:spring-boot:jar:2.0.3.RELEASE:compile
+   org.springframework.boot:spring-boot-starter-aop:jar:2.0.4.RELEASE:compile
+   org.springframework.boot:spring-boot-starter-data-jpa:jar:2.0.4.RELEASE:compile
+   org.springframework.boot:spring-boot-starter:jar:2.0.4.RELEASE:compile
+   org.springframework.boot:spring-boot-starter-jdbc:jar:2.0.3.RELEASE:compile
+   org.springframework.boot:spring-boot-starter-jetty:jar:2.0.3.RELEASE:compile
+   org.springframework.boot:spring-boot-starter-json:jar:2.0.3.RELEASE:compile
+   org.springframework.boot:spring-boot-starter-logging:jar:2.0.3.RELEASE:compile
+   org.springframework.boot:spring-boot-starter-validation:jar:2.0.3.RELEASE:compile
+   org.springframework.boot:spring-boot-starter-web:jar:2.0.4.RELEASE:compile
+   org.springframework.cloud:spring-cloud-bus:jar:2.0.0.RELEASE:compile
+   org.springframework.cloud:spring-cloud-commons:jar:2.0.1.RELEASE:compile
+   org.springframework.cloud:spring-cloud-context:jar:2.0.1.RELEASE:compile
+   org.springframework.cloud:spring-cloud-starter-bus-kafka:jar:2.0.0.RELEASE:compile
+   org.springframework.cloud:spring-cloud-starter:jar:2.0.1.RELEASE:compile
+   org.springframework.cloud:spring-cloud-starter-stream-kafka:jar:2.0.1.RELEASE:compile
+   org.springframework.cloud:spring-cloud-stream-binder-kafka-core:jar:2.0.1.RELEASE:compile
+   org.springframework.cloud:spring-cloud-stream-binder-kafka:jar:2.0.1.RELEASE:compile
+   org.springframework.cloud:spring-cloud-stream:jar:2.0.1.RELEASE:compile
+   org.springframework.data:spring-data-commons:jar:2.0.8.RELEASE:compile
+   org.springframework.data:spring-data-jpa:jar:2.0.8.RELEASE:compile
+   org.springframework.data:spring-data-mongodb:jar:2.0.8.RELEASE:compile
+   org.springframework.hateoas:spring-hateoas:jar:0.24.0.RELEASE:compile
+   org.springframework.integration:spring-integration-core:jar:5.0.6.RELEASE:compile
+   org.springframework.integration:spring-integration-jmx:jar:5.0.6.RELEASE:compile
+   org.springframework.integration:spring-integration-kafka:jar:3.0.3.RELEASE:compile
    org.springframework.integration:spring-integration-tuple:jar:1.0.0.RELEASE:compile
-   org.springframework.kafka:spring-kafka:jar:1.0.5.RELEASE:compile
+   org.springframework.kafka:spring-kafka:jar:2.1.7.RELEASE:compile
    org.springframework.plugin:spring-plugin-core:jar:1.2.0.RELEASE:compile
-   org.springframework.retry:spring-retry:jar:1.1.5.RELEASE:compile
-   org.springframework.security.oauth:spring-security-oauth2:jar:2.0.14.RELEASE:compile
-   org.springframework.security:spring-security-aspects:jar:4.1.4.RELEASE:compile
-   org.springframework.security:spring-security-config:jar:4.1.4.RELEASE:compile
-   org.springframework.security:spring-security-core:jar:4.1.4.RELEASE:compile
-   org.springframework.security:spring-security-crypto:jar:4.1.4.RELEASE:compile
-   org.springframework.security:spring-security-jwt:jar:1.0.5.RELEASE:compile
-   org.springframework.security:spring-security-web:jar:4.1.4.RELEASE:compile
-   org.springframework:spring-aop:jar:4.3.9.RELEASE:compile
-   org.springframework:spring-aspects:jar:4.3.9.RELEASE:compile
-   org.springframework:spring-beans:jar:4.3.9.RELEASE:compile
-   org.springframework:spring-context:jar:4.3.9.RELEASE:compile
-   org.springframework:spring-context-support:jar:4.3.9.RELEASE:compile
-   org.springframework:spring-core:jar:4.3.9.RELEASE:compile
-   org.springframework:spring-expression:jar:4.3.9.RELEASE:compile
-   org.springframework:spring-jdbc:jar:4.3.9.RELEASE:compile
-   org.springframework:spring-messaging:jar:4.3.9.RELEASE:compile
-   org.springframework:spring-orm:jar:4.3.9.RELEASE:compile
+   org.springframework.retry:spring-retry:jar:1.2.2.RELEASE:compile
+   org.springframework.security:spring-security-aspects:jar:5.0.6.RELEASE:compile
+   org.springframework.security:spring-security-config:jar:5.0.6.RELEASE:compile
+   org.springframework.security:spring-security-core:jar:5.0.6.RELEASE:compile
+   org.springframework.security:spring-security-crypto:jar:5.0.6.RELEASE:compile
+   org.springframework.security:spring-security-rsa:jar:1.0.5.RELEASE:compile
+   org.springframework.security:spring-security-web:jar:5.0.6.RELEASE:compile
+   org.springframework:spring-aop:jar:5.0.7.RELEASE:compile
+   org.springframework:spring-aspects:jar:5.0.7.RELEASE:compile
+   org.springframework:spring-beans:jar:5.0.7.RELEASE:compile
+   org.springframework:spring-context:jar:5.0.7.RELEASE:compile
+   org.springframework:spring-context-support:jar:5.0.7.RELEASE:compile
+   org.springframework:spring-core:jar:5.0.7.RELEASE:compile
+   org.springframework:spring-expression:jar:5.0.7.RELEASE:compile
+   org.springframework:spring-jcl:jar:5.0.7.RELEASE:compile
+   org.springframework:spring-jdbc:jar:5.0.7.RELEASE:compile
+   org.springframework:spring-messaging:jar:5.0.7.RELEASE:compile
+   org.springframework:spring-orm:jar:5.0.7.RELEASE:compile
    org.springframework:spring-tuple:jar:1.0.0.RELEASE:compile
-   org.springframework:spring-tx:jar:4.3.9.RELEASE:compile
-   org.springframework:spring-web:jar:4.3.9.RELEASE:compile
-   org.springframework:spring-webmvc:jar:4.3.9.RELEASE:compile
+   org.springframework:spring-tx:jar:5.0.7.RELEASE:compile
+   org.springframework:spring-web:jar:5.0.7.RELEASE:compile
+   org.springframework:spring-webmvc:jar:5.0.7.RELEASE:compile
    org.vaadin.addons:flexibleoptiongroup:jar:2.2.0:compile
    org.vaadin.addons.lazyquerycontainer:vaadin-lazyquerycontainer:jar:7.6.1.3:compile
    org.vaadin.addons:tokenfield:jar:7.0.1:compile
@@ -152,6 +139,6 @@
    org.vaadin.spring.extensions:vaadin-spring-ext-core:jar:0.0.6.RELEASE:compile
    org.vaadin.spring.extensions:vaadin-spring-ext-security:jar:0.0.6.RELEASE:compile
    org.w3c.css:sac:jar:1.3:compile
-   org.xerial.snappy:snappy-java:jar:1.1.1.7:compile
-   org.yaml:snakeyaml:jar:1.17:compile
+   org.xerial.snappy:snappy-java:jar:1.1.4:compile
+   org.yaml:snakeyaml:jar:1.19:compile
    software.amazon.ion:ion-java:jar:1.0.2:compile
