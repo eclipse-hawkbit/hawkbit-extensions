@@ -2,7 +2,6 @@
    com.jayway.jsonpath:json-path:jar:2.0.0:test
    de.flapdoodle.embed:de.flapdoodle.embed.mongo:jar:1.50.5:test
    de.flapdoodle.embed:de.flapdoodle.embed.process:jar:1.50.2:test
-   junit:junit:jar:4.12:test
    net.java.dev.jna:jna:jar:4.2.2:test
    net.java.dev.jna:jna-platform:jar:4.0.0:test
    net.minidev:asm:jar:1.0.2:test
@@ -11,17 +10,14 @@
    org.apache.tika:tika-core:jar:1.7:test
    org.aspectj:aspectjrt:jar:1.8.10:test
    org.assertj:assertj-core:jar:3.6.2:test
-   org.hamcrest:hamcrest-core:jar:1.3:test
    org.hamcrest:hamcrest-library:jar:1.3:test
    org.jvnet.jaxb2_commons:jaxb2-basics-runtime:jar:0.9.3:test
    org.mockito:mockito-core:jar:1.10.19:test
-   org.objenesis:objenesis:jar:2.1:test
    org.skyscreamer:jsonassert:jar:1.3.0:test
    org.springframework.boot:spring-boot-starter-test:jar:1.4.7.RELEASE:test
    org.springframework.boot:spring-boot-test-autoconfigure:jar:1.4.7.RELEASE:test
    org.springframework.boot:spring-boot-test:jar:1.4.7.RELEASE:test
    org.springframework:spring-test:jar:4.3.9.RELEASE:test
-   org.yaml:snakeyaml:jar:1.17:test
    ru.qatools.commons:properties:jar:2.0.RC5:test
    ru.yandex.qatools.allure:allure-java-adaptor-api:jar:1.5.4:test
    ru.yandex.qatools.allure:allure-java-annotations:jar:1.5.4:test
