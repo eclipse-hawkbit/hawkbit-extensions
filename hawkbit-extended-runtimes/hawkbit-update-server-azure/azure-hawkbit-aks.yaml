@@ -7,48 +7,50 @@ spec:
   template:
     metadata:
       labels:
-        app: hawkbit-update-server
+        app: hawkbit-update-server        
     spec:
       containers:
-      - name: hawkbit-update-server
-        image: <YourAcrLoginServer>/hawkbit-update-server-azure
-        ports:
-        - containerPort: 8080
-        env:
-        - name: SPRING_JPA_DATABASE
-          value: "SQL_SERVER"
-        - name: SPRING_DATASOURCE_DRIVERCLASSNAME
-          value: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
-        - name: SPRING_DATASOURCE_USER
-          valueFrom:
-            secretKeyRef:
-              name: hawkbit-infra-secrets
-              key: db_username
-        - name: SPRING_DATASOURCE_URL
-          valueFrom:
-            secretKeyRef:
-              name: hawkbit-infra-secrets
-              key: db_url
-        - name: SPRING_DATASOURCE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: hawkbit-infra-secrets
-              key: db_password
-        - name: AZURE_STORAGE_CONNECTION_STRING
-          valueFrom:
-            secretKeyRef:
-              name: hawkbit-infra-secrets
-              key: storage_url     
-        - name: AZURE_EVENTHUBS_CONNECTIONSTRING
-          valueFrom:
-            secretKeyRef:
-              name: hawkbit-infra-secrets
-              key: eventhubs_url 
-        - name: AZURE_EVENTHUBS_SERVICEHOST
-          valueFrom:
-            secretKeyRef:
-              name: hawkbit-infra-secrets
-              key: eventhubs_host
+        - name: hawkbit-update-server
+          image: <YourAcrLoginServer>/hawkbit-update-server-azure
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_JPA_DATABASE
+              value: "SQL_SERVER"
+            - name: SPRING_DATASOURCE_DRIVERCLASSNAME
+              value: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+            - name: SPRING_CLOUD_BUS_ENABLED
+              value: "true"
+            - name: SPRING_DATASOURCE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: hawkbit-infra-secrets
+                  key: db_username
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: hawkbit-infra-secrets
+                  key: db_url
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: hawkbit-infra-secrets
+                  key: db_password
+            - name: AZURE_STORAGE_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: hawkbit-infra-secrets
+                  key: storage_url
+            - name: AZURE_EVENTHUBS_CONNECTIONSTRING
+              valueFrom:
+                secretKeyRef:
+                  name: hawkbit-infra-secrets
+                  key: eventhubs_url
+            - name: AZURE_EVENTHUBS_SERVICEHOST
+              valueFrom:
+                secretKeyRef:
+                  name: hawkbit-infra-secrets
+                  key: eventhubs_host
 ---
 apiVersion: v1
 kind: Service
@@ -57,6 +59,6 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 8080
+    - port: 8080
   selector:
     app: hawkbit-update-server
