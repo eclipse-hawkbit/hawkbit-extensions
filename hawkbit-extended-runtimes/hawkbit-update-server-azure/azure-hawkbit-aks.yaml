@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: hawkbit-update-server
-        image: kaisregistry.azurecr.io/hawkbit-update-server-azure
+        image: <YourAcrLoginServer>/hawkbit-update-server-azure
         ports:
         - containerPort: 8080
         env:

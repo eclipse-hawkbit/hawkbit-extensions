@@ -27,7 +27,7 @@ import com.vaadin.spring.navigator.SpringViewProvider;
  * hawkBit UI implementation.
  */
 @SpringUI
-@Push(value = PushMode.AUTOMATIC, transport = Transport.WEBSOCKET)
+@Push(value = PushMode.AUTOMATIC, transport = Transport.WEBSOCKET_XHR)
 public class AzureUI extends AbstractHawkbitUI {
     private static final long serialVersionUID = 1L;
 

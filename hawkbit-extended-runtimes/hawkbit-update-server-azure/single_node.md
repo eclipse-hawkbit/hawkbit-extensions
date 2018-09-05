@@ -55,7 +55,7 @@ az container create --resource-group $resourcegroupname --name $app_name --image
     --dns-name-label $app_name --ports 8080 \
     --environment-variables SPRING_JPA_DATABASE=SQL_SERVER \
     SPRING_DATASOURCE_URL=jdbc:sqlserver://"$db_servername".database.windows.net:1433\;database="$db_name"\;user="$db_adminlogin"@"$db_servername"\;password="$db_password"\;encrypt=true\;trustServerCertificate=false\;hostNameInCertificate=*.database.windows.net\;loginTimeout=30 \
-    SPRING_DATASOURCE_USER="$db_adminlogin"@"$db_name" \
+    SPRING_DATASOURCE_USER="$db_adminlogin"@"$db_servername" \
     SPRING_DATASOURCE_PASSWORD="$db_password" \
     SPRING_DATASOURCE_DRIVERCLASSNAME=com.microsoft.sqlserver.jdbc.SQLServerDriver \
     AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=https\;AccountName="$storage_name"\;AccountKey="$storage_access_key"\;EndpointSuffix=core.windows.net
