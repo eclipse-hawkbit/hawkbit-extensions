@@ -26,18 +26,24 @@
     <name>hawkBit :: Extensions :: Azure</name>
     <description>Parent pom for hawkBit extensions around Microsoft Azure integration</description>
 
+	<properties>
+		<azure.version>2.0.5</azure.version>
+	</properties>
+
     <modules>
         <module>hawkbit-extension-artifact-repository-azure</module>
     </modules>
 
     <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.microsoft.azure</groupId>
-                <artifactId>azure-storage-spring-boot-starter</artifactId>
-                <version>0.2.0</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.microsoft.azure</groupId>
+				<artifactId>azure-spring-boot-bom</artifactId>
+				<version>${azure.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 </project>
    
