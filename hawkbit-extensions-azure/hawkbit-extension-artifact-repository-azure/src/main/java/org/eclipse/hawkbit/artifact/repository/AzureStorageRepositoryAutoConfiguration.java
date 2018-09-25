@@ -8,7 +8,6 @@
  */
 package org.eclipse.hawkbit.artifact.repository;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,11 +15,10 @@ import org.springframework.context.annotation.Configuration;
 import com.microsoft.azure.storage.CloudStorageAccount;
 
 /**
- * The Spring auto-configuration to register the necessary beans for the Azure Storage
- * artifact repository implementation.
+ * The Spring auto-configuration to register the necessary beans for the Azure
+ * Storage artifact repository implementation.
  */
 @Configuration
-@ConditionalOnProperty(prefix = "org.eclipse.hawkbit.artifact.repository.azure", name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(AzureStorageRepositoryProperties.class)
 public class AzureStorageRepositoryAutoConfiguration {
 

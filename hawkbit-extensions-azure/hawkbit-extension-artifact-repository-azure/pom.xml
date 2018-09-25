@@ -1,49 +1,49 @@
 <!--
 
-    Copyright (c) 2018 Microsoft and others.
+   Copyright (c) 2018 Microsoft and others.
 
-    All rights reserved. This program and the accompanying materials
-    are made available under the terms of the Eclipse Public License v1.0
-    which accompanies this distribution, and is available at
-    http://www.eclipse.org/legal/epl-v10.html
+   All rights reserved. This program and the accompanying materials
+   are made available under the terms of the Eclipse Public License v1.0
+   which accompanies this distribution, and is available at
+   http://www.eclipse.org/legal/epl-v10.html
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.eclipse.hawkbit</groupId>
-        <artifactId>hawkbit-extensions-azure</artifactId>
-        <version>0.3.0-SNAPSHOT</version>
-    </parent>
-    <artifactId>hawkbit-extension-artifact-repository-azure</artifactId>
-    <name>hawkBit :: Extensions :: Azure Block Storage Repository</name>
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <parent>
+      <groupId>org.eclipse.hawkbit</groupId>
+      <artifactId>hawkbit-extensions-azure</artifactId>
+      <version>0.3.0-SNAPSHOT</version>
+   </parent>
+   <artifactId>hawkbit-extension-artifact-repository-azure</artifactId>
+   <name>hawkBit :: Extensions :: Azure Block Storage Repository</name>
 
-    <description>hawkBit extension for managing software artifacts in Microsoft Azure Storage</description>
+   <description>hawkBit extension for managing software artifacts in Microsoft Azure Storage</description>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.microsoft.azure</groupId>
-            <artifactId>azure-storage-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.hawkbit</groupId>
-            <artifactId>hawkbit-core</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-        </dependency>
-    </dependencies>
+   <dependencies>
+      <dependency>
+         <groupId>com.microsoft.azure</groupId>
+         <artifactId>azure-storage-spring-boot-starter</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.eclipse.hawkbit</groupId>
+         <artifactId>hawkbit-core</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>com.google.guava</groupId>
+         <artifactId>guava</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-autoconfigure</artifactId>
+      </dependency>
+   </dependencies>
 
 </project>
