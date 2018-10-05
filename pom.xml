@@ -10,17 +10,17 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
-   
+
    <parent>
       <groupId>org.eclipse.hawkbit</groupId>
       <artifactId>hawkbit-parent</artifactId>
       <version>0.3.0-SNAPSHOT</version>
    </parent>
-   
+
    <artifactId>hawkbit-extensions-parent</artifactId>
    <version>0.3.0-SNAPSHOT</version>
    <packaging>pom</packaging>
-   
+
    <name>hawkBit :: Extensions</name>
    <description>Parent pom for hawkBit extensions</description>
 
@@ -51,7 +51,7 @@
       <sonar.github.repository>eclipse/hawkbit-extensions</sonar.github.repository>
       <sonar.links.ci>https://circleci.com/gh/eclipse/hawkbit-extensions</sonar.links.ci>
    </properties>
-   
+
    <scm>
       <connection>${release.scm.connection}</connection>
       <developerConnection>${release.scm.developerConnection}</developerConnection>
@@ -64,7 +64,7 @@
       <module>hawkbit-extensions-azure</module>
       <module>hawkbit-extended-runtimes</module>
    </modules>
-   
+
    <build>
       <plugins>
          <plugin>
