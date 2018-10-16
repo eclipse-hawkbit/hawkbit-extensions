@@ -38,8 +38,7 @@ jobs:
         command: mkdir -p testresults/junit/ && find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} testresults/junit/ \;
 
     - store_test_results:
-        path: testresults/junit/
-        destination: test-reports
+        path: testresults/junit
 
     - store_artifacts:
         path: pom.xml
