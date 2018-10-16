@@ -8,12 +8,9 @@
 # http://www.eclipse.org/legal/epl-v10.html
 #
 
-#echo "$CIRCLE_PULL_REQUEST pull request"
-
 # Run SonarQube only for master branch
 if [ $CIRCLE_BRANCH = master ] ; then
   mvn verify license:check sonar:sonar -Dsonar.login=$SONAR_ACCESS_TOKEN --batch-mode
 else
   mvn verify license:check --batch-mode
 fi
-
