@@ -35,10 +35,10 @@ jobs:
 
     - run:
         name: Record test results
-        command: mkdir -p testresults/junit/ && find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} testresults/junit/ \;
+        command: mkdir -p testresults/junit/xUnit && find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} testresults/junit/xUnit \;
 
     - store_test_results:
-        path: testresults/junit
+        path: testresults/junit/xUnit
 
     - store_artifacts:
         path: pom.xml
