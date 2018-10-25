@@ -65,6 +65,7 @@
       <module>hawkbit-extension-artifact-repository-s3</module>
       <module>hawkbit-extensions-azure</module>
       <module>hawkbit-extended-runtimes</module>
+      <module>hawkbit-extension-multi-user</module>
    </modules>
 
    <build>
