@@ -33,12 +33,12 @@ import com.microsoft.azure.storage.blob.CloudBlobDirectory;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.azure.storage.blob.ListBlobItem;
 
-
 /**
  * An {@link ArtifactRepository} implementation for Azure Storage.
  */
 @Validated
 public class AzureStorageRepository extends AbstractArtifactRepository {
+
     private static final Logger LOG = LoggerFactory.getLogger(AzureStorageRepository.class);
 
     private final CloudBlobClient blobClient;
@@ -158,19 +158,20 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
             ResultContinuation token = null;
             do {
                 token = blobs.getContinuationToken();
-                blobs.getResults().stream().filter(blob -> blob instanceof CloudBlob).forEach(blob -> {
-                    try {
-                        ((CloudBlob) blob).delete();
-                    } catch (final StorageException e) {
-                        throw new ArtifactStoreException("Failed to delete tenant directory from Azure storage", e);
-                    }
-                });
+                blobs.getResults().stream().filter(CloudBlob.class::isInstance).map(CloudBlob.class::cast)
+                        .forEach(this::deleteBlob);
             } while (token != null);
 
         } catch (final URISyntaxException | StorageException e) {
             throw new ArtifactStoreException("Failed to delete tenant directory from Azure storage", e);
         }
-
     }
 
+    private void deleteBlob(final CloudBlob blob) {
+        try {
+            blob.delete();
+        } catch (final StorageException e) {
+            throw new ArtifactStoreException("Failed to delete tenant directory from Azure storage", e);
+        }
+    }
 }
