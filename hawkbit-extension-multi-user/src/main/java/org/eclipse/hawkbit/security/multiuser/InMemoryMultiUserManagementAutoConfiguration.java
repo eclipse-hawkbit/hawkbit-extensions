@@ -50,7 +50,7 @@ public class InMemoryMultiUserManagementAutoConfiguration extends GlobalAuthenti
     @Bean
     public UserDetailsService userDetailsService() {
         final String defaultTenant = "DEFAULT";
-        final List<UserDetails> userDetails = new ArrayList<>();
+        final List<UserPrincipal> userPrincipals = new ArrayList<>();
         for (MultiUserProperties.User user : multiUserProperties.getUser()) {
             List<GrantedAuthority> authorityList;
             // Allows ALL as a shorthand for all permissions
@@ -61,36 +61,42 @@ public class InMemoryMultiUserManagementAutoConfiguration extends GlobalAuthenti
             final UserPrincipal userPrincipal = new UserPrincipal(user.getUsername(), user.getPassword(),
                     user.getFirstname(), user.getLastname(), user.getUsername(), user.getEmail(), defaultTenant,
                     authorityList);
-            userDetails.add(userPrincipal);
+            userPrincipals.add(userPrincipal);
         }
 
         // If no users are configured through the multi user properties, set up
         // the default user from security properties
-        if (userDetails.isEmpty()) {
+        if (userPrincipals.isEmpty()) {
             final String name = securityProperties.getUser().getName();
             final String password = securityProperties.getUser().getPassword();
-            userDetails.add(new UserPrincipal(name, password, name, name, name, null, defaultTenant,
+            userPrincipals.add(new UserPrincipal(name, password, name, name, name, null, defaultTenant,
                     PermissionUtils.createAllAuthorityList()));
         }
 
-        return new FixedInMemoryUserDetailsService(userDetails);
+        return new FixedInMemoryUserPrincipalUserDetailsService(userPrincipals);
     }
 
-    private static class FixedInMemoryUserDetailsService implements UserDetailsService {
-        private final HashMap<String, UserDetails> userDetailsMap = new HashMap<>();
+    private static class FixedInMemoryUserPrincipalUserDetailsService implements UserDetailsService {
+        private final HashMap<String, UserPrincipal> userPrincipalMap = new HashMap<>();
 
-        public FixedInMemoryUserDetailsService(Collection<UserDetails> userDetails) {
-            for (UserDetails user : userDetails) {
-                userDetailsMap.put(user.getUsername(), user);
+        public FixedInMemoryUserPrincipalUserDetailsService(Collection<UserPrincipal> userPrincipals) {
+            for (UserPrincipal user : userPrincipals) {
+                userPrincipalMap.put(user.getUsername(), user);
             }
+        }
+
+        private static UserPrincipal clone(UserPrincipal a) {
+            return new UserPrincipal(a.getUsername(), a.getPassword(), a.getFirstname(), a.getLastname(),
+                    a.getLoginname(), a.getEmail(), a.getTenant(), a.getAuthorities());
         }
 
         @Override
         public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-            UserDetails userDetails = userDetailsMap.get(username);
-            if (userDetails == null)
+            UserPrincipal userPrincipal = userPrincipalMap.get(username);
+            if (userPrincipal == null)
                 throw new UsernameNotFoundException("No such user");
-            return userDetails;
+            // Spring mutates the data, so we must return a copy here
+            return clone(userPrincipal);
         }
 
     }
