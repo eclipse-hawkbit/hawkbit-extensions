@@ -45,16 +45,16 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.google.common.io.BaseEncoding;
 import com.google.common.io.ByteStreams;
 
-import ru.yandex.qatools.allure.annotations.Description;
-import ru.yandex.qatools.allure.annotations.Features;
-import ru.yandex.qatools.allure.annotations.Stories;
+import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 
 /**
  * Test class for the {@link S3Repository}.
  */
 @RunWith(MockitoJUnitRunner.class)
-@Features("Unit Tests - S3 Repository")
-@Stories("S3 Artifact Repository")
+@Feature("Unit Tests - S3 Repository")
+@Story("S3 Artifact Repository")
 public class S3RepositoryTest {
     private static final String TENANT = "test_tenant";
 

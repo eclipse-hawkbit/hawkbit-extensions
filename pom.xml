@@ -40,7 +40,7 @@
    <properties>
       <jacoco.outputDir>${project.basedir}/../../target/</jacoco.outputDir>
       <hawkbit.version>0.3.0-SNAPSHOT</hawkbit.version>
-      
+
       <!-- Release - START -->
       <release.scm.connection>scm:git:git@github.com:eclipse/hawkbit-extensions.git</release.scm.connection>
       <release.scm.developerConnection>scm:git:https://github.com/eclipse/hawkbit-extensions.git</release.scm.developerConnection>
