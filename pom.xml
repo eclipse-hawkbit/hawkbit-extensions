@@ -62,7 +62,7 @@
       <module>hawkbit-extension-artifact-repository-mongo</module>
       <module>hawkbit-extension-artifact-repository-s3</module>
       <!--module>hawkbit-extensions-azure</module-->
-      <module>hawkbit-extended-runtimes</module>
+      <!--module>hawkbit-extended-runtimes</module-->
    </modules>
 
    <build>

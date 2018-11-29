@@ -26,7 +26,6 @@ import com.mongodb.MongoClientException;
 import com.mongodb.MongoException;
 import com.mongodb.MongoGridFSException;
 import com.mongodb.client.gridfs.model.GridFSFile;
-import com.mongodb.gridfs.GridFSDBFile;
 
 /**
  * The file management based on MongoDb GridFS.
@@ -68,7 +67,7 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
     }
 
     /**
-     * Retrieves a {@link GridFSDBFile} from the store by it's SHA1 hash.
+     * Retrieves an artifact from the store by its SHA1 hash.
      *
      * @param sha1Hash
      *            the sha1-hash of the file to lookup.

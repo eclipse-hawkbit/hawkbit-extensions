@@ -22,9 +22,6 @@ import com.mongodb.gridfs.GridFSDBFile;
  * {@link InputStream} directly from {@link GridFSDBFile#getInputStream()} which
  * retrieves when calling {@link #getFileInputStream()} always a new
  * {@link InputStream} and not the same.
- *
- *
- *
  */
 public class GridFsArtifact extends AbstractDbArtifact {
 
