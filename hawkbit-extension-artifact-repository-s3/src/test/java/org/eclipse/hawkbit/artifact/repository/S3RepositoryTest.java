@@ -155,7 +155,6 @@ public class S3RepositoryTest {
     @Description("Verifies that null is returned if the given hash does not exists on S3")
     public void getArtifactBySha1ReturnsNullIfFileDoesNotExists() {
         final String knownSHA1Hash = "0815";
-        when(amazonS3Mock.getObject(s3Properties.getBucketName(), knownSHA1Hash)).thenReturn(null);
 
         // test
         final AbstractDbArtifact artifactBySha1NotExists = s3RepositoryUnderTest.getArtifactBySha1(TENANT,
