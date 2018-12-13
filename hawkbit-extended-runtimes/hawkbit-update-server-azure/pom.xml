@@ -67,7 +67,25 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bus-kafka</artifactId>
-        </dependency>
+         <exclusions>
+            <exclusion>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-starter-tomcat</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.springframework.security</groupId>
+               <artifactId>spring-security-rsa</artifactId>
+            </exclusion>
+            <exclusion>
+                  <groupId>org.objenesis</groupId>
+               <artifactId>objenesis</artifactId>
+            </exclusion>
+            <exclusion>
+                  <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-el</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
