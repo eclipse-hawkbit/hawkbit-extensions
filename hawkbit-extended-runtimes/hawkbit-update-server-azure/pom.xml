@@ -77,10 +77,6 @@
                <artifactId>spring-security-rsa</artifactId>
             </exclusion>
             <exclusion>
-                  <groupId>org.objenesis</groupId>
-               <artifactId>objenesis</artifactId>
-            </exclusion>
-            <exclusion>
                   <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-el</artifactId>
             </exclusion>

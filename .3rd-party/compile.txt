@@ -63,6 +63,7 @@
    org.jsoup:jsoup:jar:1.8.3:compile
    org.lz4:lz4-java:jar:1.4.1:compile
    org.mortbay.jasper:apache-el:jar:8.5.33.1:compile
+   org.objenesis:objenesis:jar:2.1:compile
    org.ow2.asm:asm-analysis:jar:6.2:compile
    org.ow2.asm:asm-commons:jar:6.2:compile
    org.ow2.asm:asm-tree:jar:6.2:compile
