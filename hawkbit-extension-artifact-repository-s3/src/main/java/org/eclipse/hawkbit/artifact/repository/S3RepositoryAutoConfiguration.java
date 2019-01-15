@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
@@ -79,7 +80,7 @@ public class S3RepositoryAutoConfiguration {
         AmazonS3ClientBuilder s3ClientBuilder = AmazonS3ClientBuilder.standard()//
                 .withCredentials(awsCredentialsProvider())//
                 .withClientConfiguration(awsClientConfiguration());
-        if (region != null) {
+        if (!StringUtils.isEmpty(region)) {
             s3ClientBuilder = s3ClientBuilder.withRegion(region);
         }
         return s3ClientBuilder.build();

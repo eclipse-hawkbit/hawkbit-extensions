@@ -104,10 +104,10 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
         }
     }
 
-    private void deleteArtifact(final GridFSFile dbFile) {
-        if (dbFile != null) {
+    private void deleteArtifact(final GridFSFile file) {
+        if (file != null) {
             try {
-                gridFs.delete(new Query().addCriteria(Criteria.where(ID).is(dbFile.getId())));
+                gridFs.delete(new Query().addCriteria(Criteria.where(ID).is(file.getId())));
             } catch (final MongoClientException e) {
                 throw new ArtifactStoreException(e.getMessage(), e);
             }
@@ -186,53 +186,53 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
     }
 
     /**
-     * Maps a single {@link GridFSFile} to {@link AbstractDbArtifact}.
+     * Maps a single {@link GridFSFile} to a {@link GridFsArtifact}.
      *
-     * @param dbFile
-     *            the mongoDB gridFs file.
+     * @param file
+     *            the {@link GridFSFile} object.
      * 
-     * @return a mapped artifact from the given dbFile
+     * @return a mapped artifact from the given file
      */
-    private GridFsArtifact map(final GridFSFile dbFile) {
-        if (dbFile == null) {
+    private GridFsArtifact map(final GridFSFile file) {
+        if (file == null) {
             return null;
         }
-        return map(dbFile, getContentType(dbFile));
+        return map(file, getContentType(file));
     }
 
     /**
-     * Maps a single {@link GridFSFile} to {@link AbstractDbArtifact}.
+     * Maps a single {@link GridFSFile} to {@link GridFsArtifact}.
      *
-     * @param dbFile
-     *            the mongoDB gridFs file.
+     * @param file
+     *            the {@link GridFSFile} object.
      * @param contentType
      *            the content type of the artifact
-     * @return a mapped artifact from the given dbFile
+     * @return a mapped artifact from the given file
      */
-    private GridFsArtifact map(final GridFSFile dbFile, final String contentType) {
-        if (dbFile == null) {
+    private GridFsArtifact map(final GridFSFile file, final String contentType) {
+        if (file == null) {
             return null;
         }
-        return new GridFsArtifact(dbFile, contentType, () -> {
+        return new GridFsArtifact(file, contentType, () -> {
             try {
-                return gridFs.getResource(dbFile).getInputStream();
+                return gridFs.getResource(file).getInputStream();
             } catch (final IllegalStateException | IOException e) {
                 throw new ArtifactStoreException(e.getMessage(), e);
             }
         });
     }
 
-    private static final String getContentType(final GridFSFile dbFile) {
-        final Document metadata = dbFile.getMetadata();
+    private static final String getContentType(final GridFSFile file) {
+        final Document metadata = file.getMetadata();
         String contentType = null;
         if (metadata != null) {
             contentType = metadata.getString(CONTENT_TYPE);
         }
         if (contentType == null) {
             try {
-                contentType = dbFile.getContentType();
+                contentType = file.getContentType();
             } catch (final MongoGridFSException e) {
-                throw new ArtifactStoreException("Could not determine content type for file " + dbFile.getId(), e);
+                throw new ArtifactStoreException("Could not determine content type for file " + file.getId(), e);
             }
         }
         return contentType;

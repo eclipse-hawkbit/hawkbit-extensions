@@ -1,14 +1,9 @@
-<!--
-
-    Copyright (c) 2015 Bosch Software Innovations GmbH and others.
-
-    All rights reserved. This program and the accompanying materials
-    are made available under the terms of the Eclipse Public License v1.0
-    which accompanies this distribution, and is available at
-    http://www.eclipse.org/legal/epl-v10.html
-
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<!-- Copyright (c) 2015 Bosch Software Innovations GmbH and others. All rights 
+   reserved. This program and the accompanying materials are made available 
+   under the terms of the Eclipse Public License v1.0 which accompanies this 
+   distribution, and is available at http://www.eclipse.org/legal/epl-v10.html -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
@@ -61,8 +56,8 @@
    <modules>
       <module>hawkbit-extension-artifact-repository-mongo</module>
       <module>hawkbit-extension-artifact-repository-s3</module>
-      <!--module>hawkbit-extensions-azure</module-->
-      <!--module>hawkbit-extended-runtimes</module-->
+      <!--module>hawkbit-extensions-azure</module -->
+      <!--module>hawkbit-extended-runtimes</module -->
    </modules>
 
    <build>
@@ -80,13 +75,13 @@
             <groupId>com.mycila</groupId>
             <artifactId>license-maven-plugin</artifactId>
             <configuration>
-                <header>licenses/LICENSE_HEADER_TEMPLATE_BOSCH_18.txt</header>
-                <validHeaders>
-                    <validHeader>licenses/LICENSE_HEADER_TEMPLATE_SIEMENS.txt</validHeader>
-                    <validHeader>licenses/LICENSE_HEADER_TEMPLATE_SIEMENS_18.txt</validHeader>
-                    <validHeader>licenses/LICENSE_HEADER_TEMPLATE_BOSCH.txt</validHeader>
-                    <validHeader>licenses/LICENSE_HEADER_TEMPLATE_MICROSOFT_18.txt</validHeader>
-                </validHeaders>
+               <header>licenses/LICENSE_HEADER_TEMPLATE_BOSCH_18.txt</header>
+               <validHeaders>
+                  <validHeader>licenses/LICENSE_HEADER_TEMPLATE_SIEMENS.txt</validHeader>
+                  <validHeader>licenses/LICENSE_HEADER_TEMPLATE_SIEMENS_18.txt</validHeader>
+                  <validHeader>licenses/LICENSE_HEADER_TEMPLATE_BOSCH.txt</validHeader>
+                  <validHeader>licenses/LICENSE_HEADER_TEMPLATE_MICROSOFT_18.txt</validHeader>
+               </validHeaders>
             </configuration>
          </plugin>
          <plugin>
@@ -95,8 +90,9 @@
             <version>1.4.1</version>
             <executions>
                <execution>
-                  <!-- Make sure that only non-snapshot versions are used for the dependencies. Only active when property 'snapshotDependencyAllowed' is
-                     false. -->
+                  <!-- Make sure that only non-snapshot versions are used 
+                     for the dependencies. Only active when property 'snapshotDependencyAllowed' 
+                     is false. -->
                   <id>enforce-no-snapshots</id>
                   <goals>
                      <goal>enforce</goal>
@@ -177,7 +173,7 @@
          <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-bom</artifactId>
-            <version>1.11.461</version>
+            <version>1.11.392</version>
             <type>pom</type>
             <scope>import</scope>
          </dependency>
@@ -192,7 +188,7 @@
             <artifactId>hawkbit-security-core</artifactId>
             <version>${hawkbit.version}</version>
             <scope>provided</scope>
-      </dependency>
+         </dependency>
       </dependencies>
    </dependencyManagement>
 
