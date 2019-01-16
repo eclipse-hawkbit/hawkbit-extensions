@@ -9,12 +9,10 @@
 package org.eclipse.hawkbit.artifact.repository;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 
@@ -24,7 +22,6 @@ import org.springframework.data.mongodb.gridfs.GridFsOperations;
 @Configuration
 @ConditionalOnProperty(prefix = "org.eclipse.hawkbit.artifact.repository.mongo", name = "enabled", matchIfMissing = true)
 @PropertySource("classpath:/hawkbit-mongodb-defaults.properties")
-@Import(MongoAutoConfiguration.class)
 @EnableConfigurationProperties(MongoProperties.class)
 public class MongoDBArtifactStoreAutoConfiguration {
 
