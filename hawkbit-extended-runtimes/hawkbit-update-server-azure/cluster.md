@@ -50,15 +50,10 @@ az storage account create \
 
 # Extract the storage access key
 export storage_access_key=`az storage account keys list --account-name $storage_name --resource-group $resourcegroupname --output=tsv|cut  -f3| head -1`
-```
 
-Now create a an Event Hubs namespace with Kafka support in [Azure Portal](https://ms.portal.azure.com/) (not supported by CLI yet).
+# Now create a an Event Hubs namespace with Kafka support
+az eventhubs namespace create --name $events_hubs_namespace_name --resource-group $resourcegroupname -l $location --enable-kafka
 
-![Azure Portal Event Hubs](eventHubsKafka.PNG)
-
-Next extract the connection string
-
-```bash
 # Get namespace connection string
 export event_hubs_access_key=`az eventhubs namespace authorization-rule keys list --resource-group $resourcegroupname --namespace-name $events_hubs_namespace_name --name RootManageSharedAccessKey --output=tsv|cut -f4`
 ```
@@ -119,5 +114,6 @@ Now you can open the management UI with the IP address
 In case it does not open up you can take a look at the logs using `kubectl logs`.
 
 Obviously this simple example if far away for productive use. Next steps could be:
-* [Deploy an HTTPS ingress controller](https://docs.microsoft.com/en-us/azure/aks/ingress)
-* Split hawkBit into multiple apps/services (e.g. one each for DDI, Management API and Management UI)
+
+- [Deploy an HTTPS ingress controller](https://docs.microsoft.com/en-us/azure/aks/ingress)
+- Split hawkBit into multiple apps/services (e.g. one each for DDI, Management API and Management UI)
