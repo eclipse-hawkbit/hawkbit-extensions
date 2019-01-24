@@ -9,11 +9,10 @@
 | com.amazonaws                    | aws-java-sdk-s3                       | 1.11.392      | [CQ17355](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=17355) |
 | com.amazonaws                    | jmespath-java                         | 1.11.392      | [CQ17356](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=17356) |
 | com.fasterxml.jackson.dataformat | jackson-dataformat-cbor               | 2.9.8         | []()                                                             |
-| com.google.code.findbugs         | annotations                           | 2.0.1         | []()                                                             |
 | com.microsoft.azure              | applicationinsights-core              | 2.1.2         | [CQ18817](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=18817) |
 | com.microsoft.azure              | azure-keyvault-core                   | 0.8.0         | [CQ17350](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=17350) |
-| com.microsoft.azure              | azure-spring-boot-starter             | 2.0.5         | []()                                                             |
-| com.microsoft.azure              | azure-spring-boot                     | 2.0.5         | []()                                                             |
+| com.microsoft.azure              | azure-spring-boot-starter             | 2.1.2         | []()                                                             |
+| com.microsoft.azure              | azure-spring-boot                     | 2.1.2         | []()                                                             |
 | com.microsoft.azure              | azure-storage                         | 5.5.0         | [CQ17351](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=17351) |
 | joda-time                        | joda-time                             | 2.10.1        | []()                                                             |
 | org.apache.kafka                 | kafka-clients                         | 2.0.1         | [CQ18815](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=18815) |

@@ -26,3 +26,4 @@
    org.springframework.boot:spring-boot-test:jar:2.1.2.RELEASE:test
    org.springframework:spring-test:jar:5.1.4.RELEASE:test
    org.xmlunit:xmlunit-core:jar:2.6.2:test
+   org.yaml:snakeyaml:jar:1.23:test

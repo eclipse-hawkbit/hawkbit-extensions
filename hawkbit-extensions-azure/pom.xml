@@ -27,7 +27,8 @@
    <description>Parent pom for hawkBit extensions around Microsoft Azure integration</description>
 
    <properties>
-      <azure.version>2.0.5</azure.version>
+      <azure.version>2.1.2</azure.version>
+      <applicationinsights.version>2.1.2</applicationinsights.version>
    </properties>
 
    <modules>
@@ -42,6 +43,11 @@
             <version>${azure.version}</version>
             <type>pom</type>
             <scope>import</scope>
+         </dependency>
+         <dependency>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>applicationinsights-core</artifactId>
+            <version>${applicationinsights.version}</version>
          </dependency>
       </dependencies>
    </dependencyManagement>
