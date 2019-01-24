@@ -15,7 +15,6 @@
 | com.microsoft.azure              | azure-spring-boot-starter             | 2.0.5         | []()                                                             |
 | com.microsoft.azure              | azure-spring-boot                     | 2.0.5         | []()                                                             |
 | com.microsoft.azure              | azure-storage                         | 5.5.0         | [CQ17351](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=17351) |
-| javax.json                       | javax.json-api                        | 1.1.4         | []()                                                             |
 | joda-time                        | joda-time                             | 2.10.1        | []()                                                             |
 | org.apache.kafka                 | kafka-clients                         | 2.0.1         | [CQ18815](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=18815) |
 | org.lz4                          | lz4-java                              | 1.4.1         | [CQ18816](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=18816) |
