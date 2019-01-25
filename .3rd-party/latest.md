@@ -11,14 +11,11 @@
 | com.fasterxml.jackson.dataformat | jackson-dataformat-cbor               | 2.9.8         | []()                                                             |
 | com.microsoft.azure              | applicationinsights-core              | 2.1.2         | [CQ18817](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=18817) |
 | com.microsoft.azure              | azure-keyvault-core                   | 0.8.0         | [CQ17350](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=17350) |
-| com.microsoft.azure              | azure-spring-boot-starter             | 2.1.2         | []()                                                             |
 | com.microsoft.azure              | azure-spring-boot                     | 2.1.2         | [CQ18830](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=18830) |
 | com.microsoft.azure              | azure-storage                         | 5.5.0         | [CQ17351](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=17351) |
 | joda-time                        | joda-time                             | 2.10.1        | []()                                                             |
 | org.apache.kafka                 | kafka-clients                         | 2.0.1         | [CQ18815](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=18815) |
 | org.lz4                          | lz4-java                              | 1.4.1         | [CQ18816](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=18816) |
-| org.springframework.cloud        | spring-cloud-starter-bus-kafka        | 2.1.0.RELEASE | []()                                                             |
-| org.springframework.cloud        | spring-cloud-starter-stream-kafka     | 2.1.0.RELEASE | []()                                                             |
 | org.springframework.cloud        | spring-cloud-stream-binder-kafka-core | 2.1.0.RELEASE | [CQ18814](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=18814) |
 | org.springframework.cloud        | spring-cloud-stream-binder-kafka      | 2.1.0.RELEASE | [CQ18814](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=18814) |
 | org.springframework.integration  | spring-integration-kafka              | 3.1.0.RELEASE | [CQ18813](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=18813) |
