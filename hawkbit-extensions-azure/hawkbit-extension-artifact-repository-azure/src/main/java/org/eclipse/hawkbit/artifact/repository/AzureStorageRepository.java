@@ -41,6 +41,8 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(AzureStorageRepository.class);
 
+    private static final Logger AZURE_SDK_LOG = LoggerFactory.getLogger(CloudBlockBlob.class);
+
     private final CloudBlobClient blobClient;
     private final AzureStorageRepositoryProperties properties;
 
@@ -85,7 +87,7 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
 
             final OperationContext context = new OperationContext();
             context.setLoggingEnabled(true);
-            context.setLogger(LoggerFactory.getLogger(CloudBlockBlob.class));
+            context.setLogger(AZURE_SDK_LOG);
 
             final BlobRequestOptions options = new BlobRequestOptions();
             options.setConcurrentRequestCount(properties.getConcurrentRequestCount());
