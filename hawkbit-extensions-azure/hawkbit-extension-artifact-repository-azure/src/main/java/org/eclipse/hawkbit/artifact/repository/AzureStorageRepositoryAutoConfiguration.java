@@ -8,9 +8,13 @@
  */
 package org.eclipse.hawkbit.artifact.repository;
 
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 import com.microsoft.azure.storage.CloudStorageAccount;
 
@@ -20,14 +24,21 @@ import com.microsoft.azure.storage.CloudStorageAccount;
  */
 @Configuration
 @EnableConfigurationProperties(AzureStorageRepositoryProperties.class)
+@PropertySource("classpath:/hawkbit-azure-storage-defaults.properties")
 public class AzureStorageRepositoryAutoConfiguration {
+
+    @Bean
+    CloudStorageAccount cloudStorageAccount(final AzureStorageRepositoryProperties properties)
+            throws InvalidKeyException, URISyntaxException {
+        return CloudStorageAccount.parse(properties.getConnectionString());
+    }
 
     /**
      * @return Azure storage repository based {@link ArtifactRepository}
      *         implementation.
      */
     @Bean
-    public ArtifactRepository artifactRepository(final CloudStorageAccount storageAccount,
+    ArtifactRepository artifactRepository(final CloudStorageAccount storageAccount,
             final AzureStorageRepositoryProperties properties) {
         return new AzureStorageRepository(storageAccount, properties);
     }

@@ -82,7 +82,15 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
 
             // Creating blob and uploading file to it
             blob.getProperties().setContentType(contentType);
-            blob.uploadFromFile(tempFile);
+
+            final OperationContext context = new OperationContext();
+            context.setLoggingEnabled(true);
+            context.setLogger(LoggerFactory.getLogger(CloudBlockBlob.class));
+
+            final BlobRequestOptions options = new BlobRequestOptions();
+            options.setConcurrentRequestCount(properties.getConcurrentRequestCount());
+
+            blob.uploadFromFile(tempFile, null, options, context);
 
             final String md5Base16 = convertToBase16(blob.getProperties().getContentMD5());
 

@@ -7,7 +7,7 @@ spec:
   template:
     metadata:
       labels:
-        app: hawkbit-update-server        
+        app: hawkbit-update-server
     spec:
       containers:
         - name: hawkbit-update-server
@@ -36,7 +36,7 @@ spec:
                 secretKeyRef:
                   name: hawkbit-infra-secrets
                   key: db_password
-            - name: AZURE_STORAGE_CONNECTION_STRING
+            - name: ORG_ECLIPSE_HAWKBIT_REPOSITORY_AZURE_CONNECTION_STRING
               valueFrom:
                 secretKeyRef:
                   name: hawkbit-infra-secrets

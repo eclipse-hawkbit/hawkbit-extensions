@@ -58,7 +58,7 @@ az container create --resource-group $resourcegroupname --name $app_name --image
     SPRING_DATASOURCE_USER="$db_adminlogin"@"$db_servername" \
     SPRING_DATASOURCE_PASSWORD="$db_password" \
     SPRING_DATASOURCE_DRIVERCLASSNAME=com.microsoft.sqlserver.jdbc.SQLServerDriver \
-    AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=https\;AccountName="$storage_name"\;AccountKey="$storage_access_key"\;EndpointSuffix=core.windows.net
+    ORG_ECLIPSE_HAWKBIT_REPOSITORY_AZURE_CONNECTION_STRING=DefaultEndpointsProtocol=https\;AccountName="$storage_name"\;AccountKey="$storage_access_key"\;EndpointSuffix=core.windows.net
 ```
 
 ### Check your work
