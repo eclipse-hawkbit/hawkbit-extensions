@@ -8,6 +8,9 @@
  */
 package org.eclipse.hawkbit.artifact.repository;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -17,7 +20,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("org.eclipse.hawkbit.repository.azure")
 public class AzureStorageRepositoryProperties {
 
+    @NotEmpty
     private String containerName = "artifactrepository";
+
+    @Min(1)
+    private int concurrentRequestCount = 8;
+
+    @NotEmpty
+    private String connectionString;
 
     public String getContainerName() {
         return containerName;
@@ -26,4 +36,21 @@ public class AzureStorageRepositoryProperties {
     public void setContainerName(final String containerName) {
         this.containerName = containerName;
     }
+
+    public int getConcurrentRequestCount() {
+        return concurrentRequestCount;
+    }
+
+    public void setConcurrentRequestCount(final int concurrentRequestCount) {
+        this.concurrentRequestCount = concurrentRequestCount;
+    }
+
+    public String getConnectionString() {
+        return connectionString;
+    }
+
+    public void setConnectionString(final String connectionString) {
+        this.connectionString = connectionString;
+    }
+
 }

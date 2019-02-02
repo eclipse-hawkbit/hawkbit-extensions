@@ -10,6 +10,7 @@ package org.eclipse.hawkbit.app;
 
 import org.eclipse.hawkbit.ui.AbstractHawkbitUI;
 import org.eclipse.hawkbit.ui.ErrorView;
+import org.eclipse.hawkbit.ui.UiProperties;
 import org.eclipse.hawkbit.ui.components.NotificationUnreadButton;
 import org.eclipse.hawkbit.ui.menu.DashboardMenu;
 import org.eclipse.hawkbit.ui.push.EventPushStrategy;
@@ -27,15 +28,16 @@ import com.vaadin.spring.navigator.SpringViewProvider;
  * hawkBit UI implementation.
  */
 @SpringUI
-@Push(value = PushMode.AUTOMATIC, transport = Transport.WEBSOCKET)
+@Push(value = PushMode.AUTOMATIC, transport = Transport.WEBSOCKET_XHR)
 public class AzureUI extends AbstractHawkbitUI {
     private static final long serialVersionUID = 1L;
 
     @Autowired
     AzureUI(final EventPushStrategy pushStrategy, final UIEventBus eventBus, final SpringViewProvider viewProvider,
             final ApplicationContext context, final DashboardMenu dashboardMenu, final ErrorView errorview,
-            final NotificationUnreadButton notificationUnreadButton) {
-        super(pushStrategy, eventBus, viewProvider, context, dashboardMenu, errorview, notificationUnreadButton);
+            final NotificationUnreadButton notificationUnreadButton, final UiProperties uiProperties) {
+        super(pushStrategy, eventBus, viewProvider, context, dashboardMenu, errorview, notificationUnreadButton,
+                uiProperties);
     }
 
 }
