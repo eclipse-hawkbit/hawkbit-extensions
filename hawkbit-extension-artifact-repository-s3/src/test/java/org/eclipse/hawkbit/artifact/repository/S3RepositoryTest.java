@@ -140,8 +140,6 @@ public class S3RepositoryTest {
         final String knownSHA1 = getSha1OfBytes(rndBytes);
         final String knownContentType = "application/octet-stream";
 
-        when(amazonS3Mock.doesObjectExist(s3Properties.getBucketName(), knownSHA1)).thenReturn(true);
-
         // test
         storeRandomBytes(rndBytes, knownContentType);
 
@@ -155,8 +153,6 @@ public class S3RepositoryTest {
     @Description("Verifies that null is returned if the given hash does not exists on S3")
     public void getArtifactBySha1ReturnsNullIfFileDoesNotExists() {
         final String knownSHA1Hash = "0815";
-        when(amazonS3Mock.getObject(s3Properties.getBucketName(), knownSHA1Hash)).thenReturn(null);
-
         // test
         final AbstractDbArtifact artifactBySha1NotExists = s3RepositoryUnderTest.getArtifactBySha1(TENANT,
                 knownSHA1Hash);
