@@ -10,9 +10,10 @@ package org.eclipse.hawkbit.artifact.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.when;
 
@@ -36,7 +37,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -56,6 +57,7 @@ import io.qameta.allure.Story;
 @Feature("Unit Tests - S3 Repository")
 @Story("S3 Artifact Repository")
 public class S3RepositoryTest {
+
     private static final String TENANT = "test_tenant";
 
     @Mock
@@ -81,8 +83,8 @@ public class S3RepositoryTest {
 
     @Before
     public void before() {
+        amazonS3Mock = mock(AmazonS3.class);
         s3RepositoryUnderTest = new S3Repository(amazonS3Mock, s3Properties);
-        when(amazonS3Mock.putObject(any(), any(), any(), any())).thenReturn(putObjectResultMock);
     }
 
     @Test
@@ -91,6 +93,8 @@ public class S3RepositoryTest {
         final byte[] rndBytes = randomBytes();
         final String knownSHA1 = getSha1OfBytes(rndBytes);
         final String knownContentType = "application/octet-stream";
+
+        when(amazonS3Mock.putObject(any(), any(), any(), any())).thenReturn(putObjectResultMock);
 
         // test
         storeRandomBytes(rndBytes, knownContentType);
@@ -140,6 +144,8 @@ public class S3RepositoryTest {
         final String knownSHA1 = getSha1OfBytes(rndBytes);
         final String knownContentType = "application/octet-stream";
 
+        when(amazonS3Mock.putObject(any(), any(), any(), any())).thenReturn(putObjectResultMock);
+
         // test
         storeRandomBytes(rndBytes, knownContentType);
 
@@ -153,6 +159,7 @@ public class S3RepositoryTest {
     @Description("Verifies that null is returned if the given hash does not exists on S3")
     public void getArtifactBySha1ReturnsNullIfFileDoesNotExists() {
         final String knownSHA1Hash = "0815";
+      
         // test
         final AbstractDbArtifact artifactBySha1NotExists = s3RepositoryUnderTest.getArtifactBySha1(TENANT,
                 knownSHA1Hash);

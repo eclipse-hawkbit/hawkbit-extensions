@@ -19,7 +19,6 @@
    <artifactId>hawkbit-extension-artifact-repository-mongo</artifactId>
    <name>hawkBit :: Extensions :: Artifact Repository Mongo</name>
 
-
    <dependencies>
       <dependency>
          <groupId>org.eclipse.hawkbit</groupId>
@@ -36,7 +35,7 @@
       </dependency>
       <dependency>
          <groupId>org.springframework.boot</groupId>
-         <artifactId>spring-boot-autoconfigure</artifactId>
+         <artifactId>spring-boot-actuator-autoconfigure</artifactId>
       </dependency>
       <dependency>
          <groupId>com.google.guava</groupId>

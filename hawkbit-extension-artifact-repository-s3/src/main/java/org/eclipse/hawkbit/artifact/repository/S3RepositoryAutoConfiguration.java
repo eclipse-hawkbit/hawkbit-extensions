@@ -14,8 +14,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.Optional;
+import org.springframework.util.StringUtils;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
@@ -33,9 +32,8 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 @EnableConfigurationProperties(S3RepositoryProperties.class)
 public class S3RepositoryAutoConfiguration {
 
-
-	@Value("${aws.region:#{null}}")
-    private Optional<String> region;
+    @Value("${aws.region:#{null}}")
+    private String region;
 
     /**
      * The {@link DefaultAWSCredentialsProviderChain} looks for credentials in
@@ -52,7 +50,7 @@ public class S3RepositoryAutoConfiguration {
      * @return the {@link DefaultAWSCredentialsProviderChain} if no other
      *         {@link AWSCredentialsProvider} bean is registered.
      */
-	
+
     @Bean
     @ConditionalOnMissingBean
     public AWSCredentialsProvider awsCredentialsProvider() {
@@ -82,8 +80,8 @@ public class S3RepositoryAutoConfiguration {
         AmazonS3ClientBuilder s3ClientBuilder = AmazonS3ClientBuilder.standard()//
                 .withCredentials(awsCredentialsProvider())//
                 .withClientConfiguration(awsClientConfiguration());
-        if (region.isPresent()) {
-            s3ClientBuilder = s3ClientBuilder.withRegion(region.get());
+        if (!StringUtils.isEmpty(region)) {
+            s3ClientBuilder = s3ClientBuilder.withRegion(region);
         }
         return s3ClientBuilder.build();
     }

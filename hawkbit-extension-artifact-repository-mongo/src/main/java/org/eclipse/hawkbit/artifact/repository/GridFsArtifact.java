@@ -9,40 +9,39 @@
 package org.eclipse.hawkbit.artifact.repository;
 
 import java.io.InputStream;
+import java.util.function.Supplier;
 
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
 import org.eclipse.hawkbit.artifact.repository.model.DbArtifactHash;
 
+import com.mongodb.client.gridfs.model.GridFSFile;
 import com.mongodb.gridfs.GridFSDBFile;
-import com.mongodb.gridfs.GridFSFile;
 
 /**
  * A wrapper object for the {@link AbstractDbArtifact} object which returns the
  * {@link InputStream} directly from {@link GridFSDBFile#getInputStream()} which
  * retrieves when calling {@link #getFileInputStream()} always a new
  * {@link InputStream} and not the same.
- *
- *
- *
  */
 public class GridFsArtifact extends AbstractDbArtifact {
 
-    private final GridFSFile dbFile;
+    private final Supplier<InputStream> inputStreamSupplier;
 
     /**
      * @param dbFile
+     * @param contentType
+     * @param inputStreamSupplier
      */
-    public GridFsArtifact(final GridFSFile dbFile) {
+    public GridFsArtifact(final GridFSFile dbFile, final String contentType,
+            final Supplier<InputStream> inputStreamSupplier) {
         super(dbFile.getId().toString(), new DbArtifactHash(dbFile.getFilename(), dbFile.getMD5()), dbFile.getLength(),
-                dbFile.getContentType());
-        this.dbFile = dbFile;
+                contentType);
+        this.inputStreamSupplier = inputStreamSupplier;
     }
 
     @Override
     public InputStream getFileInputStream() {
-        if (dbFile instanceof GridFSDBFile) {
-            return ((GridFSDBFile) dbFile).getInputStream();
-        }
-        return null;
+        return inputStreamSupplier.get();
     }
+
 }
