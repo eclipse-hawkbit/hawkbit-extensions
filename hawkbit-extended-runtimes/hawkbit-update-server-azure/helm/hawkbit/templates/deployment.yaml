@@ -66,13 +66,13 @@ spec:
                   key: eventhubs_host
           livenessProbe:
             httpGet:
-              path: /actuator/health
+              path: /
               port: 8080
             initialDelaySeconds: 60
             timeoutSeconds: 2
           readinessProbe:
             httpGet:
-              path: /actuator/health
+              path: /
               port: 8080
             initialDelaySeconds: 5
             timeoutSeconds: 2
