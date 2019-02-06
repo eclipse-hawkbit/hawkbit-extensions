@@ -30,9 +30,8 @@ docker push <YourAcrLoginServer>/hawkbit-update-server-azure:latest
 
 ### Quick start your azure environment ([Azure CLI](https://shell.azure.com))
 
-* [hawkBit single node](single_node.md) with Azure Container Instances (ACI)
-* [hawkBit cluster](cluster.md) with Azure Kubernetes Service (AKS)
-
+- [hawkBit single node](single_node.md) with Azure Container Instances (ACI)
+- [hawkBit cluster](cluster.md) with Azure Kubernetes Service (AKS)
 
 ### Cleanup your resources
 

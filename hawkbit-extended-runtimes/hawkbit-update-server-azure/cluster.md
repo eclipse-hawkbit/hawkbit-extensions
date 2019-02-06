@@ -24,6 +24,8 @@ export storage_name=hawkbitstorage$RANDOM
 export events_hubs_namespace_name=hawkbit-ns
 # The AKS cluster name
 export aks_cluster_name=hawkbit-cluster-$RANDOM
+# The AKS IP name
+export aks_ip_name=hawkbit-ip-$RANDOM
 
 # Create a resource group
 az group create --name $resourcegroupname --location $location
@@ -75,6 +77,13 @@ az aks create --resource-group $resourcegroupname --name $aks_cluster_name --nod
 # Get credentials and configures the Kubernetes CLI to use them.
 az aks get-credentials --resource-group $resourcegroupname --name $aks_cluster_name
 
+export node_resource_group=`az aks show --resource-group $resourcegroupname --name $aks_cluster_name --query nodeResourceGroup -o tsv`
+
+# Get static public IP with DNS name
+az network public-ip create --resource-group $node_resource_group --name $aks_ip_name --allocation-method static --dns-name $app_name
+export public_ip_address=`az network public-ip show --resource-group $node_resource_group --name $aks_ip_name --query ipAddress -o tsv`
+export public_fqdn=`az network public-ip show --resource-group $node_resource_group --name $aks_ip_name --query dnsSettings.fqdn -o tsv`
+
 # Store your secrets
 export ho db_url=jdbc:sqlserver://"$db_servername".database.windows.net:1433\;database="$db_name"\;user="$db_adminlogin"@"$db_servername"\;password="$db_password"\;encrypt=true\;trustServerCertificate=false\;hostNameInCertificate=*.database.windows.net\;loginTimeout=30\; > secrets.env
 export db_username="$db_adminlogin"@"$db_servername" >> secrets.env
@@ -88,32 +97,56 @@ echo storage_url="$storage_url" >> secrets.env
 echo eventhubs_host="$eventhubs_host" >> secrets.env
 echo event_hubs_access_key=$event_hubs_access_key >> secrets.env
 
-kubectl create secret generic hawkbit-infra-secrets --from-env-file=secrets.env
+kubectl create secret generic hawkbit-infra-secrets --from-env-file=secrets.env --namespace hawkbit
+```
 
-# Deploy containers and service
-kubectl apply -f azure-hawkbit-aks.yaml
+Next deploy helm on your cluster. For this follow the guide [here](https://docs.microsoft.com/en-us/azure/aks/kubernetes-helm).
+
+Deploy Nginx as Kubernetes Ingress controller.
+
+```bash
+helm install stable/nginx-ingress \
+    --namespace hawkbit \
+    --set controller.service.loadBalancerIP=$public_ip_address \
+    --set controller.replicaCount=2 \
+    --name hawkbit-ingress
+```
+
+Deploy hawkbit.
+
+```bash
+cd helm
+helm install ./hawkbit/ \
+    --name hawkbit \
+    --namespace hawkbit \
+    --set image.repository=<YourAcrLoginServer>/hawkbit-update-server-azure \
+    --set ingress.hosts={$public_fqdn}
 ```
 
 Now check your deployment and identify the public IP address (might take a moment).
 
 ```bash
-> kubectl get services
-NAME                    TYPE           CLUSTER-IP   EXTERNAL-IP     PORT(S)          AGE
-hawkbit-update-server   LoadBalancer   10.0.30.89   51.145.128.61   8080:31066/TCP   8m
-kubernetes              ClusterIP      10.0.0.1     <none>          443/TCP          34m
+> kubectl get services -n hawkbit
+NAME                                            TYPE           CLUSTER-IP    EXTERNAL-IP   PORT(S)                      AGE
+hawkbit                                         LoadBalancer   10.0.185.59   <pending>     8080:30324/TCP               14s
+hawkbit-ingress-nginx-ingress-controller        LoadBalancer   10.0.75.142   52.174.35.7   80:31811/TCP,443:31615/TCP   45m
+hawkbit-ingress-nginx-ingress-default-backend   ClusterIP      10.0.65.126   <none>        80/TCP                       45m
 
 
-> kubectl get pods
-NAME                                     READY     STATUS    RESTARTS   AGE
-hawkbit-update-server-68f6b7bf67-4sdpk   1/1       Running   0          8m
-hawkbit-update-server-68f6b7bf67-hrw2z   1/1       Running   0          8m
+> kubectl get pods -n hawkbit
+NAME                                                            READY   STATUS    RESTARTS   AGE
+hawkbit-5ddf667cc8-hdlj2                                        1/1     Running   0          62s
+hawkbit-5ddf667cc8-m9szw                                        1/1     Running   0          62s
+hawkbit-ingress-nginx-ingress-controller-57658b4744-9gwmh       1/1     Running   0          46m
+hawkbit-ingress-nginx-ingress-controller-57658b4744-nhmnn       1/1     Running   0          46m
+hawkbit-ingress-nginx-ingress-default-backend-7c5b8cf46-kxg8p   1/1     Running   0          46m
 ```
 
-Now you can open the management UI with the IP address
+Now you can open the management UI with the DNS name
 
 In case it does not open up you can take a look at the logs using `kubectl logs`.
 
 Obviously this simple example if far away for productive use. Next steps could be:
 
-- [Deploy an HTTPS ingress controller](https://docs.microsoft.com/en-us/azure/aks/ingress)
+- [Extend ingress controller with TLS](https://docs.microsoft.com/en-us/azure/aks/ingress-tls)
 - Split hawkBit into multiple apps/services (e.g. one each for DDI, Management API and Management UI)
