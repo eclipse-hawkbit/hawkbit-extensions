@@ -72,7 +72,7 @@ export acr_id_access_registry=`az acr show --resource-group kaisGroup --name <Yo
 az role assignment create --assignee $app_id_access_registry --scope $acr_id_access_registry --role Reader
 
 # Create cluster and get credentials for kubectl
-az aks create --resource-group $resourcegroupname --name $aks_cluster_name --node-count 1 --enable-addons monitoring --generate-ssh-keys --service-principal $app_id_access_registry --client-secret $password_access_registry
+az aks create --resource-group $resourcegroupname --name $aks_cluster_name --node-count 2 --enable-addons monitoring --generate-ssh-keys --service-principal $app_id_access_registry --client-secret $password_access_registry
 
 # Get credentials and configures the Kubernetes CLI to use them.
 az aks get-credentials --resource-group $resourcegroupname --name $aks_cluster_name
