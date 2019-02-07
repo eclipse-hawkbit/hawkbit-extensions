@@ -17,13 +17,11 @@ metadata:
 spec:
 {{- if .Values.ingress.tls }}
   tls:
-  {{- range .Values.ingress.tls }}
     - hosts:
-      {{- range .hosts }}
+        {{- range .Values.ingress.hosts }}
         - {{ . | quote }}
-      {{- end }}
-      secretName: {{ .secretName }}
-  {{- end }}
+        {{- end }}
+      secretName: {{ .Values.ingress.tls.secretName }}
 {{- end }}
   rules:
   {{- range .Values.ingress.hosts }}
@@ -37,4 +35,40 @@ spec:
               servicePort: http
 	{{- end }}
   {{- end }}
+{{- end }}
+{{- if .Values.ingress.tls }}
+---
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: kai.zimmermann@microsoft.com
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    http01: {}
+---
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: {{ .Values.ingress.tls.secretName }}
+spec:
+  secretName: {{ .Values.ingress.tls.secretName }}
+  dnsNames:
+    {{- range .Values.ingress.hosts }}
+      - {{ . | quote }}
+    {{- end }}
+  acme:
+    config:
+      - http01:
+          ingressClass: nginx
+        domains:
+          {{- range .Values.ingress.hosts }}
+            - {{ . | quote }}
+          {{- end }}
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
 {{- end }}
