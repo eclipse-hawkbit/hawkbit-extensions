@@ -3,7 +3,7 @@
 Setup an Azure resource group including [Azure SQL Database](https://azure.microsoft.com/en-us/services/sql-database/), [Azure Storage](https://azure.microsoft.com/en-us/services/storage/) account for hawkBit's repository and [Azure Event Hubs for Apache Kafka](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-for-kafka-ecosystem-overview) for inner cluster communication.
 
 ```bash
-# Your ACC registry name
+# Your ACR registry name
 export acr_registry_name=yourACr
 export acr_login_server=yourACr.azurecr.io
 export acr_resourcegroupname=yourACrsGroup
