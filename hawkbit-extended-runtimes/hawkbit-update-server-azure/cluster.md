@@ -3,6 +3,11 @@
 Setup an Azure resource group including [Azure SQL Database](https://azure.microsoft.com/en-us/services/sql-database/), [Azure Storage](https://azure.microsoft.com/en-us/services/storage/) account for hawkBit's repository and [Azure Event Hubs for Apache Kafka](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-for-kafka-ecosystem-overview) for inner cluster communication.
 
 ```bash
+# Your ACR registry name
+export acr_registry_name=yourACr
+export acr_login_server=yourACr.azurecr.io
+export acr_resourcegroupname=yourACrsGroup
+
 # The data center and resource name for your resources
 export resourcegroupname=hawkBitTestResource
 export location=westeurope
@@ -24,6 +29,8 @@ export storage_name=hawkbitstorage$RANDOM
 export events_hubs_namespace_name=hawkbit-ns
 # The AKS cluster name
 export aks_cluster_name=hawkbit-cluster-$RANDOM
+# The AKS IP name
+export aks_ip_name=hawkbit-ip-$RANDOM
 
 # Create a resource group
 az group create --name $resourcegroupname --location $location
@@ -61,22 +68,31 @@ export event_hubs_access_key=`az eventhubs namespace authorization-rule keys lis
 Now create your Kubernetes cluster.
 
 ```bash
-# First grant access to your ACR registry
+# Grant access to your ACR registry
 export service_principal_access_registry=`az ad sp create-for-rbac --skip-assignment --output tsv`
 export app_id_access_registry=`echo $service_principal_access_registry|cut -f1 -d ' '`
 export password_access_registry=`echo $service_principal_access_registry|cut -f4 -d ' '`
-export acr_id_access_registry=`az acr show --resource-group kaisGroup --name <YourAcrRegistry> --query "id" --output tsv`
+export acr_id_access_registry=`az acr show --resource-group $acr_resourcegroupname --name $acr_registry_name --query "id" --output tsv`
 
+# Wait until service principal is available
+sleep 60
 az role assignment create --assignee $app_id_access_registry --scope $acr_id_access_registry --role Reader
 
 # Create cluster and get credentials for kubectl
-az aks create --resource-group $resourcegroupname --name $aks_cluster_name --node-count 1 --enable-addons monitoring --generate-ssh-keys --service-principal $app_id_access_registry --client-secret $password_access_registry
+az aks create --resource-group $resourcegroupname --name $aks_cluster_name --node-count 2 --enable-addons monitoring --generate-ssh-keys --service-principal $app_id_access_registry --client-secret $password_access_registry
 
 # Get credentials and configures the Kubernetes CLI to use them.
 az aks get-credentials --resource-group $resourcegroupname --name $aks_cluster_name
 
+export node_resource_group=`az aks show --resource-group $resourcegroupname --name $aks_cluster_name --query nodeResourceGroup -o tsv`
+
+# Get static public IP with DNS name
+az network public-ip create --resource-group $node_resource_group --name $aks_ip_name --allocation-method static --dns-name $app_name
+export public_ip_address=`az network public-ip show --resource-group $node_resource_group --name $aks_ip_name --query ipAddress -o tsv`
+export public_fqdn=`az network public-ip show --resource-group $node_resource_group --name $aks_ip_name --query dnsSettings.fqdn -o tsv`
+
 # Store your secrets
-export ho db_url=jdbc:sqlserver://"$db_servername".database.windows.net:1433\;database="$db_name"\;user="$db_adminlogin"@"$db_servername"\;password="$db_password"\;encrypt=true\;trustServerCertificate=false\;hostNameInCertificate=*.database.windows.net\;loginTimeout=30\; > secrets.env
+export db_url=jdbc:sqlserver://"$db_servername".database.windows.net:1433\;database="$db_name"\;user="$db_adminlogin"@"$db_servername"\;password="$db_password"\;encrypt=true\;trustServerCertificate=false\;hostNameInCertificate=*.database.windows.net\;loginTimeout=30\; > secrets.env
 export db_username="$db_adminlogin"@"$db_servername" >> secrets.env
 export storage_url=DefaultEndpointsProtocol=https\;AccountName="$storage_name"\;AccountKey="$storage_access_key"\;EndpointSuffix=core.windows.net >> secrets.env
 export eventhubs_host="$events_hubs_namespace_name".servicebus.windows.net >> secrets.env
@@ -86,34 +102,65 @@ echo db_username="$db_username" >> secrets.env
 echo db_password="$db_password" >> secrets.env
 echo storage_url="$storage_url" >> secrets.env
 echo eventhubs_host="$eventhubs_host" >> secrets.env
-echo event_hubs_access_key=$event_hubs_access_key >> secrets.env
+echo event_hubs_access_key="$event_hubs_access_key" >> secrets.env
 
-kubectl create secret generic hawkbit-infra-secrets --from-env-file=secrets.env
-
-# Deploy containers and service
-kubectl apply -f azure-hawkbit-aks.yaml
+kubectl create namespace hawkbit
+kubectl create secret generic hawkbit-infra-secrets --from-env-file=secrets.env --namespace hawkbit
 ```
 
-Now check your deployment and identify the public IP address (might take a moment).
+Next deploy helm on your cluster. For this follow the guide [here](https://docs.microsoft.com/en-us/azure/aks/kubernetes-helm).
+
+Deploy Nginx as Kubernetes Ingress controller.
 
 ```bash
-> kubectl get services
-NAME                    TYPE           CLUSTER-IP   EXTERNAL-IP     PORT(S)          AGE
-hawkbit-update-server   LoadBalancer   10.0.30.89   51.145.128.61   8080:31066/TCP   8m
-kubernetes              ClusterIP      10.0.0.1     <none>          443/TCP          34m
-
-
-> kubectl get pods
-NAME                                     READY     STATUS    RESTARTS   AGE
-hawkbit-update-server-68f6b7bf67-4sdpk   1/1       Running   0          8m
-hawkbit-update-server-68f6b7bf67-hrw2z   1/1       Running   0          8m
+helm install stable/nginx-ingress \
+    --namespace hawkbit \
+    --set controller.service.loadBalancerIP=$public_ip_address \
+    --set controller.replicaCount=2 \
+    --name hawkbit-ingress
 ```
 
-Now you can open the management UI with the IP address
+Deploy cert manager for [Let's Encrypt](https://letsencrypt.org) certificates.
+
+```bash
+helm install stable/cert-manager \
+    --namespace hawkbit \
+    --name hawkbit-cert-manager \
+    --set ingressShim.defaultIssuerName=letsencrypt-prod \
+    --set ingressShim.defaultIssuerKind=ClusterIssuer \
+    --version v0.5.2
+```
+
+Deploy hawkbit.
+
+```bash
+cd helm
+helm install ./hawkbit/ \
+    --name hawkbit \
+    --namespace hawkbit \
+    --set image.repository=$acr_login_server/hawkbit-update-server-azure \
+    --set ingress.hosts={$public_fqdn}
+```
+
+Now check your deployment.
+
+```bash
+> kubectl get services -n hawkbit
+NAME                                            TYPE           CLUSTER-IP    EXTERNAL-IP   PORT(S)                      AGE
+hawkbit                                         LoadBalancer   10.0.185.59   <pending>     8080:30324/TCP               14s
+hawkbit-ingress-nginx-ingress-controller        LoadBalancer   10.0.75.142   52.174.35.7   80:31811/TCP,443:31615/TCP   45m
+hawkbit-ingress-nginx-ingress-default-backend   ClusterIP      10.0.65.126   <none>        80/TCP                       45m
+
+
+> kubectl get pods -n hawkbit
+NAME                                                            READY   STATUS    RESTARTS   AGE
+hawkbit-5ddf667cc8-hdlj2                                        1/1     Running   0          62s
+hawkbit-5ddf667cc8-m9szw                                        1/1     Running   0          62s
+hawkbit-ingress-nginx-ingress-controller-57658b4744-9gwmh       1/1     Running   0          46m
+hawkbit-ingress-nginx-ingress-controller-57658b4744-nhmnn       1/1     Running   0          46m
+hawkbit-ingress-nginx-ingress-default-backend-7c5b8cf46-kxg8p   1/1     Running   0          46m
+```
+
+Now you can open the management UI with the defined DNS name. However, it will take some time until the application is booted up and the certificates are issued.
 
 In case it does not open up you can take a look at the logs using `kubectl logs`.
-
-Obviously this simple example if far away for productive use. Next steps could be:
-
-- [Deploy an HTTPS ingress controller](https://docs.microsoft.com/en-us/azure/aks/ingress)
-- Split hawkBit into multiple apps/services (e.g. one each for DDI, Management API and Management UI)

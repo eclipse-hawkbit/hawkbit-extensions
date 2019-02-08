@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/java/jre-headless:8u181-zulu-alpine
+FROM mcr.microsoft.com/java/jre-headless:8u202-zulu-alpine
 
 MAINTAINER Kai Zimmermann <kai.zimmermann@microsoft.com>
 

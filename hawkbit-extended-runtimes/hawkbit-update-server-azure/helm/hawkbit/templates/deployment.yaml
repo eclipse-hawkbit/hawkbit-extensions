@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hawkbit.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "hawkbit.name" . }}
+    helm.sh/chart: {{ include "hawkbit.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "hawkbit.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "hawkbit.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: SPRING_JPA_DATABASE
+              value: "SQL_SERVER"
+            - name: SPRING_DATASOURCE_DRIVERCLASSNAME
+              value: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+            - name: SPRING_CLOUD_BUS_ENABLED
+              value: "true"
+            - name: SPRING_DATASOURCE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: hawkbit-infra-secrets
+                  key: db_username
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: hawkbit-infra-secrets
+                  key: db_url
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: hawkbit-infra-secrets
+                  key: db_password
+            - name: ORG_ECLIPSE_HAWKBIT_REPOSITORY_AZURE_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: hawkbit-infra-secrets
+                  key: storage_url
+            - name: AZURE_EVENTHUBS_CONNECTIONSTRING
+              valueFrom:
+                secretKeyRef:
+                  name: hawkbit-infra-secrets
+                  key: event_hubs_access_key
+            - name: AZURE_EVENTHUBS_SERVICEHOST
+              valueFrom:
+                secretKeyRef:
+                  name: hawkbit-infra-secrets
+                  key: eventhubs_host
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 60
+            timeoutSeconds: 2
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 5
+            timeoutSeconds: 2
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
