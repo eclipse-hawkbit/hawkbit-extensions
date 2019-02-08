@@ -142,7 +142,7 @@ helm install ./hawkbit/ \
     --set ingress.hosts={$public_fqdn}
 ```
 
-Now check your deployment and identify the public IP address (might take a moment).
+Now check your deployment.
 
 ```bash
 > kubectl get services -n hawkbit
@@ -161,6 +161,6 @@ hawkbit-ingress-nginx-ingress-controller-57658b4744-nhmnn       1/1     Running 
 hawkbit-ingress-nginx-ingress-default-backend-7c5b8cf46-kxg8p   1/1     Running   0          46m
 ```
 
-Now you can open the management UI with the DNS name. However, it will take some time until the application is booted up and the certificates are issued.
+Now you can open the management UI with the defined DNS name. However, it will take some time until the application is booted up and the certificates are issued.
 
 In case it does not open up you can take a look at the logs using `kubectl logs`.
