@@ -28,6 +28,8 @@ spec:
               containerPort: 8080
               protocol: TCP
           env:
+            - name: HAWKBIT_SERVER_BUILD_VERSION
+              value: "{{ .Values.image.tag }}"
             - name: SPRING_JPA_DATABASE
               value: "SQL_SERVER"
             - name: SPRING_DATASOURCE_DRIVERCLASSNAME
