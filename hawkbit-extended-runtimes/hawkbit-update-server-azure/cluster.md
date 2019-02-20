@@ -79,7 +79,7 @@ sleep 60
 az role assignment create --assignee $app_id_access_registry --scope $acr_id_access_registry --role Reader
 
 # Create cluster and get credentials for kubectl
-az aks create --resource-group $resourcegroupname --name $aks_cluster_name --node-count 2 --enable-addons monitoring --generate-ssh-keys --service-principal $app_id_access_registry --client-secret $password_access_registry
+az aks create --resource-group $resourcegroupname --name $aks_cluster_name --node-count 3 --enable-addons monitoring --generate-ssh-keys --service-principal $app_id_access_registry --client-secret $password_access_registry
 
 # Get credentials and configures the Kubernetes CLI to use them.
 az aks get-credentials --resource-group $resourcegroupname --name $aks_cluster_name
@@ -92,10 +92,10 @@ export public_ip_address=`az network public-ip show --resource-group $node_resou
 export public_fqdn=`az network public-ip show --resource-group $node_resource_group --name $aks_ip_name --query dnsSettings.fqdn -o tsv`
 
 # Store your secrets
-export db_url=jdbc:sqlserver://"$db_servername".database.windows.net:1433\;database="$db_name"\;user="$db_adminlogin"@"$db_servername"\;password="$db_password"\;encrypt=true\;trustServerCertificate=false\;hostNameInCertificate=*.database.windows.net\;loginTimeout=30\; > secrets.env
-export db_username="$db_adminlogin"@"$db_servername" >> secrets.env
-export storage_url=DefaultEndpointsProtocol=https\;AccountName="$storage_name"\;AccountKey="$storage_access_key"\;EndpointSuffix=core.windows.net >> secrets.env
-export eventhubs_host="$events_hubs_namespace_name".servicebus.windows.net >> secrets.env
+export db_url=jdbc:sqlserver://"$db_servername".database.windows.net:1433\;database="$db_name"\;user="$db_adminlogin"@"$db_servername"\;password="$db_password"\;encrypt=true\;trustServerCertificate=false\;hostNameInCertificate=*.database.windows.net\;loginTimeout=30\;
+export db_username="$db_adminlogin"@"$db_servername"
+export storage_url=DefaultEndpointsProtocol=https\;AccountName="$storage_name"\;AccountKey="$storage_access_key"\;EndpointSuffix=core.windows.net
+export eventhubs_host="$events_hubs_namespace_name".servicebus.windows.net
 
 echo db_url="$db_url" > secrets.env
 echo db_username="$db_username" >> secrets.env
