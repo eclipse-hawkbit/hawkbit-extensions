@@ -29,6 +29,7 @@
    <properties>
       <azure.version>2.1.2</azure.version>
       <applicationinsights.version>2.1.2</applicationinsights.version>
+      <azure.storage.version>8.0.0</azure.storage.version>
    </properties>
 
    <modules>
@@ -48,6 +49,11 @@
             <groupId>com.microsoft.azure</groupId>
             <artifactId>applicationinsights-core</artifactId>
             <version>${applicationinsights.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>azure-storage</artifactId>
+            <version>${azure.storage.version}</version>
          </dependency>
       </dependencies>
    </dependencyManagement>

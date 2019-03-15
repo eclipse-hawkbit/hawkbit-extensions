@@ -69,7 +69,7 @@ Now create your Kubernetes cluster.
 
 ```bash
 # Grant access to your ACR registry
-export service_principal_access_registry=`az ad sp create-for-rbac --skip-assignment --output tsv`
+export service_principal_access_registry=`az ad sp create-for-rbac --name http://$aks_cluster_name --skip-assignment --output tsv`
 export app_id_access_registry=`echo $service_principal_access_registry|cut -f1 -d ' '`
 export password_access_registry=`echo $service_principal_access_registry|cut -f4 -d ' '`
 export acr_id_access_registry=`az acr show --resource-group $acr_resourcegroupname --name $acr_registry_name --query "id" --output tsv`
@@ -79,7 +79,7 @@ sleep 60
 az role assignment create --assignee $app_id_access_registry --scope $acr_id_access_registry --role Reader
 
 # Create cluster and get credentials for kubectl
-az aks create --resource-group $resourcegroupname --name $aks_cluster_name --node-count 3 --enable-addons monitoring --generate-ssh-keys --service-principal $app_id_access_registry --client-secret $password_access_registry
+az aks create --resource-group $resourcegroupname --name $aks_cluster_name --node-count 3 --enable-addons monitoring --generate-ssh-keys --service-principal $app_id_access_registry --client-secret $password_access_registry --kubernetes-version 1.12.5
 
 # Get credentials and configures the Kubernetes CLI to use them.
 az aks get-credentials --resource-group $resourcegroupname --name $aks_cluster_name

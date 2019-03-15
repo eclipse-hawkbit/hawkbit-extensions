@@ -1,6 +1,8 @@
    com.fasterxml.jackson.module:jackson-module-jaxb-annotations:jar:2.9.8:test
    com.jayway.jsonpath:json-path:jar:2.4.0:test
    com.vaadin.external.google:android-json:jar:0.0.20131108.vaadin1:test
+   de.flapdoodle.embed:de.flapdoodle.embed.mongo:jar:2.1.2:test
+   de.flapdoodle.embed:de.flapdoodle.embed.process:jar:2.1.2:test
    io.qameta.allure:allure-java-commons:jar:2.7.0:test
    io.qameta.allure:allure-junit4:jar:2.7.0:test
    io.qameta.allure:allure2-model-api:jar:1.0.0:test
@@ -9,8 +11,13 @@
    junit:junit:jar:4.12:test
    net.bytebuddy:byte-buddy-agent:jar:1.9.7:test
    net.bytebuddy:byte-buddy:jar:1.9.7:test
+   net.java.dev.jna:jna-platform:jar:4.5.2:test
+   net.java.dev.jna:jna:jar:4.5.2:test
    net.minidev:accessors-smart:jar:1.2:test
    net.minidev:json-smart:jar:2.3:test
+   org.apache.commons:commons-compress:jar:1.18:test
+   org.apache.logging.log4j:log4j-api:jar:2.11.1:test
+   org.apache.logging.log4j:log4j-to-slf4j:jar:2.11.1:test
    org.apache.tika:tika-core:jar:1.14:test
    org.aspectj:aspectjrt:jar:1.9.2:test
    org.assertj:assertj-core:jar:3.11.1:test
