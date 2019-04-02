@@ -18,9 +18,10 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
+import org.springframework.security.config.annotation.authentication.configuration.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -54,10 +55,16 @@ public class InMemoryMultiUserManagementAutoConfiguration extends GlobalAuthenti
         for (MultiUserProperties.User user : multiUserProperties.getUser()) {
             List<GrantedAuthority> authorityList;
             // Allows ALL as a shorthand for all permissions
-            if (user.getPermissions().size() == 1 && user.getPermissions().get(0).equals("ALL"))
+            if (user.getPermissions().size() == 1 && user.getPermissions().get(0).equals("ALL")) {
                 authorityList = PermissionUtils.createAllAuthorityList();
-            else
-                authorityList = PermissionUtils.createAuthorityList(user.getPermissions());
+            } else {
+                authorityList = new ArrayList<>(user.getPermissions().size());
+                for (final String permission : user.getPermissions()) {
+                    authorityList.add(new SimpleGrantedAuthority(permission));
+                    authorityList.add(new SimpleGrantedAuthority("ROLE_" + permission));
+                }
+            }
+
             final UserPrincipal userPrincipal = new UserPrincipal(user.getUsername(), user.getPassword(),
                     user.getFirstname(), user.getLastname(), user.getUsername(), user.getEmail(), defaultTenant,
                     authorityList);
