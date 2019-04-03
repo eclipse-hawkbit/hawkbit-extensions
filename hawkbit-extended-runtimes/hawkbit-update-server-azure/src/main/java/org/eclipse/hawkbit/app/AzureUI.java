@@ -14,6 +14,7 @@ import org.eclipse.hawkbit.ui.UiProperties;
 import org.eclipse.hawkbit.ui.components.NotificationUnreadButton;
 import org.eclipse.hawkbit.ui.menu.DashboardMenu;
 import org.eclipse.hawkbit.ui.push.EventPushStrategy;
+import org.eclipse.hawkbit.ui.utils.VaadinMessageSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.vaadin.spring.events.EventBus.UIEventBus;
@@ -35,9 +36,9 @@ public class AzureUI extends AbstractHawkbitUI {
     @Autowired
     AzureUI(final EventPushStrategy pushStrategy, final UIEventBus eventBus, final SpringViewProvider viewProvider,
             final ApplicationContext context, final DashboardMenu dashboardMenu, final ErrorView errorview,
-            final NotificationUnreadButton notificationUnreadButton, final UiProperties uiProperties) {
+            final NotificationUnreadButton notificationUnreadButton, final UiProperties uiProperties,
+            final VaadinMessageSource i18n) {
         super(pushStrategy, eventBus, viewProvider, context, dashboardMenu, errorview, notificationUnreadButton,
-                uiProperties);
+                uiProperties, i18n);
     }
-
 }

@@ -16,7 +16,7 @@
    <parent>
       <groupId>org.eclipse.hawkbit</groupId>
       <artifactId>hawkbit-parent</artifactId>
-      <version>0.3.0M1</version>
+      <version>0.3.0M2</version>
    </parent>
 
    <artifactId>hawkbit-extensions-parent</artifactId>
@@ -41,7 +41,7 @@
 
    <properties>
       <jacoco.outputDir>${project.basedir}/../../target/</jacoco.outputDir>
-      <hawkbit.version>0.3.0M1</hawkbit.version>
+      <hawkbit.version>0.3.0M2</hawkbit.version>
 
       <!-- Release - START -->
       <release.scm.connection>scm:git:git@github.com:eclipse/hawkbit-extensions.git</release.scm.connection>
@@ -118,8 +118,8 @@
             <artifactId>maven-enforcer-plugin</artifactId>
             <executions>
                <execution>
-                  <!-- Make sure that only non-snapshot versions are used 
-                     for the dependencies. Only active when property 'snapshotDependencyAllowed' 
+                  <!-- Make sure that only non-snapshot versions are used
+                     for the dependencies. Only active when property 'snapshotDependencyAllowed'
                      is false. -->
                   <id>enforce-no-snapshots</id>
                   <goals>
