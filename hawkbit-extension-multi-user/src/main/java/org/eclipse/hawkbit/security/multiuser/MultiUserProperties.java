@@ -13,16 +13,16 @@ import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties("multiuser")
+@ConfigurationProperties("hawkbit.server.im")
 public class MultiUserProperties {
-    private List<User> user = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
 
-    public List<User> getUser() {
-        return user;
+    public List<User> getUsers() {
+        return users;
     }
 
-    public void setUser(List<User> user) {
-        this.user = user;
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     public static class User {

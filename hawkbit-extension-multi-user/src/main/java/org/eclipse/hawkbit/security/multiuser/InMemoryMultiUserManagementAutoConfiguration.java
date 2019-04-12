@@ -17,7 +17,6 @@ import org.eclipse.hawkbit.im.authentication.PermissionUtils;
 import org.eclipse.hawkbit.im.authentication.TenantAwareAuthenticationDetails;
 import org.eclipse.hawkbit.im.authentication.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -60,7 +59,7 @@ public class InMemoryMultiUserManagementAutoConfiguration extends GlobalAuthenti
     public UserDetailsService userDetailsService() {
         final String defaultTenant = "DEFAULT";
         final List<UserPrincipal> userPrincipals = new ArrayList<>();
-        for (MultiUserProperties.User user : multiUserProperties.getUser()) {
+        for (MultiUserProperties.User user : multiUserProperties.getUsers()) {
             List<GrantedAuthority> authorityList;
             // Allows ALL as a shorthand for all permissions
             if (user.getPermissions().size() == 1 && user.getPermissions().get(0).equals("ALL")) {
