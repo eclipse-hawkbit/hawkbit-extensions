@@ -35,9 +35,9 @@
 | com.google.cloud                             | google-cloud-storage                  | 1.69.0                | [CQ19811](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19811) |
 | com.google.http-client                       | google-http-client-appengine          | 1.27.0                | [CQ19835](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19835) |
 | com.google.http-client                       | google-http-client-jackson2           | 1.27.0                | [CQ19836](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19836) |
-| com.google.http-client                       | google-http-client                    | 1.27.0                | [CQ19849](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19849) |
+| com.google.http-client                       | google-http-client                    | 1.27.0                | [CQ19857](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19857) |
 | com.google.j2objc                            | j2objc-annotations                    | 1.1                   | [CQ19837](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19837) |
-| com.google.oauth-client                      | google-oauth-client                   | 1.27.0                | [CQ19848](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19848) |
+| com.google.oauth-client                      | google-oauth-client                   | 1.27.0                | [CQ19858](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19858) |
 | com.google.protobuf                          | protobuf-java-util                    | 3.6.1                 | [CQ19850](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19850) |
 | com.google.protobuf                          | protobuf-java                         | 3.6.1                 | [CQ19851](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19851) |
 | io.grpc                                      | grpc-context                          | 1.12.0                | [CQ19852](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19852) |
