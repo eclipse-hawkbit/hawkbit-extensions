@@ -222,6 +222,8 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
         });
     }
 
+    @SuppressWarnings("squid:S2589")
+    // False positive: file.getMetadata() can return null
     private static final String getContentType(final GridFSFile file) {
         final Document metadata = file.getMetadata();
         String contentType = null;
