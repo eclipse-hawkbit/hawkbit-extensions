@@ -77,7 +77,7 @@ public class S3Repository extends AbstractArtifactRepository {
         LOG.info("Storing file {} with length {} to AWS S3 bucket {} with key {}", file.getName(), file.length(),
                 s3Properties.getBucketName(), key);
 
-        if (exists(key)) {
+        if (existsByTenantAndSha1(tenant, sha1Hash16)) {
             LOG.debug("Artifact {} already exists on S3 bucket {}, don't need to upload twice", key,
                     s3Properties.getBucketName());
             return s3Artifact;
@@ -152,8 +152,9 @@ public class S3Repository extends AbstractArtifactRepository {
         }
     }
 
-    private boolean exists(final String sha1) {
-        return amazonS3.doesObjectExist(s3Properties.getBucketName(), sha1);
+    @Override
+    public boolean existsByTenantAndSha1(final String tenant, final String sha1Hash) {
+        return amazonS3.doesObjectExist(s3Properties.getBucketName(), objectKey(tenant, sha1Hash));
     }
 
     @Override

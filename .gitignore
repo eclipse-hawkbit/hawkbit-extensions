@@ -55,3 +55,7 @@ maven.properties
 # Test Files
 *.tmp
 hawkbit-extended-runtimes/hawkbit-update-server-azure/*.env
+
+# Intellij
+.idea
+*.iml
