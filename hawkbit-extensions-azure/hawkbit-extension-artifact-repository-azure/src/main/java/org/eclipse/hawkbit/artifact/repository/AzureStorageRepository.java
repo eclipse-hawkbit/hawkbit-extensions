@@ -130,7 +130,7 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
             blob.delete();
 
         } catch (final URISyntaxException | StorageException e) {
-            throw new ArtifactStoreException("Failed to delete artifact drom Azure storage", e);
+            throw new ArtifactStoreException("Failed to delete artifact from Azure storage", e);
         }
     }
 
@@ -182,6 +182,16 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
             blob.delete();
         } catch (final StorageException e) {
             throw new ArtifactStoreException("Failed to delete tenant directory from Azure storage", e);
+        }
+    }
+
+    @Override
+    public boolean existsByTenantAndSha1(final String tenant, final String sha1Hash) {
+        try {
+            return getBlob(tenant, sha1Hash).exists();
+        } catch (StorageException | URISyntaxException e) {
+            LOG.warn("Caught Exception while calling getBlob() for tenant: {} and sha1Hash: {}", tenant, sha1Hash, e);
+            return false;
         }
     }
 }

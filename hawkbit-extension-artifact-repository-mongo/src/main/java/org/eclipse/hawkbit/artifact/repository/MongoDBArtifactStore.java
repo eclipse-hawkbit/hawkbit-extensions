@@ -248,4 +248,12 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
             throw new ArtifactStoreException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public boolean existsByTenantAndSha1(final String tenant, final String sha1Hash) {
+        final GridFSFile artifact = gridFs.findOne(new Query()
+                .addCriteria(Criteria.where(FILENAME).is(sha1Hash).and(TENANT_QUERY).is(sanitizeTenant(tenant))));
+
+        return artifact != null;
+    }
 }
