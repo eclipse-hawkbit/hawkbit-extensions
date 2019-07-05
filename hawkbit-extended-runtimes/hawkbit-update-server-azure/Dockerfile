@@ -1,7 +1,5 @@
 FROM mcr.microsoft.com/java/jre-headless:8u202-zulu-alpine
 
-MAINTAINER Kai Zimmermann <kai.zimmermann@microsoft.com>
-
 ARG JAR_FILE=hawkbit-update-server-azure-0.3.0-SNAPSHOT.jar
 
 ENV HAWKBIT_HOME=/opt/hawkbit
