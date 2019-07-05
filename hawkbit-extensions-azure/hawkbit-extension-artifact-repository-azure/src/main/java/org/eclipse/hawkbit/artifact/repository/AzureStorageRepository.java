@@ -61,16 +61,16 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
     }
 
     @Override
-    protected AbstractDbArtifact store(final String tenant, final String sha1Hash16, final String mdMD5Hash16,
-            final String contentType, final String tempFile) throws IOException {
+    protected AbstractDbArtifact store(final String tenant, final DbArtifactHash hashes, final String contentType,
+            final String tempFile) throws IOException {
 
         final File file = new File(tempFile);
 
         try {
-            final CloudBlockBlob blob = getBlob(tenant, sha1Hash16);
+            final CloudBlockBlob blob = getBlob(tenant, hashes.getSha1());
 
-            final AzureStorageArtifact artifact = new AzureStorageArtifact(blob, sha1Hash16,
-                    new DbArtifactHash(sha1Hash16, mdMD5Hash16), file.length(), contentType);
+            final AzureStorageArtifact artifact = new AzureStorageArtifact(blob, hashes.getSha1(), hashes,
+                    file.length(), contentType);
 
             LOG.info("Storing file {} with length {} to Azure Storage container {} in directory {}", file.getName(),
                     file.length(), properties.getContainerName(), blob.getParent());
@@ -78,7 +78,7 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
             if (blob.exists()) {
                 LOG.debug(
                         "Artifact {} for tenant {} already exists on Azure Storage container {}, don't need to upload twice",
-                        sha1Hash16, tenant, properties.getContainerName());
+                        hashes.getSha1(), tenant, properties.getContainerName());
                 return artifact;
             }
 
@@ -97,7 +97,7 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
             final String md5Base16 = convertToBase16(blob.getProperties().getContentMD5());
 
             LOG.debug("Artifact {} stored on Azure Storage container {} with  server side Etag {} and MD5 hash {}",
-                    sha1Hash16, blob.getContainer().getName(), blob.getProperties().getEtag(), md5Base16);
+                    hashes.getSha1(), blob.getContainer().getName(), blob.getProperties().getEtag(), md5Base16);
 
             return artifact;
         } catch (final URISyntaxException | StorageException e) {
@@ -147,7 +147,7 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
                     blob.getContainer().getName(), sha1Hash16, tenant);
 
             return new AzureStorageArtifact(blob, sha1Hash16,
-                    new DbArtifactHash(sha1Hash16, convertToBase16(blob.getProperties().getContentMD5())),
+                    new DbArtifactHash(sha1Hash16, convertToBase16(blob.getProperties().getContentMD5()), null),
                     blob.getProperties().getLength(), blob.getProperties().getContentType());
         } catch (final URISyntaxException | StorageException e) {
             throw new ArtifactStoreException("Failed to load artifact into Azure storage", e);

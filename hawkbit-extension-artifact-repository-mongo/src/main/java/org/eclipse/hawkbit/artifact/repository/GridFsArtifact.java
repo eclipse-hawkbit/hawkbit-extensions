@@ -32,9 +32,9 @@ public class GridFsArtifact extends AbstractDbArtifact {
      * @param contentType
      * @param inputStreamSupplier
      */
-    public GridFsArtifact(final GridFSFile dbFile, final String contentType,
+    public GridFsArtifact(final GridFSFile dbFile, final String contentType, final DbArtifactHash hashes,
             final Supplier<InputStream> inputStreamSupplier) {
-        super(dbFile.getId().toString(), new DbArtifactHash(dbFile.getFilename(), dbFile.getMD5()), dbFile.getLength(),
+        super(dbFile.getId().toString(), hashes, dbFile.getLength(),
                 contentType);
         this.inputStreamSupplier = inputStreamSupplier;
     }

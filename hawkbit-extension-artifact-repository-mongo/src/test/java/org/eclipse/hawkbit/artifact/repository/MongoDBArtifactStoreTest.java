@@ -37,9 +37,9 @@ import io.qameta.allure.Story;
 @Feature("Component Tests - Repository")
 @Story("Artifact Store MongoDB")
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { MongoDBArtifactStoreAutoConfiguration.class, TestConfiguration.class }, properties = {
+@SpringBootTest(classes = {MongoDBArtifactStoreAutoConfiguration.class, TestConfiguration.class}, properties = {
         "spring.data.mongodb.port=0", "spring.mongodb.embedded.version=3.5.5",
-        "spring.mongodb.embedded.features=sync_delay,no_http_interface_arg" })
+        "spring.mongodb.embedded.features=sync_delay,no_http_interface_arg"})
 public class MongoDBArtifactStoreTest {
     private static final String TENANT = "test_tenant";
     private static final String TENANT2 = "test_tenant2";
@@ -90,9 +90,11 @@ public class MongoDBArtifactStoreTest {
         new Random().nextBytes(bytes);
 
         final MessageDigest mdSHA1 = MessageDigest.getInstance("SHA1");
+        final MessageDigest mdSHA256 = MessageDigest.getInstance("SHA-256");
         final MessageDigest mdMD5 = MessageDigest.getInstance("MD5");
         final DbArtifactHash hash = new DbArtifactHash(BaseEncoding.base16().lowerCase().encode(mdSHA1.digest(bytes)),
-                BaseEncoding.base16().lowerCase().encode(mdMD5.digest(bytes)));
+                BaseEncoding.base16().lowerCase().encode(mdMD5.digest(bytes)),
+                BaseEncoding.base16().lowerCase().encode(mdSHA256.digest(bytes)));
 
         final AbstractDbArtifact artifact1 = storeArtifact(TENANT, "file1.txt", new ByteArrayInputStream(bytes), mdSHA1,
                 mdMD5, hash);

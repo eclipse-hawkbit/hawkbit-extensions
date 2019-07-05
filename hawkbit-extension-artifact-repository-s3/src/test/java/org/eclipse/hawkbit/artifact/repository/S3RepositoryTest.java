@@ -169,17 +169,19 @@ public class S3RepositoryTest {
     }
 
     @Test
-    @Description("Verifies that given SHA1 hash are checked and if not match will throw exception")
+    @Description("Verifies that given SHA1 hash is checked and if not match will throw exception")
     public void sha1HashValuesAreNotTheSameThrowsException() throws IOException {
 
         final byte[] rndBytes = randomBytes();
         final String knownContentType = "application/octet-stream";
         final String wrongSHA1Hash = "wrong";
         final String wrongMD5 = "wrong";
+        final String wrongSHA256 = "wrong";
+
 
         // test
         try {
-            storeRandomBytes(rndBytes, knownContentType, new DbArtifactHash(wrongSHA1Hash, wrongMD5));
+            storeRandomBytes(rndBytes, knownContentType, new DbArtifactHash(wrongSHA1Hash, wrongMD5, wrongSHA256));
             fail("Expected an HashNotMatchException, but didn't throw");
         } catch (final HashNotMatchException e) {
             assertThat(e.getHashFunction()).isEqualTo(HashNotMatchException.SHA1);
@@ -187,20 +189,40 @@ public class S3RepositoryTest {
     }
 
     @Test
-    @Description("Verifies that given MD5 hash are checked and if not match will throw exception")
+    @Description("Verifies that given MD5 hash is checked and if not match will throw exception")
     public void md5HashValuesAreNotTheSameThrowsException() throws IOException, NoSuchAlgorithmException {
 
         final byte[] rndBytes = randomBytes();
         final String knownContentType = "application/octet-stream";
         final String knownSHA1 = getSha1OfBytes(rndBytes);
         final String wrongMD5 = "wrong";
+        final String wrongSHA256 = "wrong";
 
         // test
         try {
-            storeRandomBytes(rndBytes, knownContentType, new DbArtifactHash(knownSHA1, wrongMD5));
+            storeRandomBytes(rndBytes, knownContentType, new DbArtifactHash(knownSHA1, wrongMD5, wrongSHA256));
             fail("Expected an HashNotMatchException, but didn't throw");
         } catch (final HashNotMatchException e) {
             assertThat(e.getHashFunction()).isEqualTo(HashNotMatchException.MD5);
+        }
+    }
+
+    @Test
+    @Description("Verifies that given SHA256 hash is checked and if not match will throw exception")
+    public void sha256HashValuesAreNotTheSameThrowsException() throws IOException, NoSuchAlgorithmException {
+
+        final byte[] rndBytes = randomBytes();
+        final String knownContentType = "application/octet-stream";
+        final String knownSHA1 = getSha1OfBytes(rndBytes);
+        final String knownMD5 = getMd5OfBytes(rndBytes);
+        final String wrongSHA256 = "wrong";
+
+        // test
+        try {
+            storeRandomBytes(rndBytes, knownContentType, new DbArtifactHash(knownSHA1, knownMD5, wrongSHA256));
+            fail("Expected an HashNotMatchException, but didn't throw");
+        } catch (final HashNotMatchException e) {
+            assertThat(e.getHashFunction()).isEqualTo(HashNotMatchException.SHA256);
         }
     }
 
@@ -222,6 +244,16 @@ public class S3RepositoryTest {
 
         try (InputStream input = new ByteArrayInputStream(bytes);
                 OutputStream output = new DigestOutputStream(new ByteArrayOutputStream(), messageDigest)) {
+            ByteStreams.copy(input, output);
+            return BaseEncoding.base16().lowerCase().encode(messageDigest.digest());
+        }
+    }
+
+    private static String getMd5OfBytes(final byte[] bytes) throws IOException, NoSuchAlgorithmException {
+        final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+
+        try (InputStream input = new ByteArrayInputStream(bytes);
+             OutputStream output = new DigestOutputStream(new ByteArrayOutputStream(), messageDigest)) {
             ByteStreams.copy(input, output);
             return BaseEncoding.base16().lowerCase().encode(messageDigest.digest());
         }
