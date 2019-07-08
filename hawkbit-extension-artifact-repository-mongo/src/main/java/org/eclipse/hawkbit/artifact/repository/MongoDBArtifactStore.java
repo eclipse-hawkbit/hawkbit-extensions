@@ -116,34 +116,34 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
     }
 
     @Override
-    protected AbstractDbArtifact store(final String tenant, final DbArtifactHash hashes, final String contentType,
+    protected AbstractDbArtifact store(final String tenant, final DbArtifactHash base16Hashes, final String contentType,
             final String tempFile) throws IOException {
 
         final GridFSFile result = gridFs.findOne(new Query().addCriteria(
-                Criteria.where(FILENAME).is(hashes.getSha1()).and(TENANT_QUERY).is(sanitizeTenant(tenant))));
+                Criteria.where(FILENAME).is(base16Hashes.getSha1()).and(TENANT_QUERY).is(sanitizeTenant(tenant))));
 
         if (result == null) {
             try {
                 final GridFSFile temp = loadTempFile(tempFile);
 
                 final Document metadata = new Document();
-                metadata.put(SHA1, hashes.getSha1());
+                metadata.put(SHA1, base16Hashes.getSha1());
                 metadata.put(TENANT, tenant);
-                metadata.put(FILENAME, hashes.getSha1());
+                metadata.put(FILENAME, base16Hashes.getSha1());
                 metadata.put(CONTENT_TYPE, contentType);
 
                 final GridFsResource resource = gridFs.getResource(temp);
-                final ObjectId id = gridFs.store(resource.getInputStream(), hashes.getSha1(), contentType, metadata);
+                final ObjectId id = gridFs.store(resource.getInputStream(), base16Hashes.getSha1(), contentType, metadata);
                 final GridFSFile file = gridFs.findOne(new Query().addCriteria(Criteria.where(ID).is(id)));
 
-                return createGridFsArtifact(file, contentType, hashes);
+                return createGridFsArtifact(file, contentType, base16Hashes);
 
             } catch (final MongoClientException e) {
                 throw new ArtifactStoreException(e.getMessage(), e);
             }
         }
 
-        return createGridFsArtifact(result, contentType, hashes);
+        return createGridFsArtifact(result, contentType, base16Hashes);
     }
 
     private GridFSFile loadTempFile(final String tempFile) {
@@ -198,7 +198,8 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
         if (file == null) {
             return null;
         }
-        return createGridFsArtifact(file, getContentType(file), new DbArtifactHash(file.getFilename(), file.getMD5(), null));
+        return createGridFsArtifact(file, getContentType(file),
+                new DbArtifactHash(file.getFilename(), file.getMD5(), null));
     }
 
     /**
@@ -208,13 +209,16 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
      *            the {@link GridFSFile} object.
      * @param contentType
      *            the content type of the artifact
+     * @param hashes
+     *            the {@link DbArtifactHash} object of the artifact
      * @return a mapped artifact from the given file
      */
-    private GridFsArtifact createGridFsArtifact(final GridFSFile file, final String contentType, final DbArtifactHash hashes) {
+    private GridFsArtifact createGridFsArtifact(final GridFSFile file, final String contentType,
+            final DbArtifactHash hashes) {
         if (file == null) {
             return null;
         }
-        return new GridFsArtifact(file, contentType, hashes, () -> {
+        return new GridFsArtifact(file.getId().toString(), hashes, file.getLength(), contentType, () -> {
             try {
                 return gridFs.getResource(file).getInputStream();
             } catch (final IllegalStateException | IOException e) {

@@ -67,17 +67,17 @@ public class S3Repository extends AbstractArtifactRepository {
     }
 
     @Override
-    protected AbstractDbArtifact store(final String tenant, final DbArtifactHash hashes, final String contentType,
+    protected AbstractDbArtifact store(final String tenant, final DbArtifactHash base16Hashes, final String contentType,
             final String tempFile) throws IOException {
         final File file = new File(tempFile);
 
-        final S3Artifact s3Artifact = createS3Artifact(tenant, hashes, contentType, file);
-        final String key = objectKey(tenant, hashes.getSha1());
+        final S3Artifact s3Artifact = createS3Artifact(tenant, base16Hashes, contentType, file);
+        final String key = objectKey(tenant, base16Hashes.getSha1());
 
         LOG.info("Storing file {} with length {} to AWS S3 bucket {} with key {}", file.getName(), file.length(),
                 s3Properties.getBucketName(), key);
 
-        if (existsByTenantAndSha1(tenant, hashes.getSha1())) {
+        if (existsByTenantAndSha1(tenant, base16Hashes.getSha1())) {
             LOG.debug("Artifact {} already exists on S3 bucket {}, don't need to upload twice", key,
                     s3Properties.getBucketName());
             return s3Artifact;
@@ -85,7 +85,7 @@ public class S3Repository extends AbstractArtifactRepository {
 
         try (final InputStream inputStream = new BufferedInputStream(new FileInputStream(file),
                 RequestClientOptions.DEFAULT_STREAM_BUFFER_SIZE)) {
-            final ObjectMetadata objectMetadata = createObjectMetadata(hashes.getMd5(), contentType, file);
+            final ObjectMetadata objectMetadata = createObjectMetadata(base16Hashes.getMd5(), contentType, file);
             final PutObjectResult result = amazonS3.putObject(s3Properties.getBucketName(), key, inputStream,
                     objectMetadata);
 

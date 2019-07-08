@@ -61,15 +61,15 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
     }
 
     @Override
-    protected AbstractDbArtifact store(final String tenant, final DbArtifactHash hashes, final String contentType,
+    protected AbstractDbArtifact store(final String tenant, final DbArtifactHash base16Hashes, final String contentType,
             final String tempFile) throws IOException {
 
         final File file = new File(tempFile);
 
         try {
-            final CloudBlockBlob blob = getBlob(tenant, hashes.getSha1());
+            final CloudBlockBlob blob = getBlob(tenant, base16Hashes.getSha1());
 
-            final AzureStorageArtifact artifact = new AzureStorageArtifact(blob, hashes.getSha1(), hashes,
+            final AzureStorageArtifact artifact = new AzureStorageArtifact(blob, base16Hashes.getSha1(), base16Hashes,
                     file.length(), contentType);
 
             LOG.info("Storing file {} with length {} to Azure Storage container {} in directory {}", file.getName(),
@@ -78,7 +78,7 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
             if (blob.exists()) {
                 LOG.debug(
                         "Artifact {} for tenant {} already exists on Azure Storage container {}, don't need to upload twice",
-                        hashes.getSha1(), tenant, properties.getContainerName());
+                        base16Hashes.getSha1(), tenant, properties.getContainerName());
                 return artifact;
             }
 
@@ -97,7 +97,7 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
             final String md5Base16 = convertToBase16(blob.getProperties().getContentMD5());
 
             LOG.debug("Artifact {} stored on Azure Storage container {} with  server side Etag {} and MD5 hash {}",
-                    hashes.getSha1(), blob.getContainer().getName(), blob.getProperties().getEtag(), md5Base16);
+                    base16Hashes.getSha1(), blob.getContainer().getName(), blob.getProperties().getEtag(), md5Base16);
 
             return artifact;
         } catch (final URISyntaxException | StorageException e) {

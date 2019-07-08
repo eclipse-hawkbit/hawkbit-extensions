@@ -159,7 +159,7 @@ public class S3RepositoryTest {
     @Description("Verifies that null is returned if the given hash does not exists on S3")
     public void getArtifactBySha1ReturnsNullIfFileDoesNotExists() {
         final String knownSHA1Hash = "0815";
-      
+
         // test
         final AbstractDbArtifact artifactBySha1NotExists = s3RepositoryUnderTest.getArtifactBySha1(TENANT,
                 knownSHA1Hash);
@@ -170,18 +170,17 @@ public class S3RepositoryTest {
 
     @Test
     @Description("Verifies that given SHA1 hash is checked and if not match will throw exception")
-    public void sha1HashValuesAreNotTheSameThrowsException() throws IOException {
+    public void sha1HashValuesAreNotTheSameThrowsException() throws IOException, NoSuchAlgorithmException {
 
         final byte[] rndBytes = randomBytes();
         final String knownContentType = "application/octet-stream";
         final String wrongSHA1Hash = "wrong";
-        final String wrongMD5 = "wrong";
-        final String wrongSHA256 = "wrong";
-
+        final String knownMD5 = getMd5OfBytes(rndBytes);
+        final String knownSHA256 = getSha256OfBytes(rndBytes);
 
         // test
         try {
-            storeRandomBytes(rndBytes, knownContentType, new DbArtifactHash(wrongSHA1Hash, wrongMD5, wrongSHA256));
+            storeRandomBytes(rndBytes, knownContentType, new DbArtifactHash(wrongSHA1Hash, knownMD5, knownSHA256));
             fail("Expected an HashNotMatchException, but didn't throw");
         } catch (final HashNotMatchException e) {
             assertThat(e.getHashFunction()).isEqualTo(HashNotMatchException.SHA1);
@@ -196,11 +195,11 @@ public class S3RepositoryTest {
         final String knownContentType = "application/octet-stream";
         final String knownSHA1 = getSha1OfBytes(rndBytes);
         final String wrongMD5 = "wrong";
-        final String wrongSHA256 = "wrong";
+        final String knownSHA256 = getSha256OfBytes(rndBytes);
 
         // test
         try {
-            storeRandomBytes(rndBytes, knownContentType, new DbArtifactHash(knownSHA1, wrongMD5, wrongSHA256));
+            storeRandomBytes(rndBytes, knownContentType, new DbArtifactHash(knownSHA1, wrongMD5, knownSHA256));
             fail("Expected an HashNotMatchException, but didn't throw");
         } catch (final HashNotMatchException e) {
             assertThat(e.getHashFunction()).isEqualTo(HashNotMatchException.MD5);
@@ -241,19 +240,22 @@ public class S3RepositoryTest {
 
     private static String getSha1OfBytes(final byte[] bytes) throws IOException, NoSuchAlgorithmException {
         final MessageDigest messageDigest = MessageDigest.getInstance("SHA1");
-
-        try (InputStream input = new ByteArrayInputStream(bytes);
-                OutputStream output = new DigestOutputStream(new ByteArrayOutputStream(), messageDigest)) {
-            ByteStreams.copy(input, output);
-            return BaseEncoding.base16().lowerCase().encode(messageDigest.digest());
-        }
+        return getHashOfBytes(bytes, messageDigest);
     }
 
     private static String getMd5OfBytes(final byte[] bytes) throws IOException, NoSuchAlgorithmException {
         final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+        return getHashOfBytes(bytes, messageDigest);
+    }
 
+    private static String getSha256OfBytes(final byte[] bytes) throws IOException, NoSuchAlgorithmException {
+        final MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+        return getHashOfBytes(bytes, messageDigest);
+    }
+
+    private static String getHashOfBytes(final byte[] bytes, final MessageDigest messageDigest) throws IOException {
         try (InputStream input = new ByteArrayInputStream(bytes);
-             OutputStream output = new DigestOutputStream(new ByteArrayOutputStream(), messageDigest)) {
+                OutputStream output = new DigestOutputStream(new ByteArrayOutputStream(), messageDigest)) {
             ByteStreams.copy(input, output);
             return BaseEncoding.base16().lowerCase().encode(messageDigest.digest());
         }
