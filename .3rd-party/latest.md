@@ -12,7 +12,7 @@
 | com.microsoft.azure                          | azure-keyvault-core                   | 1.0.0                 | [CQ19128](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19128) |
 | com.microsoft.azure                          | azure-spring-boot                     | 2.1.2                 | [CQ18830](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=18830) |
 | com.microsoft.azure                          | azure-storage                         | 8.0.0                 | [CQ19127](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19127) |
-| joda-time                                    | joda-time                             | 2.10.1                | []()                                                             |
+| joda-time                                    | joda-time                             | 2.10.1                | [CQ20332](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=20332) |
 | org.apache.kafka                             | kafka-clients                         | 2.0.1                 | [CQ18815](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=18815) |
 | org.lz4                                      | lz4-java                              | 1.4.1                 | [CQ18816](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=18816) |
 | org.springframework.cloud                    | spring-cloud-stream-binder-kafka-core | 2.1.0.RELEASE         | [CQ18814](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=18814) |
@@ -41,6 +41,9 @@
 | com.google.protobuf                          | protobuf-java-util                    | 3.6.1                 | [CQ19850](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19850) |
 | com.google.protobuf                          | protobuf-java                         | 3.6.1                 | [CQ19851](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19851) |
 | io.grpc                                      | grpc-context                          | 1.12.0                | [CQ19852](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19852) |
+| org.threeten                                 | threetenbp                            | 1.3.3                 | [CQ19938](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19938) |
+| io.opencensus                                | opencensus-api                        | 0.15.0                | [CQ19936](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19936) |
+| io.opencensus                                | opencensus-contrib-http-util          | 0.15.0                | [CQ19937](https://dev.eclipse.org/ipzilla/show_bug.cgi?id=19937) |
 
 ## Test and build dependencies
 
