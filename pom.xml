@@ -89,28 +89,6 @@
                   <validHeader>licenses/LICENSE_HEADER_TEMPLATE_BOSCH.txt</validHeader>
                   <validHeader>licenses/LICENSE_HEADER_TEMPLATE_MICROSOFT_18.txt</validHeader>
                </validHeaders>
-               <excludes>
-                  <exclude>**/helm/**</exclude>
-                  <exclude>**/README</exclude>
-                  <exclude>.3rd-party/**</exclude>
-                  <exclude>.github/**</exclude>
-                  <exclude>**/.git*</exclude>
-                  <exclude>.git*</exclude>
-                  <exclude>**/*.sql</exclude>
-                  <exclude>eclipse_codeformatter.xml</exclude>
-                  <exclude>**/addons.scss</exclude>
-                  <exclude>**/VAADIN/widgetsets/**</exclude>
-                  <exclude>.sonar</exclude>
-                  <exclude>**/Dockerfile</exclude>
-                  <exclude>**/docker-compose.yml</exclude>
-                  <exclude>**/docker-compose-stack.yml</exclude>
-                  <exclude>**/.sonar/**</exclude>
-                  <exclude>docs/content/**</exclude>
-                  <exclude>docs/layouts/**</exclude>
-                  <exclude>docs/static/**</exclude>
-                  <exclude>docs/*.toml</exclude>
-                  <exclude>**/LICENSE*</exclude>
-               </excludes>
             </configuration>
          </plugin>
          <plugin>

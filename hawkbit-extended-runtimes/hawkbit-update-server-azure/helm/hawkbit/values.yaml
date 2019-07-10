@@ -28,6 +28,8 @@ ingress:
   hosts:
     - hawkbit.westeurope.cloudapp.azure.com
   tls:
+    enabled: true
+    email: you.mail@comes.here
     secretName: tls-secret-hawkbit
 
 resources:
