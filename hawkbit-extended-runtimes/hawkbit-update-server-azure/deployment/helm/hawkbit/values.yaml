@@ -12,6 +12,22 @@ image:
 nameOverride: ""
 fullnameOverride: ""
 
+storage:
+  url:
+
+db:
+  username:
+  password:
+  url:
+
+eventHubs:
+  connectionString:
+  namespace:
+
+insights:
+  enabled: true
+  key: ""
+
 service:
   type: ClusterIP
   port: 8080

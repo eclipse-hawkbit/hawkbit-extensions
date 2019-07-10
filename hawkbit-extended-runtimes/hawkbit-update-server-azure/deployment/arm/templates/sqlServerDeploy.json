@@ -1,0 +1,84 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "dbServerName": {
+            "type": "string",
+            "defaultValue": "hawkbitsql",
+            "metadata": {
+                "description": "Azure DB server name."
+            }
+        },
+        "dbName": {
+            "type": "string",
+            "defaultValue": "hawkbit",
+            "metadata": {
+                "description": "Azure DB name."
+            }
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        }
+    },
+    "variables": {
+        "sqlserverAdminLogin": "[concat('l', uniqueString(resourceGroup().id, '9A08DDB9-95A1-495F-9263-D89738ED4205'))]",
+        "sqlserverAdminPassword": "[concat('P', uniqueString(resourceGroup().id, '224F5A8B-51DB-46A3-A7C8-59B0DD584A41'), 'x', '!')]"
+
+    },
+    "resources": [{
+        "type": "Microsoft.Sql/servers",
+        "apiVersion": "2018-06-01-preview",
+        "name": "[parameters('dbServerName')]",
+        "location": "[parameters('location')]",
+        "tags": {
+            "displayName": "[parameters('dbServerName')]"
+        },
+        "properties": {
+            "administratorLogin": "[variables('sqlserverAdminLogin')]",
+            "administratorLoginPassword": "[variables('sqlserverAdminPassword')]"
+        },
+        "resources": [{
+            "type": "firewallRules",
+            "apiVersion": "2018-06-01-preview",
+            "dependsOn": [
+                "[parameters('dbServerName')]"
+            ],
+            "name": "AllowAllIps",
+            "properties": {
+                "startIpAddress": "0.0.0.0",
+                "endIpAddress": "0.0.0.0"
+            }
+        }, {
+            "type": "databases",
+            "apiVersion": "2018-06-01-preview",
+            "name": "[parameters('dbName')]",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "[parameters('dbName')]"
+            },
+            "dependsOn": [
+                "[parameters('dbServerName')]"
+            ],
+            "properties": {
+                "collation": "SQL_Latin1_General_CP1_CI_AS",
+                "edition": "Basic",
+                "maxSizeBytes": "1073741824",
+                "requestedServiceObjectiveName": "Basic"
+            }
+        }]
+    }],
+    "outputs": {
+        "administratorLogin": {
+            "type": "string",
+            "value": "[variables('sqlserverAdminLogin')]"
+        },
+        "administratorLoginPassword": {
+            "type": "string",
+            "value": "[variables('sqlserverAdminPassword')]"
+        }
+    }
+}
