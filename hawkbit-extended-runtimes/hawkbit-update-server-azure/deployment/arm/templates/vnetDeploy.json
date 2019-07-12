@@ -62,8 +62,16 @@
             "properties": {
                 "addressPrefix": "[parameters('aksSubnetPrefix')]",
                 "serviceEndpoints": [{
-                    "service": "Microsoft.AzureCosmosDB"
-                }]
+                        "service": "Microsoft.EventHub"
+                    },
+                    {
+                        "service": "Microsoft.Storage"
+                    },
+                    {
+                        "service": "Microsoft.Sql"
+                    }
+                ]
+
             }
         }]
     }]

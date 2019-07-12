@@ -25,7 +25,7 @@ eventHubs:
   namespace:
 
 insights:
-  enabled: true
+  enabled: false
   key: ""
 
 service:

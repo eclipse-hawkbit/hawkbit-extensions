@@ -31,31 +31,70 @@
             "metadata": {
                 "description": "Location for all resources."
             }
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of an existing VNET that will contain this deployment."
+            }
+        },
+        "virtualNetworkResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the existing VNET resource group"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Subnet name that will contain the nodes."
+            }
         }
     },
     "variables": {
         "defaultSASKeyName": "RootManageSharedAccessKey",
-        "authRuleResourceId": "[resourceId('Microsoft.EventHub/namespaces/authorizationRules', parameters('namespaceName'), variables('defaultSASKeyName'))]"
+        "authRuleResourceId": "[resourceId('Microsoft.EventHub/namespaces/authorizationRules', parameters('namespaceName'), variables('defaultSASKeyName'))]",
+        "namespaceNetworkRuleSetName": "[concat(parameters('namespaceName'), concat('/', 'default'))]",
+        "vnetSubnetId": "[resourceId(parameters('virtualNetworkResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('virtualNetworkName'),parameters('subnetName'))]",
     },
     "resources": [{
-        "apiVersion": "2017-04-01",
-        "name": "[parameters('namespaceName')]",
-        "type": "Microsoft.EventHub/namespaces",
-        "location": "[parameters('location')]",
-        "sku": {
-            "name": "[parameters('eventhubSku')]",
-            "tier": "[parameters('eventhubSku')]",
-            "capacity": "[parameters('skuCapacity')]"
+            "apiVersion": "2017-04-01",
+            "name": "[parameters('namespaceName')]",
+            "type": "Microsoft.EventHub/namespaces",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[parameters('eventhubSku')]",
+                "tier": "[parameters('eventhubSku')]",
+                "capacity": "[parameters('skuCapacity')]"
+            },
+            "tags": {
+                "displayName": "[parameters('namespaceName')]"
+            },
+            "properties": {
+                "kafkaEnabled": true
+            }
         },
-        "tags": {
-            "displayName": "[parameters('namespaceName')]"
-        },
-        "properties": {
-            "kafkaEnabled": true
+        {
+            "apiVersion": "2018-01-01-preview",
+            "name": "[variables('namespaceNetworkRuleSetName')]",
+            "type": "Microsoft.EventHub/namespaces/networkruleset",
+            "dependsOn": [
+                "[concat('Microsoft.EventHub/namespaces/', parameters('namespaceName'))]"
+            ],
+            "properties": {
+                "virtualNetworkRules": [{
+                    "subnet": {
+                        "id": "[variables('vnetSubnetId')]"
+                    },
+                    "ignoreMissingVnetServiceEndpoint": false
+                }],
+                "defaultAction": "Deny"
+            }
         }
-    }],
+
+    ],
     "outputs": {
-        "NamespaceConnectionString": {
+        "namespaceConnectionString": {
             "type": "string",
             "value": "[listkeys(variables('authRuleResourceId'), '2017-04-01').primaryConnectionString]"
         }

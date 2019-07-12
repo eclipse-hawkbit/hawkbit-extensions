@@ -126,10 +126,13 @@
             "name": "hawkBitStorageDeployment",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'hawkbitVnetDeployment')]"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/kaizimmerm/hawkbit-extensions/arm/hawkbit-extended-runtimes/hawkbit-update-server-azure/arm/templates/storageDeploy.json"
+                    "uri": "https://raw.githubusercontent.com/kaizimmerm/hawkbit-extensions/arm/hawkbit-extended-runtimes/hawkbit-update-server-azure/deployment/arm/templates/storageDeploy.json"
                 },
                 "parameters": {
                     "storageAccountName": {
@@ -140,6 +143,15 @@
                     },
                     "location": {
                         "value": "[parameters('location')]"
+                    },
+                    "virtualNetworkName": {
+                        "value": "[variables('vnetName')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('aksSubnetName')]"
+                    },
+                    "virtualNetworkResourceGroup": {
+                        "value": "[resourceGroup().name]"
                     }
                 }
             }
@@ -147,10 +159,13 @@
             "name": "hawkBitSQLServerDeployment",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'hawkbitVnetDeployment')]"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/kaizimmerm/hawkbit-extensions/arm/hawkbit-extended-runtimes/hawkbit-update-server-azure/arm/templates/sqlServerDeploy.json"
+                    "uri": "https://raw.githubusercontent.com/kaizimmerm/hawkbit-extensions/arm/hawkbit-extended-runtimes/hawkbit-update-server-azure/deployment/arm/templates/sqlServerDeploy.json"
                 },
                 "parameters": {
                     "dbServerName": {
@@ -161,6 +176,15 @@
                     },
                     "location": {
                         "value": "[parameters('location')]"
+                    },
+                    "virtualNetworkName": {
+                        "value": "[variables('vnetName')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('aksSubnetName')]"
+                    },
+                    "virtualNetworkResourceGroup": {
+                        "value": "[resourceGroup().name]"
                     }
                 }
             }
@@ -168,6 +192,9 @@
             "name": "hawkBitEventHubsDeployment",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'hawkbitVnetDeployment')]"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -179,6 +206,15 @@
                     },
                     "location": {
                         "value": "[parameters('location')]"
+                    },
+                    "virtualNetworkName": {
+                        "value": "[variables('vnetName')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('aksSubnetName')]"
+                    },
+                    "virtualNetworkResourceGroup": {
+                        "value": "[resourceGroup().name]"
                     }
                 }
             }
@@ -216,7 +252,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/kaizimmerm/hawkbit-extensions/arm/hawkbit-extended-runtimes/hawkbit-update-server-azure/arm/templates/kubernetesDeploy.json"
+                    "uri": "https://raw.githubusercontent.com/kaizimmerm/hawkbit-extensions/arm/hawkbit-extended-runtimes/hawkbit-update-server-azure/deployment/arm/templates/kubernetesDeploy.json"
                 },
                 "parameters": {
                     "clusterName": {
@@ -268,6 +304,42 @@
         "publicIPAddressName": {
             "type": "string",
             "value": "[variables('publicIPAddressName')]"
+        },
+        "publicIPAddress": {
+            "type": "string",
+            "value": "[reference('hawkBitKubernetesDeployment').outputs.ipAddress.value]"
+        },
+        "publicIPFQDN": {
+            "type": "string",
+            "value": "[reference('hawkBitKubernetesDeployment').outputs.ipFQDN.value]"
+        },
+        "dbAdministratorLogin": {
+            "type": "string",
+            "value": "[reference('hawkBitSQLServerDeployment').outputs.administratorLogin.value]"
+        },
+        "dbAdministratorLoginPassword": {
+            "type": "string",
+            "value": "[reference('hawkBitSQLServerDeployment').outputs.administratorLoginPassword.value]"
+        },
+        "dbUri": {
+            "type": "string",
+            "value": "[concat('jdbc:sqlserver://', variables('dbServerName'), '.database.windows.net:1433;database=', variables('dbName'), ';user=', reference('hawkBitSQLServerDeployment').outputs.administratorLogin.value, '@', variables('dbServerName'), ';password=',reference('hawkBitSQLServerDeployment').outputs.administratorLoginPassword.value, ';encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;')]"
+        },
+        "storageKey": {
+            "type": "string",
+            "value": "[reference('hawkBitStorageDeployment').outputs.storageKey.value]"
+        },
+        "storageConnectionString": {
+            "type": "string",
+            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'),';AccountKey=', reference('hawkBitStorageDeployment').outputs.storageKey.value)]"
+        },
+        "ehNamespaceConnectionString": {
+            "type": "string",
+            "value": "[reference('hawkBitEventHubsDeployment').outputs.namespaceConnectionString.value]"
+        },
+        "ehNamespaceName": {
+            "type": "string",
+            "value": "[variables('namespaceName')]"
         }
     }
 }
