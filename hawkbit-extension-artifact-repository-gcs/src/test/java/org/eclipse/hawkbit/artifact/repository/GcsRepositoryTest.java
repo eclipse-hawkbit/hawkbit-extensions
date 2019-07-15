@@ -95,9 +95,8 @@ public class GcsRepositoryTest {
 
     @Test
     @Description("Verifies that the gcs storage client is called to put the object to GCS with the correct inputstream and meta-data")
-    public void storeInputStreamCallGcsStorageClient() throws IOException, NoSuchAlgorithmException {
+    public void storeInputStreamCallGcsStorageClient() throws IOException {
         final byte[] rndBytes = randomBytes();
-        final String knownSHA1 = getSha1OfBytes(rndBytes);
         final String knownContentType = "application/octet-stream";
 
         when(gcsStorageMock.get(anyString(), anyString())).thenReturn(gcpObjectMock);
@@ -143,9 +142,8 @@ public class GcsRepositoryTest {
 
     @Test
     @Description("Verifies that the gcs storage client is not called to put the object to GCS due the artifact already exists on GCS")
-    public void artifactIsNotUploadedIfAlreadyExists() throws NoSuchAlgorithmException, IOException {
+    public void artifactIsNotUploadedIfAlreadyExists() throws IOException {
         final byte[] rndBytes = randomBytes();
-        final String knownSHA1 = getSha1OfBytes(rndBytes);
         final String knownContentType = "application/octet-stream";
 
         when(gcsStorageMock.get(anyString(), anyString())).thenReturn(gcpObjectMock);
@@ -207,8 +205,7 @@ public class GcsRepositoryTest {
         }
     }
 
-    private void storeRandomBytes(final byte[] rndBytes, final String contentType)
-            throws IOException, NoSuchAlgorithmException {
+    private void storeRandomBytes(final byte[] rndBytes, final String contentType) throws IOException {
         storeRandomBytes(rndBytes, contentType, null);
     }
 

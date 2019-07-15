@@ -15,11 +15,15 @@ import java.io.IOException;
  */
 public class GcpInitialisationFailedException extends RuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Constructor.
-     * @param e wrapped exception
+     * 
+     * @param e
+     *            wrapped exception
      */
-    public GcpInitialisationFailedException(IOException e) {
+    public GcpInitialisationFailedException(final IOException e) {
         super(e);
     }
 }

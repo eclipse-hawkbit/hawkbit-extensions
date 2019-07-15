@@ -13,11 +13,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-   <parent>
+    <parent>
       <groupId>org.eclipse.hawkbit</groupId>
       <artifactId>hawkbit-parent</artifactId>
       <version>0.3.0M4</version>
-   </parent>
+    </parent>
 
     <artifactId>hawkbit-extensions-parent</artifactId>
     <version>0.3.0-SNAPSHOT</version>
@@ -40,19 +40,21 @@
     </distributionManagement>
 
    <properties>
-      <jacoco.outputDir>${project.basedir}/../../target/</jacoco.outputDir>
+      
       <hawkbit.version>0.3.0M4</hawkbit.version>
+      <aws.sdk.version>1.11.415</aws.sdk.version>
+      <gcp.sdk.version>0.77.0-alpha</gcp.sdk.version>
+        
+      <!-- Release - START -->
+      <release.scm.connection>scm:git:git@github.com:eclipse/hawkbit-extensions.git</release.scm.connection>
+      <release.scm.developerConnection>scm:git:https://github.com/eclipse/hawkbit-extensions.git</release.scm.developerConnection>
+      <release.scm.url>https://github.com/eclipse/hawkbit-extensions.git</release.scm.url>
+      <!-- Release - END -->
 
-        <!-- Release - START -->
-        <release.scm.connection>scm:git:git@github.com:eclipse/hawkbit-extensions.git</release.scm.connection>
-        <release.scm.developerConnection>scm:git:https://github.com/eclipse/hawkbit-extensions.git
-        </release.scm.developerConnection>
-        <release.scm.url>https://github.com/eclipse/hawkbit-extensions.git</release.scm.url>
-        <!-- Release - END -->
-
-        <!-- Sonar - START -->
-        <sonar.github.repository>eclipse/hawkbit-extensions</sonar.github.repository>
-        <sonar.links.ci>https://circleci.com/gh/eclipse/hawkbit-extensions</sonar.links.ci>
+      <!-- Sonar - START -->
+      <sonar.github.repository>eclipse/hawkbit-extensions</sonar.github.repository>
+      <sonar.links.ci>https://circleci.com/gh/eclipse/hawkbit-extensions</sonar.links.ci>
+      <jacoco.outputDir>${project.basedir}/../../target/</jacoco.outputDir>
     </properties>
 
     <scm>
@@ -206,14 +208,16 @@
             <dependency>
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk-bom</artifactId>
-                <version>1.11.392</version>
+                <version>${aws.sdk.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>com.google.cloud</groupId>
-                <artifactId>google-cloud-storage</artifactId>
-                <version>1.69.0</version>
+                <artifactId>google-cloud-bom</artifactId>
+                <version>${gcp.sdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.hawkbit</groupId>

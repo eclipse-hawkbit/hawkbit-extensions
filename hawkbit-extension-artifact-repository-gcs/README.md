@@ -5,6 +5,7 @@ HawkBit Artifact Repository is a library for storing binary artifacts and metada
 ## Using Artifact Repository GCS Extension
 The module contains a spring-boot autoconfiguration for easily integration into spring-boot projects.
 For using this extension in the hawkbit-example-application you just need to add the maven dependency.
+
 ```
 <dependency>
   <groupId>org.eclipse.hawkbit</groupId>
