@@ -28,10 +28,15 @@ public class GridFsArtifact extends AbstractDbArtifact {
 
     /**
      * @param artifactId
+     *            id of the artifact
      * @param hashes
+     *            base16 hashes of the artifact
      * @param size
+     *            size of the artifact
      * @param contentType
+     *            content type of the artifact
      * @param inputStreamSupplier
+     *            the supplier of the input stream
      */
     public GridFsArtifact(final String artifactId, final DbArtifactHash hashes, final long size,
             final String contentType, final Supplier<InputStream> inputStreamSupplier) {
