@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2015 Bosch Software Innovations GmbH and others.
- *
+ * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,7 +54,7 @@ public class S3Repository extends AbstractArtifactRepository {
 
     /**
      * Constructor.
-     * 
+     *
      * @param amazonS3
      *            the amazonS3 client to use
      * @param s3Properties
@@ -67,17 +67,17 @@ public class S3Repository extends AbstractArtifactRepository {
     }
 
     @Override
-    protected AbstractDbArtifact store(final String tenant, final String sha1Hash16, final String mdMD5Hash16,
-            final String contentType, final String tempFile) throws IOException {
+    protected AbstractDbArtifact store(final String tenant, final DbArtifactHash base16Hashes, final String contentType,
+            final String tempFile) throws IOException {
         final File file = new File(tempFile);
 
-        final S3Artifact s3Artifact = createS3Artifact(tenant, sha1Hash16, mdMD5Hash16, contentType, file);
-        final String key = objectKey(tenant, sha1Hash16);
+        final S3Artifact s3Artifact = createS3Artifact(tenant, base16Hashes, contentType, file);
+        final String key = objectKey(tenant, base16Hashes.getSha1());
 
         LOG.info("Storing file {} with length {} to AWS S3 bucket {} with key {}", file.getName(), file.length(),
                 s3Properties.getBucketName(), key);
 
-        if (existsByTenantAndSha1(tenant, sha1Hash16)) {
+        if (existsByTenantAndSha1(tenant, base16Hashes.getSha1())) {
             LOG.debug("Artifact {} already exists on S3 bucket {}, don't need to upload twice", key,
                     s3Properties.getBucketName());
             return s3Artifact;
@@ -85,7 +85,7 @@ public class S3Repository extends AbstractArtifactRepository {
 
         try (final InputStream inputStream = new BufferedInputStream(new FileInputStream(file),
                 RequestClientOptions.DEFAULT_STREAM_BUFFER_SIZE)) {
-            final ObjectMetadata objectMetadata = createObjectMetadata(mdMD5Hash16, contentType, file);
+            final ObjectMetadata objectMetadata = createObjectMetadata(base16Hashes.getMd5(), contentType, file);
             final PutObjectResult result = amazonS3.putObject(s3Properties.getBucketName(), key, inputStream,
                     objectMetadata);
 
@@ -98,10 +98,10 @@ public class S3Repository extends AbstractArtifactRepository {
         }
     }
 
-    private S3Artifact createS3Artifact(final String tenant, final String sha1Hash, final String mdMD5Hash16,
-            final String contentType, final File file) {
-        return new S3Artifact(amazonS3, s3Properties, objectKey(tenant, sha1Hash), sha1Hash,
-                new DbArtifactHash(sha1Hash, mdMD5Hash16), file.length(), contentType);
+    private S3Artifact createS3Artifact(final String tenant, final DbArtifactHash hashes, final String contentType,
+            final File file) {
+        return new S3Artifact(amazonS3, s3Properties, objectKey(tenant, hashes.getSha1()), hashes.getSha1(), hashes,
+                file.length(), contentType);
     }
 
     private ObjectMetadata createObjectMetadata(final String mdMD5Hash16, final String contentType, final File file) {
@@ -144,7 +144,8 @@ public class S3Repository extends AbstractArtifactRepository {
             return new S3Artifact(amazonS3, s3Properties, key, sha1Hash,
                     new DbArtifactHash(sha1Hash,
                             BaseEncoding.base16().lowerCase()
-                                    .encode(BaseEncoding.base64().decode(s3ObjectMetadata.getETag()))),
+                                    .encode(BaseEncoding.base64().decode(s3ObjectMetadata.getETag())),
+                            null),
                     s3ObjectMetadata.getContentLength(), s3ObjectMetadata.getContentType());
         } catch (final IOException e) {
             LOG.error("Could not verify S3Object", e);
