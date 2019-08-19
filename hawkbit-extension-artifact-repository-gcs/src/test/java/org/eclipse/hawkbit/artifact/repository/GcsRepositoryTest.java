@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 Bosch Software Innovations GmbH and others.
+ * Copyright (c) 2019 Rico Pahlisch and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -12,7 +12,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.when;
@@ -39,10 +38,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectResult;
-import com.amazonaws.services.s3.model.S3Object;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
 import com.google.common.io.BaseEncoding;
 import com.google.common.io.ByteStreams;
 
@@ -51,67 +49,55 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 
 /**
- * Test class for the {@link S3Repository}.
+ * Test class for the {@link GcsRepository}.
  */
 @RunWith(MockitoJUnitRunner.class)
-@Feature("Unit Tests - S3 Repository")
-@Story("S3 Artifact Repository")
-public class S3RepositoryTest {
+@Feature("Unit Tests - GCS Repository")
+@Story("GCS Artifact Repository")
+public class GcsRepositoryTest {
 
     private static final String TENANT = "test_tenant";
-
+    private final GcsRepositoryProperties gcpProperties = new GcsRepositoryProperties();
     @Mock
-    private AmazonS3 amazonS3Mock;
-
+    private Storage gcsStorageMock;
     @Mock
-    private S3Object s3ObjectMock;
-
+    private Blob gcpObjectMock;
     @Mock
-    private ObjectMetadata s3ObjectMetadataMock;
-
-    @Mock
-    private PutObjectResult putObjectResultMock;
-
+    private Blob putObjectResultMock;
     @Captor
-    private ArgumentCaptor<ObjectMetadata> objectMetaDataCaptor;
-
+    private ArgumentCaptor<byte[]> inputStreamCaptor;
     @Captor
-    private ArgumentCaptor<InputStream> inputStreamCaptor;
-
-    private final S3RepositoryProperties s3Properties = new S3RepositoryProperties();
-    private S3Repository s3RepositoryUnderTest;
+    private ArgumentCaptor<BlobInfo> blobCaptor;
+    private GcsRepository gcsRepositoryUnderTest;
 
     @Before
     public void before() {
-        amazonS3Mock = mock(AmazonS3.class);
-        s3RepositoryUnderTest = new S3Repository(amazonS3Mock, s3Properties);
+        gcsStorageMock = mock(Storage.class);
+        gcsRepositoryUnderTest = new GcsRepository(gcsStorageMock, gcpProperties);
     }
 
     @Test
-    @Description("Verifies that the amazonS3 client is called to put the object to S3 with the correct inputstream and meta-data")
-    public void storeInputStreamCallAmazonS3Client() throws IOException, NoSuchAlgorithmException {
+    @Description("Verifies that the gcs storage client is called to put the object to GCS with the correct inputstream and meta-data")
+    public void storeInputStreamCallGcsStorageClient() throws IOException {
         final byte[] rndBytes = randomBytes();
-        final String knownSHA1 = getSha1OfBytes(rndBytes);
         final String knownContentType = "application/octet-stream";
 
-        when(amazonS3Mock.putObject(any(), any(), any(), any())).thenReturn(putObjectResultMock);
+        when(gcsStorageMock.get(anyString(), anyString())).thenReturn(gcpObjectMock);
+        when(gcsStorageMock.create(any(), (byte[]) any())).thenReturn(putObjectResultMock);
 
         // test
         storeRandomBytes(rndBytes, knownContentType);
 
         // verify
-        Mockito.verify(amazonS3Mock).putObject(eq(s3Properties.getBucketName()),
-                eq(TENANT.toUpperCase() + "/" + knownSHA1), inputStreamCaptor.capture(),
-                objectMetaDataCaptor.capture());
+        Mockito.verify(gcsStorageMock).create(blobCaptor.capture(), inputStreamCaptor.capture());
 
-        final ObjectMetadata recordedObjectMetadata = objectMetaDataCaptor.getValue();
+        final BlobInfo recordedObjectMetadata = blobCaptor.getValue();
         assertThat(recordedObjectMetadata.getContentType()).isEqualTo(knownContentType);
-        assertThat(recordedObjectMetadata.getContentMD5()).isNotNull();
-        assertThat(recordedObjectMetadata.getContentLength()).isEqualTo(rndBytes.length);
+        assertThat(recordedObjectMetadata.getMd5()).isNotNull();
     }
 
     @Test
-    @Description("Verifies that the amazonS3 client is called to retrieve the correct artifact from S3 and the mapping to the DBArtifact is correct")
+    @Description("Verifies that the gcs storage client is called to retrieve the correct artifact from GCS and the mapping to the DBArtifact is correct")
     public void getArtifactBySHA1Hash() {
         final String knownSHA1Hash = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
         final long knownContentLength = 100;
@@ -120,14 +106,14 @@ public class S3RepositoryTest {
         final String knownMdBase16 = BaseEncoding.base16().lowerCase().encode(knownMd5.getBytes());
         final String knownMd5Base64 = BaseEncoding.base64().encode(knownMd5.getBytes());
 
-        when(amazonS3Mock.getObject(anyString(), anyString())).thenReturn(s3ObjectMock);
-        when(s3ObjectMock.getObjectMetadata()).thenReturn(s3ObjectMetadataMock);
-        when(s3ObjectMetadataMock.getContentLength()).thenReturn(knownContentLength);
-        when(s3ObjectMetadataMock.getETag()).thenReturn(knownMd5Base64);
-        when(s3ObjectMetadataMock.getContentType()).thenReturn(knownContentType);
+        when(gcsStorageMock.get(anyString(), anyString())).thenReturn(gcpObjectMock);
+        when(gcpObjectMock.exists()).thenReturn(true);
+        when(gcpObjectMock.getSize()).thenReturn(knownContentLength);
+        when(gcpObjectMock.getMd5()).thenReturn(knownMd5Base64);
+        when(gcpObjectMock.getContentType()).thenReturn(knownContentType);
 
         // test
-        final AbstractDbArtifact artifactBySha1 = s3RepositoryUnderTest.getArtifactBySha1(TENANT, knownSHA1Hash);
+        final AbstractDbArtifact artifactBySha1 = gcsRepositoryUnderTest.getArtifactBySha1(TENANT, knownSHA1Hash);
 
         // verify
         assertThat(artifactBySha1.getArtifactId()).isEqualTo(knownSHA1Hash);
@@ -138,30 +124,28 @@ public class S3RepositoryTest {
     }
 
     @Test
-    @Description("Verifies that the amazonS3 client is not called to put the object to S3 due the artifact already exists on S3")
-    public void artifactIsNotUploadedIfAlreadyExists() throws NoSuchAlgorithmException, IOException {
+    @Description("Verifies that the gcs storage client is not called to put the object to GCS due the artifact already exists on GCS")
+    public void artifactIsNotUploadedIfAlreadyExists() throws IOException {
         final byte[] rndBytes = randomBytes();
-        final String knownSHA1 = getSha1OfBytes(rndBytes);
         final String knownContentType = "application/octet-stream";
 
-        when(amazonS3Mock.putObject(any(), any(), any(), any())).thenReturn(putObjectResultMock);
+        when(gcsStorageMock.get(anyString(), anyString())).thenReturn(gcpObjectMock);
+        when(gcpObjectMock.exists()).thenReturn(true);
 
         // test
         storeRandomBytes(rndBytes, knownContentType);
 
         // verify
-        Mockito.verify(amazonS3Mock, never()).putObject(eq(s3Properties.getBucketName()), eq(knownSHA1),
-                inputStreamCaptor.capture(), objectMetaDataCaptor.capture());
-
+        Mockito.verify(gcsStorageMock, never()).create(blobCaptor.capture(), inputStreamCaptor.capture());
     }
 
     @Test
-    @Description("Verifies that null is returned if the given hash does not exists on S3")
+    @Description("Verifies that null is returned if the given hash does not exists on GCS")
     public void getArtifactBySha1ReturnsNullIfFileDoesNotExists() {
         final String knownSHA1Hash = "0815";
 
         // test
-        final AbstractDbArtifact artifactBySha1NotExists = s3RepositoryUnderTest.getArtifactBySha1(TENANT,
+        final AbstractDbArtifact artifactBySha1NotExists = gcsRepositoryUnderTest.getArtifactBySha1(TENANT,
                 knownSHA1Hash);
 
         // verify
@@ -225,16 +209,15 @@ public class S3RepositoryTest {
         }
     }
 
-    private void storeRandomBytes(final byte[] rndBytes, final String contentType)
-            throws IOException, NoSuchAlgorithmException {
+    private void storeRandomBytes(final byte[] rndBytes, final String contentType) throws IOException {
         storeRandomBytes(rndBytes, contentType, null);
     }
 
     private void storeRandomBytes(final byte[] rndBytes, final String contentType, final DbArtifactHash hashes)
             throws IOException {
         final String knownFileName = "randomBytes";
-        try (InputStream content = new BufferedInputStream(new ByteArrayInputStream(rndBytes))) {
-            s3RepositoryUnderTest.store(TENANT, content, knownFileName, contentType, hashes);
+        try (final InputStream content = new BufferedInputStream(new ByteArrayInputStream(rndBytes))) {
+            gcsRepositoryUnderTest.store(TENANT, content, knownFileName, contentType, hashes);
         }
     }
 
@@ -254,8 +237,8 @@ public class S3RepositoryTest {
     }
 
     private static String getHashOfBytes(final byte[] bytes, final MessageDigest messageDigest) throws IOException {
-        try (InputStream input = new ByteArrayInputStream(bytes);
-                OutputStream output = new DigestOutputStream(new ByteArrayOutputStream(), messageDigest)) {
+        try (final InputStream input = new ByteArrayInputStream(bytes);
+                final OutputStream output = new DigestOutputStream(new ByteArrayOutputStream(), messageDigest)) {
             ByteStreams.copy(input, output);
             return BaseEncoding.base16().lowerCase().encode(messageDigest.digest());
         }

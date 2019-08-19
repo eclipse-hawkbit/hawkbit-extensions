@@ -1,2 +1,2 @@
    javax.validation:validation-api:jar:2.0.1.Final:provided
-   org.slf4j:slf4j-api:jar:1.7.25:provided
+   org.slf4j:slf4j-api:jar:1.7.26:provided

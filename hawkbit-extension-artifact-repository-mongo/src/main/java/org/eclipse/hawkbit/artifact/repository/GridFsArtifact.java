@@ -14,7 +14,6 @@ import java.util.function.Supplier;
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
 import org.eclipse.hawkbit.artifact.repository.model.DbArtifactHash;
 
-import com.mongodb.client.gridfs.model.GridFSFile;
 import com.mongodb.gridfs.GridFSDBFile;
 
 /**
@@ -28,14 +27,20 @@ public class GridFsArtifact extends AbstractDbArtifact {
     private final Supplier<InputStream> inputStreamSupplier;
 
     /**
-     * @param dbFile
+     * @param artifactId
+     *            id of the artifact
+     * @param hashes
+     *            base16 hashes of the artifact
+     * @param size
+     *            size of the artifact
      * @param contentType
+     *            content type of the artifact
      * @param inputStreamSupplier
+     *            the supplier of the input stream
      */
-    public GridFsArtifact(final GridFSFile dbFile, final String contentType,
-            final Supplier<InputStream> inputStreamSupplier) {
-        super(dbFile.getId().toString(), new DbArtifactHash(dbFile.getFilename(), dbFile.getMD5()), dbFile.getLength(),
-                contentType);
+    public GridFsArtifact(final String artifactId, final DbArtifactHash hashes, final long size,
+            final String contentType, final Supplier<InputStream> inputStreamSupplier) {
+        super(artifactId, hashes, size, contentType);
         this.inputStreamSupplier = inputStreamSupplier;
     }
 
