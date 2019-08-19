@@ -132,7 +132,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/kaizimmerm/hawkbit-extensions/arm/hawkbit-extended-runtimes/hawkbit-update-server-azure/deployment/arm/templates/storageDeploy.json"
+                    "uri": "https://raw.githubusercontent.com/eclipse/hawkbit-extensions/master/hawkbit-extended-runtimes/hawkbit-update-server-azure/deployment/arm/templates/storageDeploy.json"
                 },
                 "parameters": {
                     "storageAccountName": {
@@ -165,7 +165,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/kaizimmerm/hawkbit-extensions/arm/hawkbit-extended-runtimes/hawkbit-update-server-azure/deployment/arm/templates/sqlServerDeploy.json"
+                    "uri": "https://raw.githubusercontent.com/eclipse/hawkbit-extensions/master/hawkbit-extended-runtimes/hawkbit-update-server-azure/deployment/arm/templates/sqlServerDeploy.json"
                 },
                 "parameters": {
                     "dbServerName": {
@@ -198,7 +198,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/kaizimmerm/hawkbit-extensions/arm/hawkbit-extended-runtimes/hawkbit-update-server-azure/deployment/arm/templates/ehNamespaceDeploy.json"
+                    "uri": "https://raw.githubusercontent.com/eclipse/hawkbit-extensions/master/hawkbit-extended-runtimes/hawkbit-update-server-azure/deployment/arm/templates/ehNamespaceDeploy.json"
                 },
                 "parameters": {
                     "namespaceName": {
@@ -226,7 +226,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/kaizimmerm/hawkbit-extensions/arm/hawkbit-extended-runtimes/hawkbit-update-server-azure/deployment/arm/templates/vnetDeploy.json"
+                    "uri": "https://raw.githubusercontent.com/eclipse/hawkbit-extensions/master/hawkbit-extended-runtimes/hawkbit-update-server-azure/deployment/arm/templates/vnetDeploy.json"
                 },
                 "parameters": {
                     "vnetName": {
@@ -252,7 +252,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/kaizimmerm/hawkbit-extensions/arm/hawkbit-extended-runtimes/hawkbit-update-server-azure/deployment/arm/templates/kubernetesDeploy.json"
+                    "uri": "https://raw.githubusercontent.com/eclipse/hawkbit-extensions/master/hawkbit-extended-runtimes/hawkbit-update-server-azure/deployment/arm/templates/kubernetesDeploy.json"
                 },
                 "parameters": {
                     "clusterName": {
