@@ -11,7 +11,7 @@
     },
     "clusterName": {
       "type": "string",
-      "defaultValue": "dittoakscluster",
+      "defaultValue": "hawkbitakscluster",
       "metadata": {
         "description": "The name of the Managed Cluster resource."
       }
@@ -150,7 +150,7 @@
     "publicIPAddressName": {
       "type": "string",
       "metadata": {
-        "description": "Public IP address name that will be used by Ditto service."
+        "description": "Public IP address name that will be used by hawkbit service."
       }
     },
     "serviceCidr": {

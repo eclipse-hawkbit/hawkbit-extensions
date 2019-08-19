@@ -4,30 +4,30 @@
     "parameters": {
         "vnetName": {
             "type": "string",
-            "defaultValue": "DittoVNet",
+            "defaultValue": "hawkBitVNet",
             "metadata": {
-                "description": "Ditto VNet name"
+                "description": "hawkBit VNet name"
             }
         },
         "vnetAddressPrefix": {
             "type": "string",
             "defaultValue": "10.0.0.0/8",
             "metadata": {
-                "description": "Ditto Address Prefix"
+                "description": "hawkBit Address Prefix"
             }
         },
         "aksSubnetPrefix": {
             "type": "string",
             "defaultValue": "10.240.0.0/16",
             "metadata": {
-                "description": "Ditto AKS Subnet Prefix"
+                "description": "hawkBit AKS Subnet Prefix"
             }
         },
         "aksSubnetName": {
             "type": "string",
             "defaultValue": "AksSubnet",
             "metadata": {
-                "description": "Ditto AKS Subnet Name"
+                "description": "hawkBit AKS Subnet Name"
             }
         },
         "location": {
