@@ -27,7 +27,7 @@
    <description>Parent pom for hawkBit extensions around Microsoft Azure integration</description>
 
    <properties>
-      <azure.version>2.1.2</azure.version>
+      <azure.version>2.1.6</azure.version>
       <applicationinsights.version>2.1.2</applicationinsights.version>
       <azure.storage.version>8.0.0</azure.storage.version>
    </properties>
@@ -58,4 +58,3 @@
       </dependencies>
    </dependencyManagement>
 </project>
-   

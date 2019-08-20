@@ -12,8 +12,24 @@ image:
 nameOverride: ""
 fullnameOverride: ""
 
+storage:
+  url:
+
+db:
+  username:
+  password:
+  url:
+
+eventHubs:
+  connectionString:
+  namespace:
+
+insights:
+  enabled: false
+  key: ""
+
 service:
-  type: LoadBalancer
+  type: ClusterIP
   port: 8080
 
 ingress:
@@ -23,6 +39,8 @@ ingress:
     nginx.ingress.kubernetes.io/affinity: cookie
     kubernetes.io/tls-acme: "true"
     kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
   paths:
     - /
   hosts:
