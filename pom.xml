@@ -16,7 +16,7 @@
     <parent>
       <groupId>org.eclipse.hawkbit</groupId>
       <artifactId>hawkbit-parent</artifactId>
-      <version>0.3.0M5</version>
+      <version>0.3.0M6</version>
     </parent>
 
     <artifactId>hawkbit-extensions-parent</artifactId>
@@ -40,11 +40,11 @@
     </distributionManagement>
 
    <properties>
-      
-      <hawkbit.version>0.3.0M5</hawkbit.version>
+
+      <hawkbit.version>0.3.0M6</hawkbit.version>
       <aws.sdk.version>1.11.415</aws.sdk.version>
       <gcp.sdk.version>0.77.0-alpha</gcp.sdk.version>
-        
+
       <!-- Release - START -->
       <release.scm.connection>scm:git:git@github.com:eclipse/hawkbit-extensions.git</release.scm.connection>
       <release.scm.developerConnection>scm:git:https://github.com/eclipse/hawkbit-extensions.git</release.scm.developerConnection>
