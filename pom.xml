@@ -54,7 +54,11 @@
       <!-- Sonar - START -->
       <sonar.github.repository>eclipse/hawkbit-extensions</sonar.github.repository>
       <sonar.links.ci>https://circleci.com/gh/eclipse/hawkbit-extensions</sonar.links.ci>
-      <jacoco.outputDir>${project.basedir}/../../target/</jacoco.outputDir>
+
+       <!-- Override Sonar/Reporting settings -->
+       <sonar.coverage.jacoco.xmlReportPaths>
+           ${project.basedir}/target/site/jacoco/jacoco.xml, ${project.basedir}/target/site/jacoco-it/jacoco.xml
+       </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <scm>
