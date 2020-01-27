@@ -54,7 +54,11 @@
       <!-- Sonar - START -->
       <sonar.github.repository>eclipse/hawkbit-extensions</sonar.github.repository>
       <sonar.links.ci>https://circleci.com/gh/eclipse/hawkbit-extensions</sonar.links.ci>
-      <jacoco.outputDir>${project.basedir}/../../target/</jacoco.outputDir>
+
+       <!-- Override Sonar/Reporting settings -->
+       <sonar.coverage.jacoco.xmlReportPaths>
+           ${project.build.directory}/site/jacoco/jacoco.xml, ${project.build.directory}/site/jacoco-it/jacoco.xml
+       </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <scm>
@@ -162,28 +166,26 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <executions>
+                    <!-- "prepare-agent" is executed in parent pom, hawkbit -->
                     <execution>
-                        <id>prepare-ut-agent</id>
-                        <phase>process-test-classes</phase>
+                        <id>report-ut</id>
+                        <phase>prepare-package</phase>
                         <goals>
-                            <goal>prepare-agent</goal>
+                            <goal>report</goal>
                         </goals>
                         <configuration>
-                            <destFile>${jacoco.reportPath}</destFile>
-                            <propertyName>jacoco.agent.ut.arg</propertyName>
-                            <append>true</append>
+                            <dataFile>${jacoco.outputDir}/jacoco.exec</dataFile>
                         </configuration>
                     </execution>
+                    <!-- "prepare-agent-integration" is executed in parent pom, hawkbit -->
                     <execution>
-                        <id>prepare-it-agent</id>
-                        <phase>pre-integration-test</phase>
+                        <id>report-it</id>
+                        <phase>post-integration-test</phase>
                         <goals>
-                            <goal>prepare-agent</goal>
+                            <goal>report-integration</goal>
                         </goals>
                         <configuration>
-                            <destFile>${jacoco.itReportPath}</destFile>
-                            <propertyName>jacoco.agent.it.arg</propertyName>
-                            <append>true</append>
+                            <dataFile>${jacoco.outputDir}/jacoco-it.exec</dataFile>
                         </configuration>
                     </execution>
                 </executions>
