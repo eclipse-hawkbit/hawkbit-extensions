@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
@@ -35,10 +36,13 @@ public class S3RepositoryAutoConfiguration {
     @Value("${aws.region:#{null}}")
     private String region;
 
+    @Value("${aws.endpoint:#{null}}")
+    private String endpoint;
+
     /**
      * The {@link DefaultAWSCredentialsProviderChain} looks for credentials in
      * this order:
-     * 
+     *
      * <pre>
      * 1. Environment Variables (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY)
      * 2. Java System Properties (aws.accessKeyId and aws.secretKey)
@@ -46,7 +50,7 @@ public class S3RepositoryAutoConfiguration {
      * 4. Amazon ECS container credentials
      * 5. Instance profile credentials
      * </pre>
-     * 
+     *
      * @return the {@link DefaultAWSCredentialsProviderChain} if no other
      *         {@link AWSCredentialsProvider} bean is registered.
      */
@@ -60,7 +64,7 @@ public class S3RepositoryAutoConfiguration {
     /**
      * The default AmazonS3 client configuration, which declares the
      * configuration for managing connection behavior to s3.
-     * 
+     *
      * @return the default {@link ClientConfiguration} bean with the default
      *         client configuration
      */
@@ -77,11 +81,15 @@ public class S3RepositoryAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public AmazonS3 amazonS3() {
-        AmazonS3ClientBuilder s3ClientBuilder = AmazonS3ClientBuilder.standard()//
-                .withCredentials(awsCredentialsProvider())//
-                .withClientConfiguration(awsClientConfiguration());
+        AmazonS3ClientBuilder s3ClientBuilder = AmazonS3ClientBuilder.standard()
+            .withCredentials(awsCredentialsProvider())
+            .withClientConfiguration(awsClientConfiguration());
         if (!StringUtils.isEmpty(region)) {
             s3ClientBuilder = s3ClientBuilder.withRegion(region);
+            if (!StringUtils.isEmpty(endpoint)) {
+                s3ClientBuilder = s3ClientBuilder
+                    .withEndpointConfiguration(new EndpointConfiguration(endpoint, region));
+            }
         }
         return s3ClientBuilder.build();
     }
