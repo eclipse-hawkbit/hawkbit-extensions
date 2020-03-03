@@ -36,7 +36,7 @@ public class S3RepositoryAutoConfiguration {
     @Value("${aws.region:#{null}}")
     private String region;
 
-    @Value("${aws.endpoint:#{null}}")
+    @Value("${aws.s3.endpoint:#{null}}")
     private String endpoint;
 
     /**
@@ -81,14 +81,12 @@ public class S3RepositoryAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public AmazonS3 amazonS3() {
-        AmazonS3ClientBuilder s3ClientBuilder = AmazonS3ClientBuilder.standard()
-            .withCredentials(awsCredentialsProvider())
-            .withClientConfiguration(awsClientConfiguration());
+        final AmazonS3ClientBuilder s3ClientBuilder = AmazonS3ClientBuilder.standard()
+                .withCredentials(awsCredentialsProvider()).withClientConfiguration(awsClientConfiguration());
         if (!StringUtils.isEmpty(region)) {
-            s3ClientBuilder = s3ClientBuilder.withRegion(region);
+            s3ClientBuilder.withRegion(region);
             if (!StringUtils.isEmpty(endpoint)) {
-                s3ClientBuilder = s3ClientBuilder
-                    .withEndpointConfiguration(new EndpointConfiguration(endpoint, region));
+                s3ClientBuilder.withEndpointConfiguration(new EndpointConfiguration(endpoint, region));
             }
         }
         return s3ClientBuilder.build();
