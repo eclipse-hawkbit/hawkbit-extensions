@@ -84,7 +84,8 @@ public class S3RepositoryAutoConfiguration {
         final AmazonS3ClientBuilder s3ClientBuilder = AmazonS3ClientBuilder.standard()
                 .withCredentials(awsCredentialsProvider()).withClientConfiguration(awsClientConfiguration());
         if (!StringUtils.isEmpty(endpoint)) {
-            s3ClientBuilder.withEndpointConfiguration(new EndpointConfiguration(endpoint, ""));
+            final String signingRegion = StringUtils.isEmpty(region) ? "" : region;
+            s3ClientBuilder.withEndpointConfiguration(new EndpointConfiguration(endpoint, signingRegion));
         } else if (!StringUtils.isEmpty(region)) {
             s3ClientBuilder.withRegion(region);
         }
