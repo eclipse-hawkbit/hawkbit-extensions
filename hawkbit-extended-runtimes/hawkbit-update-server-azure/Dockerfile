@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/java/jre-headless:8u202-zulu-alpine
+FROM mcr.microsoft.com/java/jre-headless:8u265-zulu-alpine
 
 ARG JAR_FILE=hawkbit-update-server-azure-0.3.0-SNAPSHOT.jar
 
