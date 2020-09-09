@@ -4,7 +4,7 @@
   "parameters": {
     "kubernetesVersion": {
       "type": "string",
-      "defaultValue": "1.14.5",
+      "defaultValue": "1.17.9",
       "metadata": {
         "description": "Kubernetes version."
       }
@@ -81,7 +81,9 @@
     "osType": {
       "type": "string",
       "defaultValue": "Linux",
-      "allowedValues": ["Linux"],
+      "allowedValues": [
+        "Linux"
+      ],
       "metadata": {
         "description": "The type of operating system."
       }
@@ -179,7 +181,8 @@
     "publicIPRef": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressName'))]",
     "vnetSubnetId": "[resourceId(parameters('virtualNetworkResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('virtualNetworkName'),parameters('subnetName'))]"
   },
-  "resources": [{
+  "resources": [
+    {
       "apiVersion": "2019-06-01",
       "type": "Microsoft.ContainerService/managedClusters",
       "location": "[parameters('location')]",
@@ -198,16 +201,18 @@
             "enabled": "[parameters('enableHttpApplicationRouting')]"
           }
         },
-        "agentPoolProfiles": [{
-          "name": "agentpool",
-          "osDiskSizeGB": "[parameters('osDiskSizeGB')]",
-          "count": "[parameters('agentCount')]",
-          "vmSize": "[parameters('agentVMSize')]",
-          "osType": "[parameters('osType')]",
-          "storageProfile": "ManagedDisks",
-          "vnetSubnetID": "[variables('vnetSubnetID')]",
-          "maxPods": "[parameters('maxPods')]"
-        }],
+        "agentPoolProfiles": [
+          {
+            "name": "agentpool",
+            "osDiskSizeGB": "[parameters('osDiskSizeGB')]",
+            "count": "[parameters('agentCount')]",
+            "vmSize": "[parameters('agentVMSize')]",
+            "osType": "[parameters('osType')]",
+            "storageProfile": "ManagedDisks",
+            "vnetSubnetID": "[variables('vnetSubnetID')]",
+            "maxPods": "[parameters('maxPods')]"
+          }
+        ],
         "servicePrincipalProfile": {
           "clientId": "[parameters('servicePrincipalClientId')]",
           "Secret": "[parameters('servicePrincipalClientSecret')]"
@@ -234,16 +239,18 @@
           "contentVersion": "1.0.0.0",
           "parameters": {},
           "variables": {},
-          "resources": [{
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2017-05-01",
-            "name": "[guid(resourceGroup().id, deployment().name)]",
-            "properties": {
-              "scope": "[resourceGroup().id]",
-              "principalId": "[parameters('servicePrincipalObjectId')]",
-              "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '4d97b98b-1d4f-4787-a291-c67834d212e7')]"
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2017-05-01",
+              "name": "[guid(resourceGroup().id, deployment().name)]",
+              "properties": {
+                "scope": "[resourceGroup().id]",
+                "principalId": "[parameters('servicePrincipalObjectId')]",
+                "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '4d97b98b-1d4f-4787-a291-c67834d212e7')]"
+              }
             }
-          }]
+          ]
         }
       }
     },

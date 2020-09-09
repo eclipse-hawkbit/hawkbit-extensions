@@ -66,21 +66,21 @@ With the next command we will use the provided [Azure Resource Manager (ARM)](ht
 ```bash
 cd deployment
 unique_solution_prefix=myprefix
-az group deployment create --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --template-file arm/hawkBitInfrastructureDeployment.json --parameters uniqueSolutionPrefix=$unique_solution_prefix servicePrincipalObjectId=$object_id_principal servicePrincipalClientId=$app_id_principal servicePrincipalClientSecret=$password_principal
+az deployment group create --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --template-file arm/hawkBitInfrastructureDeployment.json --parameters uniqueSolutionPrefix=$unique_solution_prefix servicePrincipalObjectId=$object_id_principal servicePrincipalClientId=$app_id_principal servicePrincipalClientSecret=$password_principal
 ```
 
 Retrieve secrets from the deployment:
 
 ```bash
-aks_cluster_name=`az group deployment show --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.aksClusterName.value -o tsv`
-ip_address=`az group deployment show --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.publicIPAddress.value -o tsv`
-public_fqdn=`az group deployment show --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.publicIPFQDN.value -o tsv`
-db_password=`az group deployment show --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.dbAdministratorLoginPassword.value -o tsv`
-db_user=`az group deployment show --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.dbAdministratorLogin.value -o tsv`
-db_url=`az group deployment show --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.dbUri.value -o tsv`
-storage_url=`az group deployment show --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.storageConnectionString.value -o tsv`
-eh_connection=`az group deployment show --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.ehNamespaceConnectionString.value -o tsv`
-eh_ns=`az group deployment show --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.ehNamespaceName.value -o tsv`
+aks_cluster_name=`az deployment group show --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.aksClusterName.value -o tsv`
+ip_address=`az deployment group show --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.publicIPAddress.value -o tsv`
+public_fqdn=`az deployment group show --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.publicIPFQDN.value -o tsv`
+db_password=`az deployment group show --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.dbAdministratorLoginPassword.value -o tsv`
+db_user=`az deployment group show --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.dbAdministratorLogin.value -o tsv`
+db_url=`az deployment group show --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.dbUri.value -o tsv`
+storage_url=`az deployment group show --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.storageConnectionString.value -o tsv`
+eh_connection=`az deployment group show --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.ehNamespaceConnectionString.value -o tsv`
+eh_ns=`az deployment group show --name hawkBitBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.ehNamespaceName.value -o tsv`
 ```
 
 Now you can set your cluster in `kubectl`.
@@ -93,7 +93,6 @@ Next deploy helm on your cluster. It will take a moment until tiller is booted u
 
 ```bash
 kubectl apply -f helm/helm-rbac.yaml
-helm init --service-account tiller
 ```
 
 Next we prepare the k8s environment and our chart for deployment.
@@ -106,7 +105,9 @@ kubectl create namespace $k8s_namespace
 Deploy Nginx as Kubernetes Ingress controller.
 
 ```bash
-helm upgrade hawkbit-ingress stable/nginx-ingress \
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm upgrade hawkbit-ingress ingress-nginx/ingress-nginx \
     --namespace $k8s_namespace \
     --set controller.service.loadBalancerIP=$ip_address \
     --set controller.replicaCount=2 \
@@ -117,11 +118,14 @@ helm upgrade hawkbit-ingress stable/nginx-ingress \
 Deploy cert manager for [Let's Encrypt](https://letsencrypt.org) certificates.
 
 ```bash
-helm upgrade hawkbit-cert-manager stable/cert-manager \
+kubectl label namespace $k8s_namespace cert-manager.io/disable-validation=true
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+
+helm upgrade hawkbit-cert-manager jetstack/cert-manager \
     --namespace $k8s_namespace \
-    --set ingressShim.defaultIssuerName=letsencrypt-prod \
-    --set ingressShim.defaultIssuerKind=ClusterIssuer \
-    --version v0.5.2 --install
+    --set installCRDs=true \
+    --version v0.16.1 --install
 ```
 
 Now install hawkBit:

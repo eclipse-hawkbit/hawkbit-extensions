@@ -1,7 +1,7 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "hawkbit.fullname" . -}}
 {{- $ingressPaths := .Values.ingress.paths -}}
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -38,8 +38,8 @@ spec:
 {{- end }}
 {{- if .Values.ingress.tls.enabled }}
 ---
-apiVersion: certmanager.k8s.io/v1alpha1
-kind: ClusterIssuer
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
 metadata:
   name: letsencrypt-prod
 spec:
@@ -47,28 +47,24 @@ spec:
     server: https://acme-v02.api.letsencrypt.org/directory
     email: {{ .Values.ingress.tls.email }}
     privateKeySecretRef:
-      name: letsencrypt-prod
-    http01: {}
+      name:  letsencrypt-prod
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
 ---
-apiVersion: certmanager.k8s.io/v1alpha1
-kind: Certificate
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
 metadata:
-  name: {{ .Values.ingress.tls.secretName }}
+  name: letsencrypt-staging
 spec:
-  secretName: {{ .Values.ingress.tls.secretName }}
-  dnsNames:
-    {{- range .Values.ingress.hosts }}
-      - {{ . | quote }}
-    {{- end }}
   acme:
-    config:
-      - http01:
-          ingressClass: nginx
-        domains:
-          {{- range .Values.ingress.hosts }}
-            - {{ . | quote }}
-          {{- end }}
-  issuerRef:
-    name: letsencrypt-prod
-    kind: ClusterIssuer
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: {{ .Values.ingress.tls.email }}
+    privateKeySecretRef:
+      name:  letsencrypt-staging
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
 {{- end }}
