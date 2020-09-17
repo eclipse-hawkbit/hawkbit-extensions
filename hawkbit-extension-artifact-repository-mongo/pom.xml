@@ -13,7 +13,7 @@
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.eclipse.hawkbit</groupId>
-      <version>0.3.0-SNAPSHOT</version>
+      <version>0.4.0-SNAPSHOT</version>
       <artifactId>hawkbit-extensions-parent</artifactId>
    </parent>
    <artifactId>hawkbit-extension-artifact-repository-mongo</artifactId>
@@ -29,6 +29,11 @@
          <groupId>org.springframework.data</groupId>
          <artifactId>spring-data-mongodb</artifactId>
       </dependency>
+      <dependency>
+         <groupId>org.mongodb</groupId>
+         <artifactId>mongodb-driver-sync</artifactId>
+      </dependency>
+
       <dependency>
          <groupId>org.springframework</groupId>
          <artifactId>spring-context</artifactId>

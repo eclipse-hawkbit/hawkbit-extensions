@@ -25,7 +25,6 @@ import org.springframework.validation.annotation.Validated;
 
 import com.mongodb.MongoClientException;
 import com.mongodb.MongoException;
-import com.mongodb.MongoGridFSException;
 import com.mongodb.client.gridfs.model.GridFSFile;
 
 /**
@@ -199,7 +198,7 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
             return null;
         }
         return createGridFsArtifact(file, getContentType(file),
-                new DbArtifactHash(file.getFilename(), file.getMD5(), null));
+                new DbArtifactHash(file.getFilename(), null, null));
     }
 
     /**
@@ -234,12 +233,9 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
         String contentType = null;
         if (metadata != null) {
             contentType = metadata.getString(CONTENT_TYPE);
-        }
-        if (contentType == null) {
-            try {
-                contentType = file.getContentType();
-            } catch (final MongoGridFSException e) {
-                throw new ArtifactStoreException("Could not determine content type for file " + file.getId(), e);
+
+            if(contentType == null) {
+                throw new ArtifactStoreException("Could not determine content type for file " + file.getId());
             }
         }
         return contentType;

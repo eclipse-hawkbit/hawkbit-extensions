@@ -16,11 +16,11 @@
    <parent>
       <groupId>org.eclipse.hawkbit</groupId>
       <artifactId>hawkbit-extensions-parent</artifactId>
-      <version>0.3.0-SNAPSHOT</version>
+      <version>0.4.0-SNAPSHOT</version>
    </parent>
 
    <artifactId>hawkbit-extensions-azure</artifactId>
-   <version>0.3.0-SNAPSHOT</version>
+   <version>0.4.0-SNAPSHOT</version>
    <packaging>pom</packaging>
 
    <name>hawkBit :: Extensions :: Azure</name>

@@ -38,7 +38,7 @@ import io.qameta.allure.Story;
 @Story("Artifact Store MongoDB")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {MongoDBArtifactStoreAutoConfiguration.class, TestConfiguration.class}, properties = {
-        "spring.data.mongodb.port=0", "spring.mongodb.embedded.version=3.5.5",
+        "spring.mongodb.embedded.version=3.5.5",
         "spring.mongodb.embedded.features=sync_delay,no_http_interface_arg"})
 public class MongoDBArtifactStoreTest {
     private static final String TENANT = "test_tenant";
@@ -120,7 +120,7 @@ public class MongoDBArtifactStoreTest {
         assertThat(loaded).isNotNull();
         assertThat(loaded.getContentType()).isEqualTo("application/json");
         assertThat(loaded.getHashes().getSha1()).isEqualTo(sha1Hash16);
-        assertThat(loaded.getHashes().getMd5()).isEqualTo(md5Hash16);
+        assertThat(loaded.getHashes().getMd5()).isNull();
         assertThat(loaded.getSize()).isEqualTo(filelengthBytes);
 
         return sha1Hash16;

@@ -14,13 +14,9 @@ import java.util.function.Supplier;
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
 import org.eclipse.hawkbit.artifact.repository.model.DbArtifactHash;
 
-import com.mongodb.gridfs.GridFSDBFile;
-
 /**
- * A wrapper object for the {@link AbstractDbArtifact} object which returns the
- * {@link InputStream} directly from {@link GridFSDBFile#getInputStream()} which
- * retrieves when calling {@link #getFileInputStream()} always a new
- * {@link InputStream} and not the same.
+ * A wrapper object for the {@link AbstractDbArtifact} object which returns
+ * always a new {@link InputStream} and not the same.
  */
 public class GridFsArtifact extends AbstractDbArtifact {
 
