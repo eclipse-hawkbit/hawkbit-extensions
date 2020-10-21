@@ -1,0 +1,62 @@
+# Default values for hawkbit.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+image:
+  repository: hawkbit-update-server-azure
+  tag: latest
+  pullPolicy: Always
+
+nameOverride: ""
+fullnameOverride: ""
+
+storage:
+  url:
+
+db:
+  username:
+  password:
+  url:
+
+eventHubs:
+  connectionString:
+  namespace:
+
+insights:
+  enabled: false
+  key: ""
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/affinity: cookie
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+  paths:
+    - /
+  hosts:
+    - hawkbit.westeurope.cloudapp.azure.com
+  tls:
+    enabled: true
+    email: you.mail@comes.here
+    secretName: tls-secret-hawkbit
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 1Gi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

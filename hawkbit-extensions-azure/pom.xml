@@ -1,0 +1,60 @@
+<!--
+
+    Copyright (c) 2018 Microsoft and others.
+
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>org.eclipse.hawkbit</groupId>
+      <artifactId>hawkbit-extensions-parent</artifactId>
+      <version>0.3.0-SNAPSHOT</version>
+   </parent>
+
+   <artifactId>hawkbit-extensions-azure</artifactId>
+   <version>0.3.0-SNAPSHOT</version>
+   <packaging>pom</packaging>
+
+   <name>hawkBit :: Extensions :: Azure</name>
+   <description>Parent pom for hawkBit extensions around Microsoft Azure integration</description>
+
+   <properties>
+      <azure.version>2.1.6</azure.version>
+      <applicationinsights.version>2.1.2</applicationinsights.version>
+      <azure.storage.version>8.0.0</azure.storage.version>
+   </properties>
+
+   <modules>
+      <module>hawkbit-extension-artifact-repository-azure</module>
+   </modules>
+
+   <dependencyManagement>
+      <dependencies>
+         <dependency>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>azure-spring-boot-bom</artifactId>
+            <version>${azure.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+         </dependency>
+         <dependency>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>applicationinsights-core</artifactId>
+            <version>${applicationinsights.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>azure-storage</artifactId>
+            <version>${azure.storage.version}</version>
+         </dependency>
+      </dependencies>
+   </dependencyManagement>
+</project>

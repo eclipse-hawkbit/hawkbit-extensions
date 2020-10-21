@@ -10,9 +10,10 @@ package org.eclipse.hawkbit.artifact.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.when;
 
@@ -36,7 +37,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -45,17 +46,18 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.google.common.io.BaseEncoding;
 import com.google.common.io.ByteStreams;
 
-import ru.yandex.qatools.allure.annotations.Description;
-import ru.yandex.qatools.allure.annotations.Features;
-import ru.yandex.qatools.allure.annotations.Stories;
+import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 
 /**
  * Test class for the {@link S3Repository}.
  */
 @RunWith(MockitoJUnitRunner.class)
-@Features("Unit Tests - S3 Repository")
-@Stories("S3 Artifact Repository")
+@Feature("Unit Tests - S3 Repository")
+@Story("S3 Artifact Repository")
 public class S3RepositoryTest {
+
     private static final String TENANT = "test_tenant";
 
     @Mock
@@ -81,8 +83,8 @@ public class S3RepositoryTest {
 
     @Before
     public void before() {
+        amazonS3Mock = mock(AmazonS3.class);
         s3RepositoryUnderTest = new S3Repository(amazonS3Mock, s3Properties);
-        when(amazonS3Mock.putObject(any(), any(), any(), any())).thenReturn(putObjectResultMock);
     }
 
     @Test
@@ -91,6 +93,8 @@ public class S3RepositoryTest {
         final byte[] rndBytes = randomBytes();
         final String knownSHA1 = getSha1OfBytes(rndBytes);
         final String knownContentType = "application/octet-stream";
+
+        when(amazonS3Mock.putObject(any(), any(), any(), any())).thenReturn(putObjectResultMock);
 
         // test
         storeRandomBytes(rndBytes, knownContentType);
@@ -140,7 +144,7 @@ public class S3RepositoryTest {
         final String knownSHA1 = getSha1OfBytes(rndBytes);
         final String knownContentType = "application/octet-stream";
 
-        when(amazonS3Mock.doesObjectExist(s3Properties.getBucketName(), knownSHA1)).thenReturn(true);
+        when(amazonS3Mock.putObject(any(), any(), any(), any())).thenReturn(putObjectResultMock);
 
         // test
         storeRandomBytes(rndBytes, knownContentType);
@@ -155,7 +159,6 @@ public class S3RepositoryTest {
     @Description("Verifies that null is returned if the given hash does not exists on S3")
     public void getArtifactBySha1ReturnsNullIfFileDoesNotExists() {
         final String knownSHA1Hash = "0815";
-        when(amazonS3Mock.getObject(s3Properties.getBucketName(), knownSHA1Hash)).thenReturn(null);
 
         // test
         final AbstractDbArtifact artifactBySha1NotExists = s3RepositoryUnderTest.getArtifactBySha1(TENANT,
@@ -166,17 +169,18 @@ public class S3RepositoryTest {
     }
 
     @Test
-    @Description("Verifies that given SHA1 hash are checked and if not match will throw exception")
-    public void sha1HashValuesAreNotTheSameThrowsException() throws IOException {
+    @Description("Verifies that given SHA1 hash is checked and if not match will throw exception")
+    public void sha1HashValuesAreNotTheSameThrowsException() throws IOException, NoSuchAlgorithmException {
 
         final byte[] rndBytes = randomBytes();
         final String knownContentType = "application/octet-stream";
         final String wrongSHA1Hash = "wrong";
-        final String wrongMD5 = "wrong";
+        final String knownMD5 = getMd5OfBytes(rndBytes);
+        final String knownSHA256 = getSha256OfBytes(rndBytes);
 
         // test
         try {
-            storeRandomBytes(rndBytes, knownContentType, new DbArtifactHash(wrongSHA1Hash, wrongMD5));
+            storeRandomBytes(rndBytes, knownContentType, new DbArtifactHash(wrongSHA1Hash, knownMD5, knownSHA256));
             fail("Expected an HashNotMatchException, but didn't throw");
         } catch (final HashNotMatchException e) {
             assertThat(e.getHashFunction()).isEqualTo(HashNotMatchException.SHA1);
@@ -184,20 +188,40 @@ public class S3RepositoryTest {
     }
 
     @Test
-    @Description("Verifies that given MD5 hash are checked and if not match will throw exception")
+    @Description("Verifies that given MD5 hash is checked and if not match will throw exception")
     public void md5HashValuesAreNotTheSameThrowsException() throws IOException, NoSuchAlgorithmException {
 
         final byte[] rndBytes = randomBytes();
         final String knownContentType = "application/octet-stream";
         final String knownSHA1 = getSha1OfBytes(rndBytes);
         final String wrongMD5 = "wrong";
+        final String knownSHA256 = getSha256OfBytes(rndBytes);
 
         // test
         try {
-            storeRandomBytes(rndBytes, knownContentType, new DbArtifactHash(knownSHA1, wrongMD5));
+            storeRandomBytes(rndBytes, knownContentType, new DbArtifactHash(knownSHA1, wrongMD5, knownSHA256));
             fail("Expected an HashNotMatchException, but didn't throw");
         } catch (final HashNotMatchException e) {
             assertThat(e.getHashFunction()).isEqualTo(HashNotMatchException.MD5);
+        }
+    }
+
+    @Test
+    @Description("Verifies that given SHA256 hash is checked and if not match will throw exception")
+    public void sha256HashValuesAreNotTheSameThrowsException() throws IOException, NoSuchAlgorithmException {
+
+        final byte[] rndBytes = randomBytes();
+        final String knownContentType = "application/octet-stream";
+        final String knownSHA1 = getSha1OfBytes(rndBytes);
+        final String knownMD5 = getMd5OfBytes(rndBytes);
+        final String wrongSHA256 = "wrong";
+
+        // test
+        try {
+            storeRandomBytes(rndBytes, knownContentType, new DbArtifactHash(knownSHA1, knownMD5, wrongSHA256));
+            fail("Expected an HashNotMatchException, but didn't throw");
+        } catch (final HashNotMatchException e) {
+            assertThat(e.getHashFunction()).isEqualTo(HashNotMatchException.SHA256);
         }
     }
 
@@ -216,7 +240,20 @@ public class S3RepositoryTest {
 
     private static String getSha1OfBytes(final byte[] bytes) throws IOException, NoSuchAlgorithmException {
         final MessageDigest messageDigest = MessageDigest.getInstance("SHA1");
+        return getHashOfBytes(bytes, messageDigest);
+    }
 
+    private static String getMd5OfBytes(final byte[] bytes) throws IOException, NoSuchAlgorithmException {
+        final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+        return getHashOfBytes(bytes, messageDigest);
+    }
+
+    private static String getSha256OfBytes(final byte[] bytes) throws IOException, NoSuchAlgorithmException {
+        final MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+        return getHashOfBytes(bytes, messageDigest);
+    }
+
+    private static String getHashOfBytes(final byte[] bytes, final MessageDigest messageDigest) throws IOException {
         try (InputStream input = new ByteArrayInputStream(bytes);
                 OutputStream output = new DigestOutputStream(new ByteArrayOutputStream(), messageDigest)) {
             ByteStreams.copy(input, output);

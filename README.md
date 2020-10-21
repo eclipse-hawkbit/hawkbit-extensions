@@ -2,6 +2,8 @@
 
 # Eclipse hawkBit™ - Extensions collection
 
+Build: [![Circle CI](https://circleci.com/gh/eclipse/hawkbit-extensions.svg?style=shield)](https://circleci.com/gh/eclipse/hawkbit-extensions)
+
 [hawkBit](https://github.com/eclipse/hawkbit) extensions are implementations to extend the functionality of hawkBit which are maintained by the hawkBit community. The extensions can be used to integrate in a hawkBit application to exchange or extend hawkBit functionality. Extensions should work with the standard [hawkBit runtime](https://github.com/eclipse/hawkbit/tree/master/hawkbit-runtime/hawkbit-update-server). All extensions provide a `README.md` which explains the use of the extension and how to use them.
 
 hawkBit extensions are implementations which are not included in the default implementation of hawkBit's security and auto-configuration mechanism or extending functionality by e.g. integrating third-party services to hawkBit. 
