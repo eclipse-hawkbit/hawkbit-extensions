@@ -96,6 +96,7 @@
                         <validHeader>licenses/LICENSE_HEADER_TEMPLATE_SIEMENS_18.txt</validHeader>
                         <validHeader>licenses/LICENSE_HEADER_TEMPLATE_BOSCH.txt</validHeader>
                         <validHeader>licenses/LICENSE_HEADER_TEMPLATE_BOSCH_18.txt</validHeader>
+                        <validHeader>licenses/LICENSE_HEADER_TEMPLATE_MICROSOFT_20.txt</validHeader>
                         <validHeader>licenses/LICENSE_HEADER_TEMPLATE_MICROSOFT_18.txt</validHeader>
                         <validHeader>licenses/LICENSE_HEADER_TEMPLATE_RICO_PAHLISCH.txt</validHeader>
                     </validHeaders>
