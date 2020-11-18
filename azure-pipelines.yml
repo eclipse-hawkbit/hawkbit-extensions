@@ -14,7 +14,7 @@
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/release/caching?view=azure-devops#maven
 
 pool:
-  vmImage: "ubuntu-latest"
+  vmImage: "ubuntu-18.04"
 
 variables:
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
@@ -24,9 +24,6 @@ steps:
   - task: Cache@2
     inputs:
       key: 'maven | "$(Agent.OS)" | **/pom.xml'
-      restoreKeys: |
-        maven | "$(Agent.OS)"
-        maven
       path: $(MAVEN_CACHE_FOLDER)
     displayName: Cache Maven local repo
   - task: Maven@3
@@ -34,8 +31,8 @@ steps:
       mavenPomFile: "pom.xml"
       mavenOptions: "-Xmx3072m"
       javaHomeOption: "JDKVersion"
-      jdkVersionOption: "1.11"
+      jdkVersionOption: "1.8"
       jdkArchitectureOption: "x64"
       publishJUnitResults: true
       testResultsFiles: "**/surefire-reports/TEST-*.xml"
-      goals: "package license:check $(MAVEN_OPTS)"
+      goals: "verify license:check $(MAVEN_OPTS)"
