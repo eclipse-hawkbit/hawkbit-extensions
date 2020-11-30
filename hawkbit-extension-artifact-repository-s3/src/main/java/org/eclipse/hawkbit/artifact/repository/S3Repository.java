@@ -143,14 +143,20 @@ public class S3Repository extends AbstractArtifactRepository {
             // the MD5Content is stored in the ETag
             return new S3Artifact(amazonS3, s3Properties, key, sha1Hash,
                     new DbArtifactHash(sha1Hash,
-                            BaseEncoding.base16().lowerCase()
-                                    .encode(BaseEncoding.base64().decode(s3ObjectMetadata.getETag())),
+                            BaseEncoding.base16().lowerCase().encode(
+                                    BaseEncoding.base64().decode(sanitizeEtag(s3ObjectMetadata.getETag()))),
                             null),
                     s3ObjectMetadata.getContentLength(), s3ObjectMetadata.getContentType());
         } catch (final IOException e) {
             LOG.error("Could not verify S3Object", e);
             return null;
         }
+    }
+
+    private static String sanitizeEtag(final String etag) {
+        // base64 alphabet consist of alphanumeric characters and + / = (see RFC
+        // 4648)
+        return etag.trim().replaceAll("[^A-Za-z0-9+/=]", "");
     }
 
     @Override
