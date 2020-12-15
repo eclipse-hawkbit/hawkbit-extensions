@@ -18,6 +18,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
+import io.qameta.allure.Description;
 import org.eclipse.hawkbit.artifact.TestConfiguration;
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
 import org.eclipse.hawkbit.artifact.repository.model.DbArtifactHash;
@@ -25,7 +26,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Description;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.google.common.io.BaseEncoding;
