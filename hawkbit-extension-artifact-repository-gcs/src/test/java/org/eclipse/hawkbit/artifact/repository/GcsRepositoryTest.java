@@ -29,9 +29,9 @@ import java.util.Random;
 
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
 import org.eclipse.hawkbit.artifact.repository.model.DbArtifactHash;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -47,11 +47,12 @@ import com.google.common.io.ByteStreams;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * Test class for the {@link GcsRepository}.
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 @Feature("Unit Tests - GCS Repository")
 @Story("GCS Artifact Repository")
 public class GcsRepositoryTest {
@@ -70,7 +71,7 @@ public class GcsRepositoryTest {
     private ArgumentCaptor<BlobInfo> blobCaptor;
     private GcsRepository gcsRepositoryUnderTest;
 
-    @Before
+    @BeforeEach
     public void before() {
         gcsStorageMock = mock(Storage.class);
         gcsRepositoryUnderTest = new GcsRepository(gcsStorageMock, gcpProperties);
