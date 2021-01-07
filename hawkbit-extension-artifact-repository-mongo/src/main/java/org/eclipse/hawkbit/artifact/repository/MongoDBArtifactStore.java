@@ -233,10 +233,6 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
         String contentType = null;
         if (metadata != null) {
             contentType = metadata.getString(CONTENT_TYPE);
-
-            if(contentType == null) {
-                throw new ArtifactStoreException("Could not determine content type for file " + file.getId());
-            }
         }
         return contentType;
     }
