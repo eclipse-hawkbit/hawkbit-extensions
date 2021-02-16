@@ -18,15 +18,13 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
+import io.qameta.allure.Description;
 import org.eclipse.hawkbit.artifact.TestConfiguration;
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
 import org.eclipse.hawkbit.artifact.repository.model.DbArtifactHash;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Description;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import com.google.common.io.BaseEncoding;
 
@@ -36,7 +34,6 @@ import io.qameta.allure.Story;
 
 @Feature("Component Tests - Repository")
 @Story("Artifact Store MongoDB")
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = {MongoDBArtifactStoreAutoConfiguration.class, TestConfiguration.class}, properties = {
         "spring.mongodb.embedded.version=3.5.5",
         "spring.mongodb.embedded.features=sync_delay,no_http_interface_arg"})

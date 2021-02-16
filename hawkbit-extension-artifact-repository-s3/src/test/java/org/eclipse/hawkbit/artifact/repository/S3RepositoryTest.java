@@ -30,14 +30,13 @@ import java.util.Random;
 
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
 import org.eclipse.hawkbit.artifact.repository.model.DbArtifactHash;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -49,13 +48,15 @@ import com.google.common.io.ByteStreams;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * Test class for the {@link S3Repository}.
  */
-@RunWith(MockitoJUnitRunner.class)
+
 @Feature("Unit Tests - S3 Repository")
 @Story("S3 Artifact Repository")
+@ExtendWith(MockitoExtension.class)
 public class S3RepositoryTest {
 
     private static final String TENANT = "test_tenant";
@@ -81,7 +82,7 @@ public class S3RepositoryTest {
     private final S3RepositoryProperties s3Properties = new S3RepositoryProperties();
     private S3Repository s3RepositoryUnderTest;
 
-    @Before
+    @BeforeEach
     public void before() {
         amazonS3Mock = mock(AmazonS3.class);
         s3RepositoryUnderTest = new S3Repository(amazonS3Mock, s3Properties);
