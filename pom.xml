@@ -44,7 +44,11 @@
       <hawkbit.version>0.3.0M7</hawkbit.version>
       <aws.sdk.version>1.11.415</aws.sdk.version>
       <gcp.sdk.version>0.77.0-alpha</gcp.sdk.version>
-      <mongodb.driver.version>4.0.6</mongodb.driver.version>
+
+      <!-- Spring boot version overrides (should be reviewed with every boot upgrade) - START -->
+      <!-- Newer versions needed than defined in Boot -->
+      <mongodb.version>4.0.6</mongodb.version>
+      <!-- Spring boot version overrides - END -->
 
       <!-- Release - START -->
       <release.scm.connection>scm:git:git@github.com:eclipse/hawkbit-extensions.git</release.scm.connection>
@@ -210,16 +214,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.mongodb</groupId>
-                <artifactId>mongodb-driver-core</artifactId>
-                <version>${mongodb.driver.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mongodb</groupId>
-                <artifactId>mongodb-driver-sync</artifactId>
-                <version>${mongodb.driver.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk-bom</artifactId>
