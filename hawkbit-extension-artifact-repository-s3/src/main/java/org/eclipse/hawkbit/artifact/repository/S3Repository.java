@@ -28,7 +28,6 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
-import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.io.BaseEncoding;
 
@@ -77,7 +76,7 @@ public class S3Repository extends AbstractArtifactRepository {
         LOG.info("Storing file {} with length {} to AWS S3 bucket {} with key {}", file.getName(), file.length(),
                 s3Properties.getBucketName(), key);
 
-        if (existsByTenantAndSha1(tenant, base16Hashes.getSha1())) {
+        if (s3Artifact.exists()) {
             LOG.debug("Artifact {} already exists on S3 bucket {}, don't need to upload twice", key,
                     s3Properties.getBucketName());
             return s3Artifact;
@@ -100,8 +99,8 @@ public class S3Repository extends AbstractArtifactRepository {
 
     private S3Artifact createS3Artifact(final String tenant, final DbArtifactHash hashes, final String contentType,
             final File file) {
-        return new S3Artifact(amazonS3, s3Properties, objectKey(tenant, hashes.getSha1()), hashes.getSha1(), hashes,
-                file.length(), contentType);
+        return S3Artifact.create(amazonS3, s3Properties, objectKey(tenant, hashes.getSha1()), hashes, file.length(),
+                contentType);
     }
 
     private ObjectMetadata createObjectMetadata(final String mdMD5Hash16, final String contentType, final File file) {
@@ -131,37 +130,22 @@ public class S3Repository extends AbstractArtifactRepository {
     @Override
     public AbstractDbArtifact getArtifactBySha1(final String tenant, final String sha1Hash) {
         final String key = objectKey(tenant, sha1Hash);
-
-        LOG.info("Retrieving S3 object from bucket {} and key {}", s3Properties.getBucketName(), key);
-        try (final S3Object s3Object = amazonS3.getObject(s3Properties.getBucketName(), key)) {
-            if (s3Object == null) {
-                return null;
-            }
-
-            final ObjectMetadata s3ObjectMetadata = s3Object.getObjectMetadata();
-
-            // the MD5Content is stored in the ETag
-            return new S3Artifact(amazonS3, s3Properties, key, sha1Hash,
-                    new DbArtifactHash(sha1Hash,
-                            BaseEncoding.base16().lowerCase().encode(
-                                    BaseEncoding.base64().decode(sanitizeEtag(s3ObjectMetadata.getETag()))),
-                            null),
-                    s3ObjectMetadata.getContentLength(), s3ObjectMetadata.getContentType());
-        } catch (final IOException e) {
-            LOG.error("Could not verify S3Object", e);
+        LOG.debug("Retrieving S3 object from bucket {} and key {}", s3Properties.getBucketName(), key);
+        try {
+            return S3Artifact.get(amazonS3, s3Properties, key, sha1Hash);
+        } catch (final S3ArtifactNotFoundException e) {
+            LOG.debug("Cannot find artifact for bucket {} with key {}", e.getBucket(), e.getKey());
             return null;
         }
     }
 
-    private static String sanitizeEtag(final String etag) {
-        // base64 alphabet consist of alphanumeric characters and + / = (see RFC
-        // 4648)
-        return etag.trim().replaceAll("[^A-Za-z0-9+/=]", "");
-    }
-
     @Override
     public boolean existsByTenantAndSha1(final String tenant, final String sha1Hash) {
-        return amazonS3.doesObjectExist(s3Properties.getBucketName(), objectKey(tenant, sha1Hash));
+        final boolean exists = amazonS3.doesObjectExist(s3Properties.getBucketName(), objectKey(tenant, sha1Hash));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Search for artifact with sha1Hash {} results in status: {}", sha1Hash, exists);
+        }
+        return exists;
     }
 
     @Override
