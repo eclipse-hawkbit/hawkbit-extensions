@@ -134,7 +134,7 @@ public class S3Repository extends AbstractArtifactRepository {
         try {
             return S3Artifact.get(amazonS3, s3Properties, key, sha1Hash);
         } catch (final S3ArtifactNotFoundException e) {
-            LOG.debug("Cannot find artifact for bucket {} with key {}", e.getBucket(), e.getKey());
+            LOG.debug("Cannot find artifact for bucket {} with key {}", e.getBucket(), e.getKey(), e);
             return null;
         }
     }

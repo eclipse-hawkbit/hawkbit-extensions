@@ -25,7 +25,7 @@ import com.amazonaws.services.s3.AmazonS3;
  * An {@link AbstractDbArtifact} implementation which retrieves the
  * {@link InputStream} from the {@link AmazonS3} client.
  */
-public class S3Artifact extends AbstractDbArtifact {
+public final class S3Artifact extends AbstractDbArtifact {
 
     private static final Logger LOG = LoggerFactory.getLogger(S3Artifact.class);
 
