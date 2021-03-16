@@ -123,6 +123,12 @@ public final class S3Artifact extends AbstractDbArtifact {
         return getS3Object().getObjectContent();
     }
 
+    @Override
+    public void abortIfNeeded() {
+        LOG.info("Abort requested for artifact input stream with key {}", key);
+        getS3Object().getObjectContent().abort();
+    }
+
     private S3Object getS3Object() {
         if (s3Object == null) {
             LOG.debug("Initialize S3Object in bucket {} with key {}", s3Properties.getBucketName(), key);
