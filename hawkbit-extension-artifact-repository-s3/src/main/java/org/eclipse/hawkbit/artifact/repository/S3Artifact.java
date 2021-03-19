@@ -159,7 +159,7 @@ public final class S3Artifact extends AbstractDbArtifact {
     /**
      * Wrapper to abort the http request of the S3 input stream before closing it
      */
-    static class WrappedS3InputStream extends S3ObjectInputStream {
+    static final class WrappedS3InputStream extends S3ObjectInputStream {
 
         /**
          * Constructor
