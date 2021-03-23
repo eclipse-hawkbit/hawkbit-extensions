@@ -21,6 +21,7 @@ import org.springframework.context.ApplicationContext;
 import org.vaadin.spring.events.EventBus.UIEventBus;
 
 import com.vaadin.annotations.Push;
+import com.vaadin.server.ErrorHandler;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.spring.annotation.SpringUI;
@@ -35,11 +36,11 @@ public class AzureUI extends AbstractHawkbitUI {
     private static final long serialVersionUID = 1L;
 
     @Autowired
-    AzureUI(final EventPushStrategy pushStrategy, final UIEventBus eventBus, final UIEventProvider eventProvider, final SpringViewProvider viewProvider,
-            final ApplicationContext context, final DashboardMenu dashboardMenu, final ErrorView errorview,
-            final NotificationUnreadButton notificationUnreadButton, final UiProperties uiProperties,
-            final VaadinMessageSource i18n) {
-        super(pushStrategy, eventBus, eventProvider, viewProvider, context, dashboardMenu, errorview, notificationUnreadButton,
-                uiProperties, i18n);
+    AzureUI(final EventPushStrategy pushStrategy, final UIEventBus eventBus, final UIEventProvider eventProvider,
+            final SpringViewProvider viewProvider, final ApplicationContext context, final DashboardMenu dashboardMenu,
+            final ErrorView errorview, final NotificationUnreadButton notificationUnreadButton,
+            final UiProperties uiProperties, final VaadinMessageSource i18n, final ErrorHandler uiErrorHandler) {
+        super(pushStrategy, eventBus, eventProvider, viewProvider, context, dashboardMenu, errorview,
+                notificationUnreadButton, uiProperties, i18n, uiErrorHandler);
     }
 }
