@@ -10,6 +10,7 @@ package org.eclipse.hawkbit.artifact.repository;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Base64;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
@@ -74,7 +75,7 @@ public final class S3Artifact extends AbstractDbArtifact {
      *             in case that no artifact could be found for the given values
      */
     public static S3Artifact get(final AmazonS3 amazonS3, final S3RepositoryProperties s3Properties, final String key,
-            final String artifactId) throws S3ArtifactNotFoundException {
+            final String artifactId) {
         final S3Object s3Object = getS3ObjectOrThrowException(amazonS3, s3Properties.getBucketName(), key);
 
         final ObjectMetadata objectMetadata = s3Object.getObjectMetadata();
@@ -136,8 +137,7 @@ public final class S3Artifact extends AbstractDbArtifact {
         }
     }
 
-    private static S3Object getS3ObjectOrThrowException(AmazonS3 amazonS3, String bucketName, String key)
-            throws S3ArtifactNotFoundException {
+    private static S3Object getS3ObjectOrThrowException(AmazonS3 amazonS3, String bucketName, String key) {
         final S3Object s3Object = amazonS3.getObject(bucketName, key);
         if (s3Object == null) {
             throw new S3ArtifactNotFoundException("Cannot find s3 object by given arguments.", bucketName, key);
@@ -147,7 +147,7 @@ public final class S3Artifact extends AbstractDbArtifact {
 
     private static DbArtifactHash createArtifactHash(final String artifactId, ObjectMetadata metadata) {
         return new DbArtifactHash(artifactId, BaseEncoding.base16().lowerCase()
-                .encode(BaseEncoding.base64().decode(sanitizeEtag(metadata.getETag()))), null);
+                .encode(Base64.getDecoder().decode(sanitizeEtag(metadata.getETag()))), null);
     }
 
     private static String sanitizeEtag(final String etag) {
