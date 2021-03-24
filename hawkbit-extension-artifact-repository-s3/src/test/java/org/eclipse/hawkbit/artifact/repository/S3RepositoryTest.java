@@ -28,6 +28,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
 import org.eclipse.hawkbit.artifact.repository.model.DbArtifactHash;
 import org.junit.jupiter.api.Test;
@@ -69,6 +71,9 @@ public class S3RepositoryTest {
 
     @Mock
     private ObjectMetadata s3ObjectMetadataMock;
+
+    @Mock
+    private S3ObjectInputStream s3ObjectInputStream;
 
     @Mock
     private PutObjectResult putObjectResultMock;
@@ -121,6 +126,7 @@ public class S3RepositoryTest {
         final String knownMdBase16 = BaseEncoding.base16().lowerCase().encode(knownMd5.getBytes());
         final String knownMd5Base64 = BaseEncoding.base64().encode(knownMd5.getBytes());
 
+        when(s3ObjectMock.getObjectContent()).thenReturn(s3ObjectInputStream);
         when(amazonS3Mock.getObject(anyString(), anyString())).thenReturn(s3ObjectMock);
         when(s3ObjectMock.getObjectMetadata()).thenReturn(s3ObjectMetadataMock);
         when(s3ObjectMetadataMock.getContentLength()).thenReturn(knownContentLength);
@@ -146,6 +152,7 @@ public class S3RepositoryTest {
         final String knownMdBase16 = BaseEncoding.base16().lowerCase().encode(knownMd5.getBytes());
         final String knownMd5Base64 = BaseEncoding.base64().encode(knownMd5.getBytes());
 
+        when(s3ObjectMock.getObjectContent()).thenReturn(s3ObjectInputStream);
         when(amazonS3Mock.getObject(anyString(), anyString())).thenReturn(s3ObjectMock);
         when(s3ObjectMock.getObjectMetadata()).thenReturn(s3ObjectMetadataMock);
         // add special characters to etag
