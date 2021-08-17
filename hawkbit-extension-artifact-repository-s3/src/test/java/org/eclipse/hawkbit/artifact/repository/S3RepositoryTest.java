@@ -30,13 +30,14 @@ import java.util.Random;
 
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
 import org.eclipse.hawkbit.artifact.repository.model.DbArtifactHash;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -48,7 +49,6 @@ import com.google.common.io.ByteStreams;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * Test class for the {@link S3Repository}.
@@ -117,14 +117,10 @@ public class S3RepositoryTest {
         final String knownSHA1Hash = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
         final long knownContentLength = 100;
         final String knownContentType = "application/octet-stream";
-        final String knownMd5 = "098f6bcd4621d373cade4e832627b4f6";
-        final String knownMdBase16 = BaseEncoding.base16().lowerCase().encode(knownMd5.getBytes());
-        final String knownMd5Base64 = BaseEncoding.base64().encode(knownMd5.getBytes());
 
         when(amazonS3Mock.getObject(anyString(), anyString())).thenReturn(s3ObjectMock);
         when(s3ObjectMock.getObjectMetadata()).thenReturn(s3ObjectMetadataMock);
         when(s3ObjectMetadataMock.getContentLength()).thenReturn(knownContentLength);
-        when(s3ObjectMetadataMock.getETag()).thenReturn(knownMd5Base64);
         when(s3ObjectMetadataMock.getContentType()).thenReturn(knownContentType);
 
         // test
@@ -135,25 +131,6 @@ public class S3RepositoryTest {
         assertThat(artifactBySha1.getContentType()).isEqualTo(knownContentType);
         assertThat(artifactBySha1.getSize()).isEqualTo(knownContentLength);
         assertThat(artifactBySha1.getHashes().getSha1()).isEqualTo(knownSHA1Hash);
-        assertThat(artifactBySha1.getHashes().getMd5()).isEqualTo(knownMdBase16);
-    }
-
-    @Test
-    @Description("Verifies that special characters in the etag are sanitized")
-    public void getArtifactBySHA1SanitizeEtag() {
-        final String knownSHA1Hash = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
-        final String knownMd5 = "098f6bcd4621d373cade4e832627b4f6";
-        final String knownMdBase16 = BaseEncoding.base16().lowerCase().encode(knownMd5.getBytes());
-        final String knownMd5Base64 = BaseEncoding.base64().encode(knownMd5.getBytes());
-
-        when(amazonS3Mock.getObject(anyString(), anyString())).thenReturn(s3ObjectMock);
-        when(s3ObjectMock.getObjectMetadata()).thenReturn(s3ObjectMetadataMock);
-        // add special characters to etag
-        when(s3ObjectMetadataMock.getETag()).thenReturn("'" + knownMd5Base64 + "'");
-
-        final AbstractDbArtifact artifactBySha1 = s3RepositoryUnderTest.getArtifactBySha1(TENANT, knownSHA1Hash);
-
-        assertThat(artifactBySha1.getHashes().getMd5()).isEqualTo(knownMdBase16);
     }
 
     @Test

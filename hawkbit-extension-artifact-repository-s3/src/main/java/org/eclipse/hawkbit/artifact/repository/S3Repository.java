@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2015 Bosch Software Innovations GmbH and others.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,7 +36,7 @@ import com.google.common.io.BaseEncoding;
  * An {@link ArtifactRepository} implementation for the AWS S3 service. All
  * binaries are stored in single bucket using the configured name
  * {@link S3RepositoryProperties#getBucketName()}.
- * 
+ *
  * From the AWS S3 documentation:
  * <p>
  * There is no limit to the number of objects that can be stored in a bucket and
@@ -140,23 +140,12 @@ public class S3Repository extends AbstractArtifactRepository {
 
             final ObjectMetadata s3ObjectMetadata = s3Object.getObjectMetadata();
 
-            // the MD5Content is stored in the ETag
-            return new S3Artifact(amazonS3, s3Properties, key, sha1Hash,
-                    new DbArtifactHash(sha1Hash,
-                            BaseEncoding.base16().lowerCase().encode(
-                                    BaseEncoding.base64().decode(sanitizeEtag(s3ObjectMetadata.getETag()))),
-                            null),
+            return new S3Artifact(amazonS3, s3Properties, key, sha1Hash, new DbArtifactHash(sha1Hash, null, null),
                     s3ObjectMetadata.getContentLength(), s3ObjectMetadata.getContentType());
         } catch (final IOException e) {
             LOG.error("Could not verify S3Object", e);
             return null;
         }
-    }
-
-    private static String sanitizeEtag(final String etag) {
-        // base64 alphabet consist of alphanumeric characters and + / = (see RFC
-        // 4648)
-        return etag.trim().replaceAll("[^A-Za-z0-9+/=]", "");
     }
 
     @Override
