@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Base64;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
@@ -111,7 +112,7 @@ public class GcsRepository extends AbstractArtifactRepository {
         // the MD5Content is stored in the ETag
         return new GcsArtifact(gcsStorage, gcsProperties, key, sha1Hash,
                 new DbArtifactHash(sha1Hash,
-                        BaseEncoding.base16().lowerCase().encode(BaseEncoding.base64().decode(blob.getMd5())), null),
+                        BaseEncoding.base16().lowerCase().encode(Base64.getDecoder().decode(blob.getMd5())), null),
                 blob.getSize(), blob.getContentType());
 
     }
