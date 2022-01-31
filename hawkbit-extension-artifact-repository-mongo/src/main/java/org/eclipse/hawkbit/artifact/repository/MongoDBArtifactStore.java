@@ -124,6 +124,9 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
         if (result == null) {
             try {
                 final GridFSFile temp = loadTempFile(tempFile);
+                if (temp == null) {
+                    throw new ArtifactStoreException("Could not load temp file for " + tempFile);
+                }
 
                 final Document metadata = new Document();
                 metadata.put(SHA1, base16Hashes.getSha1());
@@ -132,7 +135,8 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
                 metadata.put(CONTENT_TYPE, contentType);
 
                 final GridFsResource resource = gridFs.getResource(temp);
-                final ObjectId id = gridFs.store(resource.getInputStream(), base16Hashes.getSha1(), contentType, metadata);
+                final ObjectId id = gridFs.store(resource.getInputStream(), base16Hashes.getSha1(), contentType,
+                        metadata);
                 final GridFSFile file = gridFs.findOne(new Query().addCriteria(Criteria.where(ID).is(id)));
 
                 return createGridFsArtifact(file, contentType, base16Hashes);
@@ -197,8 +201,7 @@ public class MongoDBArtifactStore extends AbstractArtifactRepository {
         if (file == null) {
             return null;
         }
-        return createGridFsArtifact(file, getContentType(file),
-                new DbArtifactHash(file.getFilename(), null, null));
+        return createGridFsArtifact(file, getContentType(file), new DbArtifactHash(file.getFilename(), null, null));
     }
 
     /**

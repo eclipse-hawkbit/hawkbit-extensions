@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Base64;
 
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
 import org.eclipse.hawkbit.artifact.repository.model.DbArtifactHash;
@@ -106,7 +107,8 @@ public class S3Repository extends AbstractArtifactRepository {
 
     private ObjectMetadata createObjectMetadata(final String mdMD5Hash16, final String contentType, final File file) {
         final ObjectMetadata objectMetadata = new ObjectMetadata();
-        final String mdMD5Hash64 = BaseEncoding.base64().encode(BaseEncoding.base16().lowerCase().decode(mdMD5Hash16));
+        final String mdMD5Hash64 = Base64.getEncoder()
+                .encodeToString(BaseEncoding.base16().lowerCase().decode(mdMD5Hash16));
         objectMetadata.setContentMD5(mdMD5Hash64);
         objectMetadata.setContentType(contentType);
         objectMetadata.setContentLength(file.length());

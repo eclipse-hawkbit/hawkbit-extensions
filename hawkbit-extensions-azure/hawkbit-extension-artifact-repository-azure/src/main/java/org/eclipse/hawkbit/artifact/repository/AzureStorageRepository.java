@@ -11,6 +11,7 @@ package org.eclipse.hawkbit.artifact.repository;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Base64;
 
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
 import org.eclipse.hawkbit.artifact.repository.model.DbArtifactHash;
@@ -110,7 +111,7 @@ public class AzureStorageRepository extends AbstractArtifactRepository {
             return null;
         }
 
-        return BaseEncoding.base16().lowerCase().encode(BaseEncoding.base64().decode(md5Base64));
+        return BaseEncoding.base16().lowerCase().encode(Base64.getDecoder().decode(md5Base64));
     }
 
     private CloudBlockBlob getBlob(final String tenant, final String sha1Hash16)
