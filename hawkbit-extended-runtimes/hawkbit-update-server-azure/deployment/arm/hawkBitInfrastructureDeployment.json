@@ -255,6 +255,9 @@
                     "uri": "https://raw.githubusercontent.com/eclipse/hawkbit-extensions/master/hawkbit-extended-runtimes/hawkbit-update-server-azure/deployment/arm/templates/kubernetesDeploy.json"
                 },
                 "parameters": {
+					"kubernetesVersion": {
+                        "value": "1.22.6"
+                    },
                     "clusterName": {
                         "value": "[variables('aksClusterName')]"
                     },
