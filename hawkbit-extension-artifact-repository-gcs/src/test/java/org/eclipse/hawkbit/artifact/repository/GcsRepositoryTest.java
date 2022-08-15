@@ -25,8 +25,10 @@ import java.io.OutputStream;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Random;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
 import org.eclipse.hawkbit.artifact.repository.model.DbArtifactHash;
 import org.junit.jupiter.api.BeforeEach;
@@ -126,12 +128,14 @@ public class GcsRepositoryTest {
 
     @Test
     @Description("Verifies that the gcs storage client is not called to put the object to GCS due the artifact already exists on GCS")
-    public void artifactIsNotUploadedIfAlreadyExists() throws IOException {
+    public void artifactIsNotUploadedIfAlreadyExists() throws IOException, NoSuchAlgorithmException {
         final byte[] rndBytes = randomBytes();
         final String knownContentType = "application/octet-stream";
+        final String knownMD5 = getMd5OfBytes(rndBytes);
 
         when(gcsStorageMock.get(anyString(), anyString())).thenReturn(gcpObjectMock);
         when(gcpObjectMock.exists()).thenReturn(true);
+        when(gcpObjectMock.getMd5()).thenReturn(knownMD5);
 
         // test
         storeRandomBytes(rndBytes, knownContentType);
