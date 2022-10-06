@@ -16,7 +16,7 @@
     <parent>
       <groupId>org.eclipse.hawkbit</groupId>
       <artifactId>hawkbit-parent</artifactId>
-      <version>0.3.0-SNAPSHOT</version>
+      <version>0.3.0.bosch81</version>
     </parent>
 
     <artifactId>hawkbit-extensions-parent</artifactId>
@@ -41,7 +41,7 @@
 
    <properties>
 
-      <hawkbit.version>0.3.0-SNAPSHOT</hawkbit.version>
+      <hawkbit.version>0.3.0.bosch81</hawkbit.version>
       <aws.sdk.version>1.11.415</aws.sdk.version>
       <gcp.sdk.version>0.77.0-alpha</gcp.sdk.version>
 
