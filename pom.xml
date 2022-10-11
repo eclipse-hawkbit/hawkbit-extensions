@@ -40,6 +40,10 @@
     </distributionManagement>
 
    <properties>
+      <!-- ************************ -->
+      <!-- Build/Release settings -->
+      <!-- ************************ -->
+      <maven.sonar.plugin.version>3.9.1.2184</maven.sonar.plugin.version>   
 
       <hawkbit.version>0.3.0-SNAPSHOT</hawkbit.version>
       <aws.sdk.version>1.11.415</aws.sdk.version>
@@ -75,6 +79,19 @@
     </modules>
 
     <build>
+    
+      <pluginManagement>
+         <plugins>      
+        	<!-- override groupid that is set in maven to supress warning regarding relocation of sonar-maven-plugin -->
+	    	<!-- see https://stackoverflow.com/a/35289210 -->
+            <plugin>
+               <groupId>org.sonarsource.scanner.maven</groupId>
+               <artifactId>sonar-maven-plugin</artifactId>
+               <version>${maven.sonar.plugin.version}</version>
+            </plugin> 
+         </plugins>
+      </pluginManagement>    
+    
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
