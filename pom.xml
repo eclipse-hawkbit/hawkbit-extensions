@@ -41,8 +41,8 @@
 
    <properties>
       <hawkbit.version>0.3.0-SNAPSHOT</hawkbit.version>
-      <aws.sdk.version>1.12.400</aws.sdk.version>
-      <gcp.sdk.version>0.77.0-alpha</gcp.sdk.version>
+      <aws.sdk.version>1.12.513</aws.sdk.version>
+      <gcp.sdk.version>0.200.0</gcp.sdk.version>
 
       <!-- Release - START -->
       <release.scm.connection>scm:git:git@github.com:eclipse/hawkbit-extensions.git</release.scm.connection>
@@ -235,5 +235,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
 </project>
