@@ -15,6 +15,7 @@ import org.eclipse.hawkbit.artifact.repository.model.DbArtifactHash;
 import org.springframework.util.Assert;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 
 /**
  * An {@link AbstractDbArtifact} implementation which retrieves the
@@ -39,7 +40,18 @@ public class S3Artifact extends AbstractDbArtifact {
 
     @Override
     public InputStream getFileInputStream() {
-        return amazonS3.getObject(s3Properties.getBucketName(), key).getObjectContent();
+        var req = new GetObjectRequest(s3Properties.getBucketName(), key);
+        var obj = amazonS3.getObject(req);
+
+        return obj.getObjectContent();
+    }
+
+    @Override
+    public InputStream getFileInputStream(long start, long end) {
+        var req = new GetObjectRequest(s3Properties.getBucketName(), key).withRange(start, end);
+        var obj = amazonS3.getObject(req);
+
+        return obj.getObjectContent();
     }
 
     @Override
