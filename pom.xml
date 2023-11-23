@@ -1,11 +1,12 @@
 <!--
 
-    Copyright (c) 2015 Bosch Software Innovations GmbH and others.
+    Copyright (c) 2015 Bosch Software Innovations GmbH and others
 
-    All rights reserved. This program and the accompanying materials
-    are made available under the terms of the Eclipse Public License v1.0
-    which accompanies this distribution, and is available at
-    http://www.eclipse.org/legal/epl-v10.html
+    This program and the accompanying materials are made
+    available under the terms of the Eclipse Public License 2.0
+    which is available at https://www.eclipse.org/legal/epl-2.0/
+
+    SPDX-License-Identifier: EPL-2.0
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -22,9 +23,16 @@
     <artifactId>hawkbit-extensions-parent</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
-
     <name>hawkBit :: Extensions</name>
     <description>Parent pom for hawkBit extensions</description>
+
+    <licenses>
+        <license>
+            <name>EPL-2.0</name>
+            <url>https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt</url>
+            <comments>Eclipse Public License - Version 2.0</comments>
+        </license>
+    </licenses>
 
     <distributionManagement>
         <repository>
@@ -89,8 +97,10 @@
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
-                    <header>licenses/LICENSE_HEADER_TEMPLATE_BOSCH_20.txt</header>
+                    <header>licenses/LICENSE_HEADER_TEMPLATE.txt</header>
                     <validHeaders>
+                        <validHeader>licenses/LICENSE_HEADER_TEMPLATE_BOSCH_23.txt</validHeader>
+                        <validHeader>licenses/LICENSE_HEADER_TEMPLATE_BOSCH_20.txt</validHeader>
                         <validHeader>licenses/LICENSE_HEADER_TEMPLATE_SIEMENS.txt</validHeader>
                         <validHeader>licenses/LICENSE_HEADER_TEMPLATE_SIEMENS_18.txt</validHeader>
                         <validHeader>licenses/LICENSE_HEADER_TEMPLATE_BOSCH.txt</validHeader>
