@@ -116,8 +116,8 @@ maven/mavencentral/org.apache.kafka/kafka-clients/3.1.2, Apache-2.0 AND (Apache-
 maven/mavencentral/org.apache.tomcat.embed/tomcat-embed-core/9.0.82, Apache-2.0 AND (CDDL-1.0 OR GPL-2.0 WITH Classpath-exception-2.0), approved, CQ20188
 maven/mavencentral/org.apache.tomcat.embed/tomcat-embed-el/9.0.82, Apache-2.0, approved, CQ20193
 maven/mavencentral/org.apache.tomcat.embed/tomcat-embed-websocket/9.0.82, Apache-2.0, approved, CQ20194
-maven/mavencentral/org.aspectj/aspectjrt/1.9.7, EPL-1.0, approved, tools.aspectj
-maven/mavencentral/org.aspectj/aspectjweaver/1.9.7, EPL-1.0, approved, tools.aspectj
+maven/mavencentral/org.aspectj/aspectjrt/1.9.7, EPL-2.0, approved, clearlydefined
+maven/mavencentral/org.aspectj/aspectjweaver/1.9.7, Apache-2.0 AND BSD-3-Clause AND EPL-1.0 AND BSD-3-Clause AND Apache-1.1, approved, #7695
 maven/mavencentral/org.checkerframework/checker-qual/3.33.0, MIT, approved, clearlydefined
 maven/mavencentral/org.conscrypt/conscrypt-openjdk-uber/2.5.2, Apache-2.0, approved, clearlydefined
 maven/mavencentral/org.eclipse.hawkbit/hawkbit-artifact-repository-filesystem/0.3.0, EPL-1.0, approved, iot.hawkbit
@@ -128,7 +128,7 @@ maven/mavencentral/org.eclipse.hawkbit/hawkbit-boot-starter-mgmt-ui/0.3.0, EPL-1
 maven/mavencentral/org.eclipse.hawkbit/hawkbit-core/0.3.0, EPL-1.0, approved, iot.hawkbit
 maven/mavencentral/org.eclipse.hawkbit/hawkbit-ddi-api/0.3.0, EPL-1.0, approved, iot.hawkbit
 maven/mavencentral/org.eclipse.hawkbit/hawkbit-ddi-resource/0.3.0, EPL-1.0, approved, iot.hawkbit
-maven/mavencentral/org.eclipse.hawkbit/hawkbit-extension-artifact-repository-azure/0.4.0-SNAPSHOT, EPL-1.0, approved, iot.hawkbit
+maven/mavencentral/org.eclipse.hawkbit/hawkbit-extension-artifact-repository-azure/0.4.0-20240103.101131-5, EPL-1.0, approved, iot.hawkbit
 maven/mavencentral/org.eclipse.hawkbit/hawkbit-http-security/0.3.0, EPL-1.0, approved, iot.hawkbit
 maven/mavencentral/org.eclipse.hawkbit/hawkbit-mgmt-api/0.3.0, EPL-1.0, approved, iot.hawkbit
 maven/mavencentral/org.eclipse.hawkbit/hawkbit-mgmt-resource/0.3.0, EPL-1.0, approved, iot.hawkbit
