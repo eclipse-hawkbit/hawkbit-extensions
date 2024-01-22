@@ -36,7 +36,7 @@ import io.qameta.allure.Story;
 @Feature("Component Tests - Repository")
 @Story("Artifact Store MongoDB")
 @SpringBootTest(classes = {MongoDBArtifactStoreAutoConfiguration.class, TestConfiguration.class}, properties = {
-        "spring.mongodb.embedded.version=3.5.5",
+        "de.flapdoodle.mongodb.embedded.version=3.6.23",
         "spring.mongodb.embedded.features=sync_delay,no_http_interface_arg"})
 public class MongoDBArtifactStoreTest {
     private static final String TENANT = "test_tenant";
