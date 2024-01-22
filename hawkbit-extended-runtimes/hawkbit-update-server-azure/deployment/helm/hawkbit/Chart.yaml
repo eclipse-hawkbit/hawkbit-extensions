@@ -1,5 +1,0 @@
-apiVersion: v1
-description: A Helm chart for hawkBit Update Server on Azure Kubernetes Service (AKS)
-name: hawkbit
-fullname: org-eclipse-hawkbit
-version: 0.3.0

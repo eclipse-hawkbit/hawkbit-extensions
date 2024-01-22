@@ -19,7 +19,6 @@
    <artifactId>hawkbit-extension-artifact-repository-s3</artifactId>
    <name>hawkBit :: Extensions :: S3 Repository</name>
 
-
    <dependencies>
       <dependency>
             <groupId>org.eclipse.hawkbit</groupId>
