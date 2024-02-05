@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
 import java.util.Random;
 
 import io.qameta.allure.Description;
@@ -26,8 +27,6 @@ import org.eclipse.hawkbit.artifact.repository.model.DbArtifactHash;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import com.google.common.io.BaseEncoding;
 
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
@@ -90,9 +89,10 @@ public class MongoDBArtifactStoreTest {
         final MessageDigest mdSHA1 = MessageDigest.getInstance("SHA1");
         final MessageDigest mdSHA256 = MessageDigest.getInstance("SHA-256");
         final MessageDigest mdMD5 = MessageDigest.getInstance("MD5");
-        final DbArtifactHash hash = new DbArtifactHash(BaseEncoding.base16().lowerCase().encode(mdSHA1.digest(bytes)),
-                BaseEncoding.base16().lowerCase().encode(mdMD5.digest(bytes)),
-                BaseEncoding.base16().lowerCase().encode(mdSHA256.digest(bytes)));
+        final HexFormat hexFormat = HexFormat.of().withLowerCase();
+        final DbArtifactHash hash = new DbArtifactHash(hexFormat.formatHex(mdSHA1.digest(bytes)),
+                hexFormat.formatHex(mdMD5.digest(bytes)),
+                hexFormat.formatHex(mdSHA256.digest(bytes)));
 
         final AbstractDbArtifact artifact1 = storeArtifact(TENANT, "file1.txt", new ByteArrayInputStream(bytes), mdSHA1,
                 mdMD5, hash);
@@ -111,8 +111,9 @@ public class MongoDBArtifactStoreTest {
 
         storeArtifact(tenant, filename, generateInputStream(filelengthBytes), mdSHA1, mdMD5, null);
 
-        final String sha1Hash16 = BaseEncoding.base16().lowerCase().encode(mdSHA1.digest());
-        final String md5Hash16 = BaseEncoding.base16().lowerCase().encode(mdMD5.digest());
+        final HexFormat hexFormat = HexFormat.of().withLowerCase();
+        final String sha1Hash16 = hexFormat.formatHex(mdSHA1.digest());
+        final String md5Hash16 = hexFormat.formatHex(mdMD5.digest());
 
         final AbstractDbArtifact loaded = artifactStoreUnderTest.getArtifactBySha1(tenant, sha1Hash16);
         assertThat(loaded).isNotNull();
