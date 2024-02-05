@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
+import java.util.HexFormat;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.hawkbit.artifact.repository.model.AbstractDbArtifact;
@@ -27,7 +28,6 @@ import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
-import com.google.common.io.BaseEncoding;
 
 /**
  * An {@link ArtifactRepository} implementation for the Gcloud GCS service. All
@@ -113,7 +113,7 @@ public class GcsRepository extends AbstractArtifactRepository {
         // the MD5Content is stored in the ETag
         return new GcsArtifact(gcsStorage, gcsProperties, key, sha1Hash,
                 new DbArtifactHash(sha1Hash,
-                        BaseEncoding.base16().lowerCase().encode(Base64.getDecoder().decode(blob.getMd5())), null),
+                        HexFormat.of().withLowerCase().formatHex(Base64.getDecoder().decode(blob.getMd5())), null),
                 blob.getSize(), blob.getContentType());
 
     }

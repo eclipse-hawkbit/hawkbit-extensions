@@ -43,10 +43,6 @@
          <groupId>org.springframework.boot</groupId>
          <artifactId>spring-boot-actuator-autoconfigure</artifactId>
       </dependency>
-      <dependency>
-         <groupId>com.google.guava</groupId>
-         <artifactId>guava</artifactId>
-      </dependency>
 
       <!-- TEST -->
       <dependency>
