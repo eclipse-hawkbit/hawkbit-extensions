@@ -57,7 +57,7 @@
    <properties>
       <revision>0-SNAPSHOT</revision>
       <hawkbit.version>0.5.0</hawkbit.version>
-      <aws.sdk.version>1.12.513</aws.sdk.version>
+      <aws.sdk.version>1.12.687</aws.sdk.version>
       <gcp.sdk.version>0.200.0</gcp.sdk.version>
 
       <!-- Release - START -->
