@@ -1,0 +1,14 @@
+name: Build against current HawkBit
+
+on:
+  pull_request:
+
+jobs:
+  build-without-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Smoke build in docker
+        uses: docker/build-push-action@v3
+        with:
+          push: false
