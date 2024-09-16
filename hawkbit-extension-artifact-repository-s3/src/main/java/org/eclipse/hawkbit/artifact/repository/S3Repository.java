@@ -27,6 +27,8 @@ import com.amazonaws.RequestClientOptions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.GetObjectMetadataRequest;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
@@ -136,19 +138,15 @@ public class S3Repository extends AbstractArtifactRepository {
         final String key = objectKey(tenant, sha1Hash);
 
         LOG.info("Retrieving S3 object from bucket {} and key {}", s3Properties.getBucketName(), key);
-        try (final S3Object s3Object = amazonS3.getObject(s3Properties.getBucketName(), key)) {
-            if (s3Object == null) {
-                return null;
-            }
 
-            final ObjectMetadata s3ObjectMetadata = s3Object.getObjectMetadata();
-
-            return new S3Artifact(amazonS3, s3Properties, key, sha1Hash, new DbArtifactHash(sha1Hash, null, null),
-                    s3ObjectMetadata.getContentLength(), s3ObjectMetadata.getContentType());
-        } catch (final IOException e) {
-            LOG.error("Could not verify S3Object", e);
+        var req = new GetObjectMetadataRequest(s3Properties.getBucketName(), key);
+        var objMeta = amazonS3.getObjectMetadata(req);
+        if (objMeta == null) {
             return null;
         }
+
+        return new S3Artifact(amazonS3, s3Properties, key, sha1Hash, new DbArtifactHash(sha1Hash, null, null),
+                objMeta.getContentLength(), objMeta.getContentType());
     }
 
     @Override
